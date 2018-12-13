@@ -24,11 +24,11 @@ namespace Essence.Communication.BusinessServices
 
         public async Task<LoginResponse> Login(LoginRequest loginData, string token = null) {
 
-            var response = Task.Run(async() => {
+            var response = await Task.Run(async() => {
                 var result =  await PostAsync(loginData,token);
                 return result;
             });
-            return response.Result;
+            return response;
         }
 
     }

@@ -32,11 +32,11 @@ namespace Essence.Communication.BusinessServices
             };
             LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
             //var result = await _apiManager.PostExternalAsync<ActivityResult>("report", "GetResidentActivity", activityRequest, loginResponse.token);
-            var response = Task.Run(async () => {
+            var response = await Task.Run(async () => {
                 var result = await PostAsync(activityRequest, loginResponse.token);
                 return result;
             });
-            return response.Result;
+            return response;
         }
 
         public override void SetApiEndpointAddress()
