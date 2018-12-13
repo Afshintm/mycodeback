@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Services.Utils;
+using Essence.Communication.BusinessServices;
 
 namespace Essence.Communication.Api
 {
@@ -98,9 +100,10 @@ namespace Essence.Communication.Api
             // AFTER Populate those registrations can override things
             // in the ServiceCollection. Mix and match as needed.
             builder.Populate(services);
-            //builder.RegisterType<HttpClientManager>().As<IHttpClientManager>().SingleInstance();
-            //builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
-            //builder.RegisterGeneric(typeof(CandidateBusinessServices<>)).As(typeof(ICandidateBusinessServices<>)).InstancePerLifetimeScope();
+            builder.RegisterType<HttpClientManager>().As<IHttpClientManager>().SingleInstance();
+            builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(AuthenticationService)).As(typeof(IAuthenticationService)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(ReportingService)).As(typeof(IReportingService)).InstancePerLifetimeScope();
             //builder.RegisterGeneric(typeof(JobBusinessServices<>)).As(typeof(IJobBusinessService<>)).InstancePerLifetimeScope();
 
 

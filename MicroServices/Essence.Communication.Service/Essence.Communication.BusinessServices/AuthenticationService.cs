@@ -19,7 +19,7 @@ namespace Essence.Communication.BusinessServices
         }
         public override void SetApiEndpointAddress()
         {
-            ApiEndPoint = _configuration.GetSection("ApiEndPoint")["login"];
+            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "login/login";
         }
 
         public async Task<LoginResponse> Login(LoginRequest loginData, string token = null) {

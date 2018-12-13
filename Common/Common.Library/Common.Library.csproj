@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="BusinessServices\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>
