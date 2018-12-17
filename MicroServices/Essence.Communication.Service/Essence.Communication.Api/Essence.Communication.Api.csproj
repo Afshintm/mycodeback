@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <AspNetCoreHostingModel>outofprocess</AspNetCoreHostingModel>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <UserSecretsId>278fb9ca-51f4-4b6f-8e21-0122ec41dc75</UserSecretsId>
   </PropertyGroup>
