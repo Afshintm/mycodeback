@@ -12,15 +12,15 @@ namespace Essence.Communication.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly IReportingService _reportingService;
-        private readonly IUserService _userService;
-        private readonly IEventService _eventService;
-        public ValuesController(IReportingService reportingService, IUserService userService, IEventService eventService)
-        {
-            _reportingService = reportingService;
-            _userService = userService;
-            _eventService = eventService;
-        }
+            private readonly IReportingService _reportingService;
+            private readonly IUserService _userService;
+            private readonly IEventService _eventService;
+            public ValuesController(IReportingService reportingService, IUserService userService, IEventService eventService)
+            {
+                _reportingService = reportingService;
+                _userService = userService;
+                _eventService = eventService;
+            }
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -53,93 +53,9 @@ namespace Essence.Communication.Api.Controllers
         {
         }
 
-        [Route("GetResidentActivity")]
-        [HttpPost]
-        public async Task<ActionResult<ActivityResult>> GetResidentActivity(ActivityRequest activityRequest)
-        {
-            var result = await _reportingService.GetResidentActivity(activityRequest);
-            return result;
-        }
 
-        [Route("AddUser")]
-        [HttpPost]
-        public async Task<ActionResult<SuccessResponse>> UserProfile(AddUserRequest addUserRequest)
-        {
-            var result = await _userService.UserProfile(addUserRequest);
-            return result;
-        }
 
-        [Route("AddAndAssociateUser")]
-        [HttpPost]
-        public async Task<ActionResult<SuccessResponse>> AddAndAssociateUser(AddAndAssociateUserRequest addAndAssociateUserRequest)
-        {
-            var result = await _userService.AddAndAssociateUser(addAndAssociateUserRequest);
-            return result;
-        }
 
-        [Route("AssociateUserToAccount")]
-        [HttpPost]
-        public async Task<SuccessResponse> AssociateUserToAccount(AssociateUserToAccountRequest associateUserToAccountRequest)
-        {
-            var result = await _userService.AssociateUserToAccount(associateUserToAccountRequest);
-            return result;
-        }
-
-        [Route("DeleteUser")]
-        [HttpPost]
-        public async Task<SuccessResponse> DeleteUser(DeleteUserRequest deleteUserRequest)
-        {
-            var result = await _userService.DeleteUser(deleteUserRequest);
-            return result;
-        }
-
-        [Route("DeactivateUser")]
-        [HttpPost]
-        public async Task<SuccessResponse> DeactivateUser(DeactivateUserRequest deactivateUserRequest)
-        {
-            var result = await _userService.DeactivateUser(deactivateUserRequest);
-            return result;
-        }
-
-        [Route("DeleteAccount")]
-        [HttpPost]
-        public async Task<SuccessResponse> DeleteAccount(DeleteAccountRequest deleteAccountRequest)
-        {
-            var result = await _userService.DeleteAccount(deleteAccountRequest);
-            return result;
-        }
-
-        [Route("DisassociateUserFromAccount")]
-        [HttpPost]
-        public async Task<SuccessResponse> DisassociateUserFromAccount(DisassociateUserFromAccountRequest disassociateUserFromAccountRequest)
-        {
-            var result = await _userService.DisassociateUserFromAccount(disassociateUserFromAccountRequest);
-            return result;
-        }
-
-        [Route("GetUsers")]
-        [HttpPost]
-        public async Task<GetUsersResult> GetUsers(GetUsersRequest getUsersRequest)
-        {
-            var result = await _userService.GetUsers(getUsersRequest);
-            return result;
-        }
-
-        [Route("GetUsersForAccount")]
-        [HttpPost]
-        public async Task<UsersForAccountResult> GetUsersForAccount(UsersForAccountRequest usersForAccountRequest)
-        {
-            var result = await _userService.GetUsersForAccount(usersForAccountRequest);
-            return result;
-        }
-
-        [Route("UpdateAccountInformation")]
-        [HttpPost]
-        public async Task<SuccessResponse> UpdateAccountInformation(UpdateAccountInformationRequest updateAccountInformationRequest)
-        {
-            var result = await _userService.UpdateAccountInformation(updateAccountInformationRequest);
-            return result;
-        }
 
         //[Route("ReceiveEvent")]
         //[HttpPost]
