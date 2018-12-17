@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  essence.communication.api:
+    image: ${DOCKER_REGISTRY-}essencecommunicationapi
+    build:
+      context: .
+      dockerfile: MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile
