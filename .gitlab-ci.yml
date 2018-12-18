@@ -31,7 +31,7 @@ docker:
     script:
         - echo "docker image"
         - "cd ./MicroServices/Essence.Communication.Service/Essence.Communication.Api"
-        - "docker build -t $REPOSITORY_URL ."
+        - "docker build -t $REPOSITORY_URL ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/"
         
 deploy:
     stage: deploy
@@ -46,5 +46,5 @@ deploy:
         - echo $AWS_SECRET_ACCESS_KEY
         - echo $PROD_LOAD_BALANCER_URL
         - $(aws ecr get-login --no-include-email --region ap-southeast-2)
-        - docker build -t $REPOSITORY_URL .
+        - docker build -t $REPOSITORY_URL ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/
         - docker push $REPOSITORY_URL        
