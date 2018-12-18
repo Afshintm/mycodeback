@@ -1,23 +1,31 @@
-image: microsoft/dotnet:latest
-
 stages:
     - build
     - test
+    - deploy
 
 variables:
-    test: "Essence.Communication.UnitTests"
-
-before_script:
-    - "cd MicroServices"
-    - "dotnet restore"
+    test: "MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests/Essence.Communication.UnitTests.csproj"
 
 build:
     stage: build
+    image: microsoft/dotnet:latest
     script:
-        - "dotnet build"
+        - "dotnet restore ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"    
+        - "dotnet build ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"
 
 test:
     stage: test
+    image: microsoft/dotnet:latest    
     script:
-        - "cd $test"
-        - "dotnet test"
+        - "dotnet test $test"
+
+deploy:
+    stage: deploy
+    image: docker:latest    
+    variables:
+        AWS_DEFAULT_REGION: "ap-southeast-2"
+        REPOSITORY_URL: 90986216309.dkr.ecr.ap-southeast-2.amazonaws.com/testcontainerapp21        
+    script:
+        - echo $AWS_ACCESS_KEY_ID
+        - echo $AWS_SECRET_ACCESS_KEY
+        - echo $PROD_LOAD_BALANCER_URL
