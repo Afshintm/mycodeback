@@ -1,3 +1,5 @@
+image: microsoft/dotnet:latest
+
 stages:
     - build
     - test
@@ -12,13 +14,11 @@ before_script:
 
 build:
     stage: build
-    image: microsoft/dotnet:latest    
     script:
         - "dotnet build ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"
 
 test:
     stage: test
-    image: microsoft/dotnet:latest    
     script:
         - "dotnet test $test"
 
