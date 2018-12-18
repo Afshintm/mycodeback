@@ -6,7 +6,7 @@ stages:
     - docker
 
 variables:
-    test: "MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests/Essence.Communication.Api.csproj"
+    test: "MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests/Essence.Communication.UnitTests.csproj"
 
 
 before_script:
