@@ -27,14 +27,20 @@ docker:
         - docker:dind
     script:
         - echo "docker image"
-        - "docker build -f ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile.original"
+        - "docker build -f ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile"
         
 deploy:
     stage: deploy
+    image: docker:latest    
     variables:
-        AWS_DEFAULT_REGION: "ap-sydney-2"
+        AWS_DEFAULT_REGION: "ap-southeast-2"
+        REPOSITORY_URL: 90986216309.dkr.ecr.ap-southeast-2.amazonaws.com/testcontainerapp21        
     script:
-        - "cd MicroServices"
+        - apk add --no-cache curl jq python py-pip
+        - pip install awscli
         - echo $AWS_ACCESS_KEY_ID
         - echo $AWS_SECRET_ACCESS_KEY
         - echo $PROD_LOAD_BALANCER_URL
+        - $(aws ecr get-login --no-include-email --region ap-southeast-2)
+        - docker build -t $REPOSITORY_URL .
+        - docker push $REPOSITORY_URL        
