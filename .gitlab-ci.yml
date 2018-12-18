@@ -7,11 +7,12 @@ stages:
     - docker
 
 variables:
-    test: "Essence.Communication.UnitTests"
+    test: "MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests"
 
 
 before_script:
-    - "dotnet MicroServices/Essence.Communication.Service/Essence.Communication.Api/restore"
+    - "cd MicroServices/Essence.Communication.Service/Essence.Communication.Api"
+    - "dotnet restore"
 
 build:
     stage: build
@@ -21,7 +22,8 @@ build:
 test:
     stage: test
     script:
-        - "dotnet MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests/test"
+        - "cd $test"
+        - "dotnet test"
 
 docker:
     stage: docker
