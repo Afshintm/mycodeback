@@ -1,15 +1,17 @@
 image: microsoft/dotnet:latest
+image: docker:latest
 
 stages:
     - build
     - test
+    - docker
 
 variables:
     test: "Essence.Communication.UnitTests"
 
+
 before_script:
-    - "cd MicroServices/Essence.Communication.Service/Essence.Communication.Api"
-    - "dotnet restore"
+    - "dotnet MicroServices/Essence.Communication.Service/Essence.Communication.Api/restore"
 
 build:
     stage: build
@@ -19,6 +21,9 @@ build:
 test:
     stage: test
     script:
-        - "cd ../Essence.Communication.UnitTests"
-        - "cd $test"
-        - "dotnet test"
+        - "dotnet MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests/test"
+
+docker:
+    stage: docker
+    script:
+        - "docker info"
