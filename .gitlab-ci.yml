@@ -8,7 +8,6 @@ variables:
     test: "Essence.Communication.UnitTests"
 
 before_script:
-    - "cd MicroServices"
     - "dotnet restore"
 
 build:
