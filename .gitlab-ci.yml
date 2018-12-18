@@ -30,7 +30,8 @@ docker:
         - docker:dind
     script:
         - echo "docker image"
-        - "docker build -f ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile -t $REPOSITORY_URL"
+        - "cd ./MicroServices/Essence.Communication.Service/Essence.Communication.Api"
+        - "docker build -t $REPOSITORY_URL"
         
 deploy:
     stage: deploy
