@@ -1,5 +1,4 @@
 ﻿using Essence.Communication.Models.Dtos;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Services.Utils;
 using System;

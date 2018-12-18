@@ -107,7 +107,7 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(UserService)).As(typeof(IAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventService)).As(typeof(IEventService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(UserAccountService)).As(typeof(IUserAccountService)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(UserProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(UsersProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();
             //builder.RegisterGeneric(typeof(JobBusinessServices<>)).As(typeof(IJobBusinessService<>)).InstancePerLifetimeScope();
 
 
