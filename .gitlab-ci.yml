@@ -27,7 +27,7 @@ docker:
         - docker:dind
     script:
         - echo "docker image"
-        - "docker build -t ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile"
+        - "docker build ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile"
         
 deploy:
     stage: deploy
