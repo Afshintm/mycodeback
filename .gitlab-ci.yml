@@ -27,14 +27,14 @@ docker:
         - docker:dind
     script:
         - echo "docker image"
-        - "docker build -f ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile"
+        - "docker build -f ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile.original"
         
 deploy:
     stage: deploy
     variables:
         AWS_DEFAULT_REGION: "ap-sydney-2"
-        AWS_ACCESS_KEY_ID: ""
-        AWS_SECRET_ACCESS_KEY: ""
-        PROD_LOAD_BALANCER_URL: ""
     script:
         - "cd MicroServices"
+        - echo $AWS_ACCESS_KEY_ID
+        - echo $AWS_SECRET_ACCESS_KEY
+        - echo $PROD_LOAD_BALANCER_URL
