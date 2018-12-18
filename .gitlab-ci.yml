@@ -1,9 +1,10 @@
-image: microsoft/dotnet:latest
+image: docker:latest
 
 stages:
     - build
     - test
     - docker
+    - deploy
 
 variables:
     test: "MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests/Essence.Communication.UnitTests.csproj"
@@ -14,18 +15,31 @@ before_script:
 
 build:
     stage: build
+    image: microsoft/dotnet:latest
     script:
         - "dotnet build ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"
 
 test:
     stage: test
+    image: microsoft/dotnet:latest    
     script:
         - "dotnet test $test"
 
 docker:
     stage: docker
-    image: docker:latest
+    image: microsoft/dotnet:latest
     services:
         - docker:dind
     script:
+        - echo "docker image"
         - "docker build -t ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile"
+        
+deploye:
+    stage: deploy
+    variables:
+        AWS_DEFAULT_REGION: "ap-sydney-2"
+        AWS_ACCESS_KEY_ID: ""
+        AWS_SECRET_ACCESS_KEY: ""
+        PROD_LOAD_BALANCER_URL: ""
+    script:
+        - "cd MicroServices"
