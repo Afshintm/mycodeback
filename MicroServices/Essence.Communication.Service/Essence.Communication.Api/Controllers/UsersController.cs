@@ -14,10 +14,14 @@ namespace Essence.Communication.Api.Controllers
     public class UsersController : ControllerBase
     {
 
-        private readonly IUserService _userService;
-        public UsersController(IUserService userService)
+        private readonly IAccountService _userService;
+        private readonly IUserProfileService _userProfileService;
+        private readonly IUserAccountService _userAccountService;
+        public UsersController(IAccountService userService, IUserProfileService userProfileService, IUserAccountService userAccountService)
         {
             _userService = userService;
+            _userProfileService = userProfileService;
+            _userAccountService = userAccountService;
         }
 
         // GET: api/Users
@@ -81,7 +85,7 @@ namespace Essence.Communication.Api.Controllers
         [HttpPost]
         public async Task<GetUsersResult> GetUsers(GetUsersRequest getUsersRequest)
         {
-            var result = await _userService.GetUsers(getUsersRequest);
+            var result = await _userProfileService.GetUsers(getUsersRequest);
             return result;
         }
 
@@ -89,7 +93,7 @@ namespace Essence.Communication.Api.Controllers
         [HttpPost]
         public async Task<UsersForAccountResult> GetUsersForAccount(UsersForAccountRequest usersForAccountRequest)
         {
-            var result = await _userService.GetUsersForAccount(usersForAccountRequest);
+            var result = await _userAccountService.GetUsersForAccount(usersForAccountRequest);
             return result;
         }
 

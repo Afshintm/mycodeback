@@ -13,9 +13,9 @@ namespace Essence.Communication.Api.Controllers
     public class ValuesController : ControllerBase
     {
             private readonly IReportingService _reportingService;
-            private readonly IUserService _userService;
+            private readonly IAccountService _userService;
             private readonly IEventService _eventService;
-            public ValuesController(IReportingService reportingService, IUserService userService, IEventService eventService)
+            public ValuesController(IReportingService reportingService, IAccountService userService, IEventService eventService)
             {
                 _reportingService = reportingService;
                 _userService = userService;

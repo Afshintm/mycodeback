@@ -1,4 +1,5 @@
 ﻿using Essence.Communication.Models.Dtos;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Services.Utils;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Essence.Communication.BusinessServices
 {
-    public interface IUserService
+    public interface IAccountService
     {
         Task<SuccessResponse> UserProfile(AddUserRequest addUserRequest);
         Task<SuccessResponse> AddAndAssociateUser(AddAndAssociateUserRequest addAndAssociateUserRequest);
@@ -17,13 +18,11 @@ namespace Essence.Communication.BusinessServices
         Task<SuccessResponse> DeactivateUser(DeactivateUserRequest deactivateUserRequest);
         Task<SuccessResponse> DeleteAccount(DeleteAccountRequest deleteAccountRequest);
         Task<SuccessResponse> DisassociateUserFromAccount(DisassociateUserFromAccountRequest disassociateUserFromAccountRequest);
-        Task<GetUsersResult> GetUsers(GetUsersRequest getUsersRequest);
-        Task<UsersForAccountResult> GetUsersForAccount(UsersForAccountRequest usersForAccountRequest);
         Task<SuccessResponse> UpdateAccountInformation(UpdateAccountInformationRequest updateAccountInformationRequest);
         Task<SuccessResponse> UpdateUser(User updateUserRequest);
     }
 
-    public class UserService : BaseBusinessServices<SuccessResponse>, IUserService
+    public class UserService : BaseBusinessServices<SuccessResponse>, IAccountService
     {
         private readonly IConfiguration _configuration;
         private readonly IAuthenticationService _authenticationService;
@@ -134,27 +133,6 @@ namespace Essence.Communication.BusinessServices
                 return result;
             });
             return response;
-        }
-
-        public Task<GetUsersResult> GetUsers(GetUsersRequest getUsersRequest)
-        {
-            //LoginRequest loginRequest = new LoginRequest()
-            //{
-            //    userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-            //    password = _configuration.GetSection("ApplicationSettings")["Password"]
-            //};
-            //LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            //var response = await Task.Run(async () => {
-            //    var result = await PostAsync(getUsersRequest, loginResponse.token);
-            //    return result;
-            //});
-            //return result;
-            throw new NotImplementedException();
-        }
-
-        public Task<UsersForAccountResult> GetUsersForAccount(UsersForAccountRequest usersForAccountRequest)
-        {
-            throw new NotImplementedException();
         }
 
         public override void SetApiEndpointAddress()
