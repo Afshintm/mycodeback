@@ -19,5 +19,6 @@ build:
 test:
     stage: test
     script:
+        - "cd ../Essence.Communication.UnitTests"
         - "cd $test"
         - "dotnet test"
