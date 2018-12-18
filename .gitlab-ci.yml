@@ -31,7 +31,7 @@ docker:
     script:
         - echo "docker image"
         - "cd ./MicroServices/Essence.Communication.Service/Essence.Communication.Api"
-        - "docker build -t $REPOSITORY_URL"
+        - "docker build -t $REPOSITORY_URL ."
         
 deploy:
     stage: deploy
