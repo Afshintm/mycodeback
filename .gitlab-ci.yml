@@ -12,7 +12,7 @@ build:
     image: microsoft/dotnet:latest
     script:
         - "dotnet restore ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"    
-        - "dotnet build ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"
+        - "dotnet build -f ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"
 
 test:
     stage: test
