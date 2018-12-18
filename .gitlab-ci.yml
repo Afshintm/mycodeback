@@ -1,5 +1,4 @@
 image: microsoft/dotnet:latest
-image: docker:latest
 
 stages:
     - build
@@ -28,4 +27,4 @@ test:
 docker:
     stage: docker
     script:
-        - "docker info"
+        - "cd MicroServices"
