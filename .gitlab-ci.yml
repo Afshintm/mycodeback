@@ -25,14 +25,14 @@ docker:
     image: docker:latest
     variables:
         AWS_DEFAULT_REGION: "ap-southeast-2"
-        REPOSITORY_URL: 90986216309.dkr.ecr.ap-southeast-2.amazonaws.com/testcontainerapp21       
+        REPOSITORY_URL: 590986216309.dkr.ecr.ap-southeast-2.amazonaws.com/essencecommunicationapi:latest       
     services:
         - docker:dind
     script:
         - echo "docker image"
-        - "docker build -t $REPOSITORY_URL ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/"
+        - "docker build -t $REPOSITORY_URL -f MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile context"
         
-deploy:
+.deploy:
     stage: deploy
     image: docker:latest    
     variables:
