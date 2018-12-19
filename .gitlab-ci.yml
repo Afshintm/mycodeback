@@ -7,14 +7,14 @@ stages:
 variables:
     test: "MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests/Essence.Communication.UnitTests.csproj"
 
-build:
+.build:
     stage: build
     image: microsoft/dotnet:latest
     script:
         - "dotnet restore ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"    
         - "dotnet build ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"
 
-test:
+.test:
     stage: test
     image: microsoft/dotnet:latest    
     script:
