@@ -6,7 +6,6 @@ stages:
 
 variables:
     test: "MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests/Essence.Communication.UnitTests.csproj"
-    REPOSITORY_URL: 590986216309.dkr.ecr.ap-southeast-2.amazonaws.com/essencecommunicationapi:latest        
 
 .build:
     stage: build
@@ -37,6 +36,7 @@ docker:
     before_script:
         - apk add --no-cache curl jq python py-pip
         - pip install awscli
+        
     script:
         - echo "docker image"
         - $(aws ecr get-login --no-include-email --region ap-southeast-2)
