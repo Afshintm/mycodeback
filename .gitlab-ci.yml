@@ -35,8 +35,10 @@ docker:
     script:
         - echo "docker image"
         - "docker build --pull -t $REPOSITORY_URL -f MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile ."
-        - "docker tag $ECR_NAME:latest $ECR_URI/$ECR_NAME:$ENVIRONMENT-$VERSION"
-        - "docker tag $ECR_NAME:latest $ECR_URI/$ECR_NAME:latest-$ENVIRONMENT"
+        #- "docker tag $ECR_NAME:latest $ECR_URI/$ECR_NAME:$ENVIRONMENT-$VERSION"
+        #- "docker tag $ECR_NAME:latest $ECR_URI/$ECR_NAME:latest-$ENVIRONMENT"
+        - echo $AWS_ACCESS_KEY_ID
+        - echo $AWS_SECRET_ACCESS_KEY
         - "$(aws ecr get-login --region $AWS_DEFAULT_REGION)"
         
 .deploy:
