@@ -1,6 +1,7 @@
 stages:
     - build
     - test
+    - docker
     - deploy
 
 variables:
@@ -19,6 +20,18 @@ test:
     script:
         - "dotnet test $test"
 
+docker:
+    stage: docker
+    image: docker:latest
+    variables:
+        AWS_DEFAULT_REGION: "ap-southeast-2"
+        REPOSITORY_URL: 90986216309.dkr.ecr.ap-southeast-2.amazonaws.com/testcontainerapp21       
+    services:
+        - docker:dind
+    script:
+        - echo "docker image"
+        - "docker build -t $REPOSITORY_URL ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/"
+        
 deploy:
     stage: deploy
     image: docker:latest    
@@ -29,3 +42,6 @@ deploy:
         - echo $AWS_ACCESS_KEY_ID
         - echo $AWS_SECRET_ACCESS_KEY
         - echo $PROD_LOAD_BALANCER_URL
+        - $(aws ecr get-login --no-include-email --region ap-southeast-2)
+        - docker build -t $REPOSITORY_URL ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/
+        - docker push $REPOSITORY_URL        
