@@ -7,6 +7,7 @@ FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY . .
 WORKDIR src/MicroServices/Essence.Communication.Service/Essence.Communication.Api
+RUN ls -l
 RUN dotnet restore Essence.Communication.Api.csproj
 RUN dotnet build Essence.Communication.Api.csproj -c Release -o /app
 
