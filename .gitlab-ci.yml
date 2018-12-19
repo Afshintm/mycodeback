@@ -6,15 +6,16 @@ stages:
 
 variables:
     test: "MicroServices/Essence.Communication.Service/Essence.Communication.UnitTests/Essence.Communication.UnitTests.csproj"
+    REPOSITORY_URL: 590986216309.dkr.ecr.ap-southeast-2.amazonaws.com/essencecommunicationapi:latest        
 
-build:
+.build:
     stage: build
     image: microsoft/dotnet:latest
     script:
         - "dotnet restore ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"    
         - "dotnet build ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/Essence.Communication.Api.csproj"
 
-test:
+.test:
     stage: test
     image: microsoft/dotnet:latest    
     script:
@@ -32,15 +33,20 @@ docker:
         REPOSITORY_URL: 590986216309.dkr.ecr.ap-southeast-2.amazonaws.com/essencecommunicationapi:latest       
     services:
         - docker:dind
+        
+    before_script:
+        - apk add --no-cache curl jq python py-pip
+        - pip install awscli
     script:
         - echo "docker image"
+        - $(aws ecr get-login --no-include-email --region ap-southeast-2)
         - "docker build --pull -t $REPOSITORY_URL -f MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile ."
-        #- "docker tag $ECR_NAME:latest $ECR_URI/$ECR_NAME:$ENVIRONMENT-$VERSION"
-        #- "docker tag $ECR_NAME:latest $ECR_URI/$ECR_NAME:latest-$ENVIRONMENT"
-        - echo $AWS_ACCESS_KEY_ID
-        - echo $AWS_SECRET_ACCESS_KEY
-        - "$(aws ecr get-login --region $AWS_DEFAULT_REGION)"
-        
+        - docker push $REPOSITORY_URL
+    only:
+      - master
+    tags:
+      - docker
+
 .deploy:
     stage: deploy
     image: docker:latest    
@@ -55,14 +61,4 @@ docker:
         - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
 #        - docker build -t $REPOSITORY_URL ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/
 #        - docker push $REPOSITORY_URL        
-        
-#         cd "${DIR}/.."
-#  docker build --pull -t "${ECR_NAME}:latest" -f ./docker/Dockerfile .
-#  docker tag "${ECR_NAME}:latest" "${ECR_URI}/${ECR_NAME}:${ENVIRONMENT}-${VERSION}"
-#  docker tag "${ECR_NAME}:latest" "${ECR_URI}/${ECR_NAME}:latest-${ENVIRONMENT}"
-#  $(aws ecr get-login --region "${ECS_REGION}")
-#  docker push "${ECR_URI}/${ECR_NAME}:${ENVIRONMENT}-${VERSION}"
-#  docker push "${ECR_URI}/${ECR_NAME}:latest-${ENVIRONMENT}"
-
-        
         
