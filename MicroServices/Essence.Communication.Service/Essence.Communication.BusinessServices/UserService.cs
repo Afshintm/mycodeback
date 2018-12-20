@@ -136,7 +136,7 @@ namespace Essence.Communication.BusinessServices
 
         public override void SetApiEndpointAddress()
         {
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "report/GetResidentActivity";
+            //ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "report/GetResidentActivity";
         }
 
         public async Task<SuccessResponse> UpdateAccountInformation(UpdateAccountInformationRequest updateAccountInformationRequest)

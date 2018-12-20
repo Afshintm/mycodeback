@@ -1,11 +1,12 @@
 ﻿using BuildingBlocks.EventBus.Events;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Essence.Communication.Models.Dtos
+namespace Core.Service.Api.Models
 {
-    public class EventObjectStructure: IntegrationEvent
+    public class EventObjectStructureModel : IntegrationEvent
     {
         public int Account { get; set; }
         public int ServiceProvider { get; set; }

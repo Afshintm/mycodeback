@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.3.3.42" />
   </ItemGroup>
 
 </Project>

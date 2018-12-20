@@ -61,5 +61,6 @@ namespace Services.Utils
             var result = await _httpClientManager.PostAsync<T>(ApiEndPoint,data,token);
             return result;
         }
+
     }
 }

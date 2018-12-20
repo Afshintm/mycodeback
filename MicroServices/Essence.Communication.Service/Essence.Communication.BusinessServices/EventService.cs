@@ -1,4 +1,5 @@
-﻿using Essence.Communication.Models.Dtos;
+﻿using BuildingBlocks.EventBus.Interfaces;
+using Essence.Communication.Models.Dtos;
 using Microsoft.Extensions.Configuration;
 using Services.Utils;
 using System;
@@ -17,16 +18,26 @@ namespace Essence.Communication.BusinessServices
     {
         private readonly IConfiguration _configuration;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IEventBus _eventBus;
 
-        public EventService(IHttpClientManager httpClientManager, IConfiguration configuration, IAuthenticationService authenticationService) : base(httpClientManager, configuration)
+
+        public EventService(
+            IHttpClientManager httpClientManager, 
+            IConfiguration configuration, 
+            IAuthenticationService authenticationService,
+            IEventBus eventBus
+            ) : base(httpClientManager, configuration)
         {
             _configuration = configuration;
             _authenticationService = authenticationService;
+            _eventBus = eventBus;
         }
 
         public Task<bool> ReceiveEvent(EventObjectStructure eventObjectStructure)
         {
-            throw new NotImplementedException();
+            var @event = eventObjectStructure;
+            _eventBus.Publish(@event);
+            return null;
         }
 
         public override void SetApiEndpointAddress()
