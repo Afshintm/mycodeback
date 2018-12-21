@@ -72,7 +72,7 @@ namespace Core.Service.Api
             builder.Populate(services);
             builder.RegisterType<HttpClientManager>().As<IHttpClientManager>().SingleInstance();
             builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).SingleInstance();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
 
             return builder;
@@ -132,7 +132,7 @@ namespace Core.Service.Api
                 var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                 //var eventBus = sp.GetRequiredService<IEventBus>();
                 //eventBus.Subscribe<EventObjectStructure, >();
-                return new EventBusMessageQueue(serviceBusPersisterConnection);
+                return new EventBusMessageQueue(serviceBusPersisterConnection,Configuration);
             });
 
             
