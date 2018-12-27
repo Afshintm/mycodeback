@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.EventBus.MessageQueue\BuildingBlocks.EventBus.MessageQueue.csproj" />
+    <ProjectReference Include="..\..\..\Messaging\BuildingBlocks\BuildingBlocks.EventBus.MessageQueue\BuildingBlocks.EventBus.MessageQueue.csproj" />
     <ProjectReference Include="..\..\Essence.Communication.Service\Essence.Communication.BusinessServices\Essence.Communication.BusinessServices.csproj" />
     <ProjectReference Include="..\..\Services.Utils\Services.Utils.csproj" />
   </ItemGroup>

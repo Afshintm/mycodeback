@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.EventBus.MessageQueue;
 using BuildingBlocks.EventBus.MessageQueue.Interfaces;
-using Core.Service.Api.Models;
-using Essence.Communication.BusinessServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Services.Utils;
 
 namespace Core.Service.Api
@@ -120,8 +113,8 @@ namespace Core.Service.Api
             // You can only do this if you have a direct reference to the container,
             // so it won't work with the above ConfigureContainer mechanism.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            //eventBus.Subscribe<EventObjectStructureModel, >
+            //var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            
         }
 
         private void RegisterServiceBusMessageEvents(IServiceCollection services)
@@ -132,10 +125,10 @@ namespace Core.Service.Api
                 var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                 //var eventBus = sp.GetRequiredService<IEventBus>();
                 //eventBus.Subscribe<EventObjectStructure, >();
-                return new EventBusMessageQueue(serviceBusPersisterConnection,Configuration);
+                return new EventBusMessageQueue(serviceBusPersisterConnection, Configuration);
             });
 
-            
+
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Essence.Communication.Models.Dtos
 {
-    public class EventObjectStructure: IntegrationEvent
+    public class EventObjectStructure : IntegrationEvent
     {
         public int Account { get; set; }
         public int ServiceProvider { get; set; }
