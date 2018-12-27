@@ -3,8 +3,6 @@ using Essence.Communication.Models.Dtos;
 using Microsoft.Extensions.Configuration;
 using Services.Utils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Essence.Communication.BusinessServices
@@ -33,11 +31,15 @@ namespace Essence.Communication.BusinessServices
             _eventBus = eventBus;
         }
 
-        public Task<bool> ReceiveEvent(EventObjectStructure eventObjectStructure)
+        public async Task<bool> ReceiveEvent(EventObjectStructure eventObjectStructure)
         {
             var @event = eventObjectStructure;
-            _eventBus.Publish(@event);
-            return null;
+            var result = await _eventBus.PublishAsync(@event);
+            
+            var MessageId = result.MessageId;
+            if (!string.IsNullOrEmpty(MessageId))
+                return true;
+            return false;
         }
 
         public override void SetApiEndpointAddress()

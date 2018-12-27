@@ -1,7 +1,5 @@
 ﻿using BuildingBlocks.EventBus.MessageQueue.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BuildingBlocks.EventBus.MessageQueue
 {

@@ -7,10 +7,9 @@ using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.EventBus.MessageQueue.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BuildingBlocks.EventBus.MessageQueue
 {
@@ -18,19 +17,31 @@ namespace BuildingBlocks.EventBus.MessageQueue
     {
         private readonly IMQPersistentConnection _persistentConnection;
         private readonly IConfiguration _configuration;
+        private AmazonSQSClient _amazonSQSClient;
 
         public EventBusMessageQueue(IMQPersistentConnection persistentConnection, IConfiguration configuration)
         {
             _persistentConnection = persistentConnection;
             _configuration = configuration;
         }
+        BasicAWSCredentials _basicAWSCredentials;
+        BasicAWSCredentials SQSAWSCredential {
+            get {
+                    if (_basicAWSCredentials == null)
+                    {
+                        _basicAWSCredentials = new BasicAWSCredentials(_configuration.GetSection("SQSSettings")["AccessKey"], _configuration.GetSection("SQSSettings")["SecretKey"]);
+                    }
+                    return _basicAWSCredentials;
+                }
+            set { _basicAWSCredentials = value; }
+        }
 
         public void Publish(IntegrationEvent @event)
         {
             var eventName = @event.GetType().Name;
-            var awsCreds = new BasicAWSCredentials(_configuration.GetSection("SQSSettings")["AccessKey"], _configuration.GetSection("SQSSettings")["SecretKey"]);
+            //var awsCreds = new BasicAWSCredentials(_configuration.GetSection("SQSSettings")["AccessKey"], _configuration.GetSection("SQSSettings")["SecretKey"]);
 
-            IAmazonSQS amazonSQS = new AmazonSQSClient(awsCreds, RegionEndpoint.APSoutheast2);
+            _amazonSQSClient = new AmazonSQSClient(SQSAWSCredential, RegionEndpoint.APSoutheast2);
 
             //TODO: FIFO Queue
 
@@ -39,7 +50,7 @@ namespace BuildingBlocks.EventBus.MessageQueue
                 QueueName = _configuration.GetSection("SQSSettings")["QueueName"]
             };
 
-            var createQueueResponse = amazonSQS.CreateQueueAsync(sqsRequest).Result;
+            var createQueueResponse = _amazonSQSClient.CreateQueueAsync(sqsRequest).Result;
 
             var myQueueUrl = createQueueResponse.QueueUrl;
 
@@ -54,11 +65,42 @@ namespace BuildingBlocks.EventBus.MessageQueue
                 MessageBody = message
             };
 
-            amazonSQS.SendMessageAsync(sqsMessageRequest);
+            _amazonSQSClient.SendMessageAsync(sqsMessageRequest);
 
             //TODO: Do we need to store the published messages for tracking purpose?
         }
 
+        public async Task<CreateQueueResponse> CreateQueueAsync() {
+            _amazonSQSClient = new AmazonSQSClient(SQSAWSCredential, RegionEndpoint.APSoutheast2);
+            var sqsRequest = new CreateQueueRequest
+            {
+                QueueName = _configuration.GetSection("SQSSettings")["QueueName"]
+            };
+            return await _amazonSQSClient.CreateQueueAsync(sqsRequest);
+
+        }
+
+        public async Task<ISendMessageResponse> PublishAsync(IntegrationEvent @event)
+        {
+            var eventName = @event.GetType().Name;
+
+            var createQueueResponse = await CreateQueueAsync();
+
+            var message = JsonConvert.SerializeObject(@event);
+
+            var encodedMessage = Encoding.UTF8.GetBytes(message);
+
+            var sqsMessageRequest = new SendMessageRequest
+            {
+                QueueUrl = createQueueResponse.QueueUrl,
+                MessageBody = message
+            };
+            var result =  await _amazonSQSClient.SendMessageAsync(sqsMessageRequest) ;
+            var str = JsonConvert.SerializeObject(result);
+            var r = JsonConvert.DeserializeObject<BuildingBlocks.EventBus.Events.SendMessageResponse>(str);
+            return r;
+        }
+         
         public void Subscribe<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
