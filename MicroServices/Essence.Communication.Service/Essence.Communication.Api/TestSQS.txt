@@ -1,0 +1,19 @@
+﻿from Postman 
+post following json to https://localhost:44308/api/events/ReceiveEvent endpoint 
+{
+    "Account": 99999999,
+    "Event": {
+        "Code": 114,
+        "Details": {
+            "DeviceId": 9,
+            "DeviceType": 38,
+            "DeviceDescription": "Living Room",
+            "MaximumThreshold": 35,
+            "ActualTemperature": 34             
+        },
+        "Severity": 2
+    },
+    "PanelTime": "2016-01-19T18:00:00",
+    "ServerTime": "2016-01-19T18:00:09.088+02:00",
+    "ServiceProvider" : 2
+}
