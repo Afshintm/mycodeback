@@ -25,15 +25,10 @@ namespace BuildingBlocks.EventBus.MessageQueue
             _configuration = configuration;
         }
         BasicAWSCredentials _basicAWSCredentials;
-        BasicAWSCredentials SQSAWSCredential {
-            get {
-                    if (_basicAWSCredentials == null)
-                    {
-                        _basicAWSCredentials = new BasicAWSCredentials(_configuration.GetSection("SQSSettings")["AccessKey"], _configuration.GetSection("SQSSettings")["SecretKey"]);
-                    }
-                    return _basicAWSCredentials;
-                }
-            set { _basicAWSCredentials = value; }
+        BasicAWSCredentials SQSAWSCredential
+        {
+            get => _basicAWSCredentials ?? (_basicAWSCredentials = new BasicAWSCredentials(_configuration.GetSection("SQSSettings")["AccessKey"], _configuration.GetSection("SQSSettings")["SecretKey"]));
+            set => _basicAWSCredentials = value;
         }
 
         public void Publish(IntegrationEvent @event)
