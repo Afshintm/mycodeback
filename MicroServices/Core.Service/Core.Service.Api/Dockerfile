@@ -8,8 +8,8 @@ COPY MicroServices/Core.Service/Core.Service.Api/Core.Service.Api.csproj MicroSe
 COPY MicroServices/Essence.Communication.Service/Essence.Communication.BusinessServices/Essence.Communication.BusinessServices.csproj MicroServices/Essence.Communication.Service/Essence.Communication.BusinessServices/
 COPY MicroServices/Services.Utils/Services.Utils.csproj MicroServices/Services.Utils/
 COPY MicroServices/Essence.Communication.Service/Essence.Communication.Models/Essence.Communication.Models.csproj MicroServices/Essence.Communication.Service/Essence.Communication.Models/
-COPY BuildingBlocks/BuildingBlocks.EventBus/BuildingBlocks.EventBus.csproj BuildingBlocks/BuildingBlocks.EventBus/
-COPY BuildingBlocks/BuildingBlocks.EventBus.MessageQueue/BuildingBlocks.EventBus.MessageQueue.csproj BuildingBlocks/BuildingBlocks.EventBus.MessageQueue/
+COPY Messaging/BuildingBlocks/BuildingBlocks.EventBus/BuildingBlocks.EventBus.csproj Messaging/BuildingBlocks/BuildingBlocks.EventBus/
+COPY Messaging/BuildingBlocks/BuildingBlocks.EventBus.MessageQueue/BuildingBlocks.EventBus.MessageQueue.csproj Messaging/BuildingBlocks/BuildingBlocks.EventBus.MessageQueue/
 RUN dotnet restore MicroServices/Core.Service/Core.Service.Api/Core.Service.Api.csproj
 COPY . .
 WORKDIR /src/MicroServices/Core.Service/Core.Service.Api
