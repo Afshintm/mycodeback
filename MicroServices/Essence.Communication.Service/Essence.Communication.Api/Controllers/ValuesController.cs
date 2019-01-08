@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Essence.Communication.BusinessServices;
-using Essence.Communication.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Essence.Communication.Api.Controllers
@@ -14,12 +10,12 @@ namespace Essence.Communication.Api.Controllers
     {
             private readonly IReportingService _reportingService;
             private readonly IAccountService _userService;
-            private readonly IEventService _eventService;
-            public ValuesController(IReportingService reportingService, IAccountService userService, IEventService eventService)
+            private readonly IMessageService _messageService;
+            public ValuesController(IReportingService reportingService, IAccountService userService, IMessageService messageService)
             {
                 _reportingService = reportingService;
                 _userService = userService;
-                _eventService = eventService;
+                _messageService = messageService;
             }
         // GET api/values
         [HttpGet]

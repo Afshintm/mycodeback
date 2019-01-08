@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 
 namespace Essence.Communication.BusinessServices
 {
-    public interface IEventService
+    public interface IMessageService
     {
-        Task<bool> ReceiveEvent(EventObjectStructure eventObjectStructure);
+        Task<bool> ReceiveMessage(EventObjectStructure eventObjectStructure);
     }
 
-    public class EventService : BaseBusinessServices<SuccessResponse>, IEventService
+    public class MessageService : BaseBusinessServices<SuccessResponse>, IMessageService
     {
         private readonly IConfiguration _configuration;
         private readonly IAuthenticationService _authenticationService;
         private readonly IEventBus _eventBus;
 
 
-        public EventService(
+        public MessageService(
             IHttpClientManager httpClientManager, 
             IConfiguration configuration, 
             IAuthenticationService authenticationService,
@@ -31,7 +31,7 @@ namespace Essence.Communication.BusinessServices
             _eventBus = eventBus;
         }
 
-        public async Task<bool> ReceiveEvent(EventObjectStructure eventObjectStructure)
+        public async Task<bool> ReceiveMessage(EventObjectStructure eventObjectStructure)
         {
             var @event = eventObjectStructure;
             var result = await _eventBus.PublishAsync(@event);
