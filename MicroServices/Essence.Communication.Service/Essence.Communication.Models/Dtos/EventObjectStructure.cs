@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.EventBus.Events;
+using Newtonsoft.Json.Linq;
 
 namespace Essence.Communication.Models.Dtos
 {
@@ -14,18 +15,18 @@ namespace Essence.Communication.Models.Dtos
         public int? ServiceProvider { get; set; }
         public int? ServiceType { get; set; }
         //Guid
-        public string Id { get; set; }
-        
+        public string Id { get; set; }      
     }
 
     public class Event
     {
         public int Code { get; set; }
         public int Severity { get; set; }
-        public BaseDetails Details { get; set; }
+        public JObject Details { get; set; }
 
         public bool? IsMobile { get; set; }
         public Location Location { get; set; }
+        public BaseDetails DetailsInstance { get; set; }
     }
 
     public class Location
