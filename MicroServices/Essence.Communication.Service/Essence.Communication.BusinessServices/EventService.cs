@@ -17,20 +17,20 @@ namespace Essence.Communication.BusinessServices
         private readonly IConfiguration _configuration;
         private readonly IAuthenticationService _authenticationService;
         private readonly IEventBus _eventBus;
-        private readonly IEventDetailCreater _eventDetailCreater;
+        private readonly IEventDetailsCreater _eventDetailsCreater;
 
         public EventService(
             IHttpClientManager httpClientManager, 
             IConfiguration configuration, 
             IAuthenticationService authenticationService,
             IEventBus eventBus,
-            IEventDetailCreater eventDetailCreater
+            IEventDetailsCreater eventDetailsCreater
             ) : base(httpClientManager, configuration)
         {
             _configuration = configuration;
             _authenticationService = authenticationService;
             _eventBus = eventBus;
-            _eventDetailCreater = eventDetailCreater;
+            _eventDetailsCreater = eventDetailsCreater;
         }
 
         public async Task<bool> ReceiveEvent(EventObjectStructure eventObjectStructure)
@@ -42,7 +42,7 @@ namespace Essence.Communication.BusinessServices
             } 
             
             var @event = eventObjectStructure.Event;
-            @event.DetailsInstance = _eventDetailCreater.Create(@event);           
+            @event.DetailsInstance = _eventDetailsCreater.Create(@event);           
             
 
             var result = await _eventBus.PublishAsync(eventObjectStructure);
