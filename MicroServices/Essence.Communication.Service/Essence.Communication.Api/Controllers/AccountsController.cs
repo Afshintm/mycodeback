@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Essence.Communication.BusinessServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Essence.Communication.Api.Controllers
@@ -11,6 +9,12 @@ namespace Essence.Communication.Api.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
+        private IAppSettingsConfigService _appSettingsConfig;
+        public AccountsController(IAppSettingsConfigService appSettingsConfig)
+        {
+            _appSettingsConfig = appSettingsConfig;
+        }
+
         // GET: api/Accounts
         [HttpGet]
         public IEnumerable<string> Get()
