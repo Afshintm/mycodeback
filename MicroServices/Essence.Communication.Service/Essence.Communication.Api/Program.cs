@@ -14,7 +14,9 @@ namespace Essence.Communication.Api
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var host = CreateWebHostBuilder(args).Build();
+            
+            host.Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
@@ -25,16 +27,6 @@ namespace Essence.Communication.Api
                     logging.AddConsole();
                 })
             ;
-
-        //public static IWebHost BuildWebHost(string[] args) =>
-        //    WebHost.CreateDefaultBuilder(args)
-        //        .UseStartup<Startup>()
-        //        .ConfigureLogging(logging =>
-        //        {
-        //            logging.ClearProviders();
-        //            logging.AddConsole();
-        //        })
-        //        .Build();
 
     }
 }

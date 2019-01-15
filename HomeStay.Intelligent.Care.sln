@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks.EventBus.Mes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity.Management.Service", "Identity.Management.Service", "{3F95D345-7987-469A-A267-E6A52F82D670}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essence.Communication.DataBaseServices", "MicroServices\Essence.Communication.Service\Essence.Communication.DataBaseServices\Essence.Communication.DataBaseServices.csproj", "{75D692DB-8B8F-4E51-95A1-FE7C5A4F0909}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{AC9573EB-131C-449C-B482-D580708FF7CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC9573EB-131C-449C-B482-D580708FF7CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC9573EB-131C-449C-B482-D580708FF7CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75D692DB-8B8F-4E51-95A1-FE7C5A4F0909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75D692DB-8B8F-4E51-95A1-FE7C5A4F0909}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75D692DB-8B8F-4E51-95A1-FE7C5A4F0909}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75D692DB-8B8F-4E51-95A1-FE7C5A4F0909}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{A0580361-18C8-42EE-A487-9EB5A878F92F} = {A80BB591-DC4E-4F5B-80B4-D1B9AE19BA62}
 		{AC9573EB-131C-449C-B482-D580708FF7CD} = {A80BB591-DC4E-4F5B-80B4-D1B9AE19BA62}
 		{3F95D345-7987-469A-A267-E6A52F82D670} = {7F77526F-1F0B-4728-A877-49D314A5B46A}
+		{75D692DB-8B8F-4E51-95A1-FE7C5A4F0909} = {E451E294-C0AA-41DB-A6CD-5CC29524F7CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {561D1396-35DE-49CA-829E-C5EFD1E4C528}

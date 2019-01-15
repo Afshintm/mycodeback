@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.EventBus.Interfaces;
+using Essence.Communication.DataBaseServices;
 using Essence.Communication.Models.Dtos; 
 using Microsoft.Extensions.Configuration;
 using Services.Utils;
@@ -18,19 +19,22 @@ namespace Essence.Communication.BusinessServices
         private readonly IAuthenticationService _authenticationService;
         private readonly IEventBus _eventBus;
         private readonly IEventDetailsCreater _eventDetailsCreater;
+        private readonly IEventRepository _reposotory;
 
         public EventService(
             IHttpClientManager httpClientManager, 
             IConfiguration configuration, 
             IAuthenticationService authenticationService,
             IEventBus eventBus,
-            IEventDetailsCreater eventDetailsCreater
+            IEventDetailsCreater eventDetailsCreater,
+            IEventRepository reposotory
             ) : base(httpClientManager, configuration)
         {
             _configuration = configuration;
             _authenticationService = authenticationService;
             _eventBus = eventBus;
             _eventDetailsCreater = eventDetailsCreater;
+            _reposotory = reposotory;
         }
 
         public async Task<bool> ReceiveEvent(EventObjectStructure eventObjectStructure)

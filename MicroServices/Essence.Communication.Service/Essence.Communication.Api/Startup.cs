@@ -14,42 +14,11 @@ using Essence.Communication.BusinessServices;
 using BuildingBlocks.EventBus.MessageQueue;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.EventBus.MessageQueue.Interfaces;
+using Essence.Communication.DataBaseServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace Essence.Communication.Api
 {
-    //public class Startup
-    //{
-    //    public Startup(IConfiguration configuration)
-    //    {
-    //        Configuration = configuration;
-    //    }
-
-    //    public IConfiguration Configuration { get; }
-
-    //    // This method gets called by the runtime. Use this method to add services to the container.
-    //    public void ConfigureServices(IServiceCollection services)
-    //    {
-    //        services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-    //    }
-
-    //    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    //    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-    //    {
-    //        if (env.IsDevelopment())
-    //        {
-    //            app.UseDeveloperExceptionPage();
-    //        }
-    //        else
-    //        {
-    //            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    //            app.UseHsts();
-    //        }
-
-    //        app.UseHttpsRedirection();
-    //        app.UseMvc();
-    //    }
-    //} 
-
     public class Startup
     {
         public Startup(IHostingEnvironment env)
@@ -72,6 +41,8 @@ namespace Essence.Communication.Api
         {
             // Add services to the collection.
             services.AddCors();
+            //set entityframework connection string
+            services.AddDbContext<EssenceDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("Essence")));
             services.AddMvc();
 
             var builder = AppContainerBuilder(services);
@@ -79,6 +50,8 @@ namespace Essence.Communication.Api
 
             this.ApplicationContainer = builder.Build();
 
+
+           
             // Create the IServiceProvider based on the container.
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
@@ -115,14 +88,11 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(UsersProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(EventRepository)).As(typeof(IEventRepository)).InstancePerLifetimeScope();
 
 
 
-
-            //builder.RegisterGeneric(typeof(CandidateJobScoreCalculatorServices<,>)).As(typeof(ICandidateJobScoreCalculatorServices<,>)).InstancePerLifetimeScope();
-
-            //builder.RegisterGeneric(typeof(CandidateSearchServices<,>)).As(typeof(ICandidateSearchServices<,>)).InstancePerLifetimeScope();
-            //builder.RegisterType<CandidateSearchCountDuplicateSkill>().AsSelf();
+  
 
             return builder;
         }
@@ -144,23 +114,7 @@ namespace Essence.Communication.Api
                 app.UseExceptionHandler("/error");
             }
 
-            //        if (env.IsDevelopment())
-            //        {
-            //            app.UseDeveloperExceptionPage();
-            //        }
-            //        else
-            //        {
-            //            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //            app.UseHsts();
-            //        }
 
-            //        app.UseHttpsRedirection();
-
-
-
-            //loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
-            //loggerFactory.AddDebug();
-            //app.UseCheckRequestMiddleware();
 
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseMvc();
