@@ -16,7 +16,6 @@ namespace Essence.Communication.BusinessServices
     public class EventDetailsCreater : IEventDetailsCreater
     {
         private readonly IEventCodeDetailsTypeMapper _eventCodeDetailTypeMapper;
-        private IDictionary<int, Type> _eventDetails;
 
         public EventDetailsCreater(IEventCodeDetailsTypeMapper eventCodeDetailTypeMapper)
         {

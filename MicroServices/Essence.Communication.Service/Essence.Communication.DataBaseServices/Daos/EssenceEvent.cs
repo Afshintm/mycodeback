@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Essence.Communication.DataBaseServices.Models
-{
+namespace Essence.Communication.DataBaseServices.Daos
+{ 
     public class EssenceEvent
     {
-        public int Id { get; set; }
-        public long? Account { get; set; }
+        public Guid EventId { get; set; }
+        public long Account { get; set; }
         //YYY-MM-DDTHH:mm:ss
         public string PanelTime { get; set; }
         //YYY-MM-DDTHH:mm:ss:sssZ
@@ -19,9 +20,8 @@ namespace Essence.Communication.DataBaseServices.Models
         public Guid? uid { get; set; }
 
         public int Code { get; set; }
-        public int Severity { get; set; }
-
-        [Column(TypeName = "nvarchar(1000)")]
+        public int? Severity { get; set; }
+        
         public string DetailsJson { get; set; }
 
         public bool? IsMobile { get; set; }
@@ -30,5 +30,6 @@ namespace Essence.Communication.DataBaseServices.Models
         public string Longitude { get; set; }
         public int? HorizontalAccuracy { get; set; }
 
+        public List<HCSEvent> HCSEvents { get; set; }
     }
 }

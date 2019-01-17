@@ -42,7 +42,7 @@ namespace Essence.Communication.Api
             // Add services to the collection.
             services.AddCors();
             //set entityframework connection string
-            services.AddDbContext<EssenceDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("Essence")));
+            services.AddDbContext<EventDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("Essence")));
             services.AddMvc();
 
             var builder = AppContainerBuilder(services);
