@@ -8,7 +8,6 @@ namespace Essence.Communication.DataBaseServices
     {
         public EventDbContext(DbContextOptions options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -16,42 +15,42 @@ namespace Essence.Communication.DataBaseServices
             base.OnModelCreating(modelBuilder);
 
             //Pk
-            modelBuilder.Entity<HCSEvent>()
+            modelBuilder.Entity<HSCEventDAO>()
                 .HasKey(h => h.Id)
                 .HasName("PK_HCSEvent_Id");
 
-            modelBuilder.Entity<EssenceEvent>()
+            modelBuilder.Entity<EssenceEventDAO>()
                 .HasKey(e => e.EventId)
                 .HasName("PK_EssenceEvent_Id");
 
             //Unique keys
-            modelBuilder.Entity<HCSEvent>()
+            modelBuilder.Entity<HSCEventDAO>()
                 .HasIndex(h => h.EventId)
                 .IsUnique()
                 .HasName("UQ_HCSEvent_EventId");
 
-            modelBuilder.Entity<EssenceEvent>()
+            modelBuilder.Entity<EssenceEventDAO>()
                 .HasKey(e => e.EventId)
                 .HasName("UQ_EssenceEvent_EventId");
 
             //Fk
-            modelBuilder.Entity<HCSEvent>()
+            modelBuilder.Entity<HSCEventDAO>()
                      .HasOne(h => h.OriginalEvent)
-                     .WithMany(o => o.HCSEvents)
+                     .WithMany(o => o.HSCEvents)
                      .HasForeignKey(h => h.OriginalEventId)
                      .HasConstraintName("FK_HCSEvent_EssenceEvent");
 
             //Default value
-            modelBuilder.Entity<HCSEvent>()
+            modelBuilder.Entity<HSCEventDAO>()
                 .Property(h => h.EventId)
                 .HasDefaultValue(Guid.NewGuid());
 
-            modelBuilder.Entity<EssenceEvent>()
+            modelBuilder.Entity<EssenceEventDAO>()
                 .Property(e => e.EventId)
                 .HasDefaultValue(Guid.NewGuid());   
         }
 
-        public DbSet<EssenceEvent> EssenceEvent { get; set; }
-        public DbSet<HCSEvent> HCSEvent { get; set; }
+        public DbSet<EssenceEventDAO> EssenceEvent { get; set; }
+        public DbSet<HSCEventDAO> HCSEvent { get; set; }
     }
 }

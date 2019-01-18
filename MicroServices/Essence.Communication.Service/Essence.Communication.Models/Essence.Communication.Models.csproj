@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Messaging\BuildingBlocks\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj" />
+    <ProjectReference Include="..\Essence.Communication.DataBaseServices\Essence.Communication.DataBaseServices.csproj" />
   </ItemGroup>
 
 </Project>

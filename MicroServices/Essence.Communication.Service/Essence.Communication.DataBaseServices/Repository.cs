@@ -11,6 +11,7 @@ namespace Essence.Communication.DataBaseServices
         IEnumerable<TEntity> GetAll();
         void Add(TEntity entity);
         void Remove(TEntity entity);
+        int Complete();
     }
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {

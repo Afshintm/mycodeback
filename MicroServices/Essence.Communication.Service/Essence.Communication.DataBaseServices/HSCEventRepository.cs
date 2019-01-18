@@ -6,13 +6,13 @@ using System.Text;
 
 namespace Essence.Communication.DataBaseServices
 {
-    public interface IEventRepository : IRepository<EssenceEvent>
+    public interface IHSCEventRepository : IRepository<HSCEventDAO>
     { 
        
     }
-    public class EventRepository : Repository<EssenceEvent>, IEventRepository
+    public class HSCEventRepository : Repository<HSCEventDAO>, IHSCEventRepository
     {
-        public EventRepository(EventDbContext context) : base(context)
+        public HSCEventRepository(EventDbContext context) : base(context)
         {
             
         }

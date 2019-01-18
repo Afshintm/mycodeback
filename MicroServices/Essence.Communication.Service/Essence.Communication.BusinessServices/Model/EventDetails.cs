@@ -1,14 +1,34 @@
 ﻿using BuildingBlocks.EventBus.Events;
 using System.Collections.Generic;
 
-namespace Essence.Communication.Models.Dtos
+namespace Essence.Communication.BusinessServices.Model
 {
-    //Evernt 2117,2152,2153,2201,2116,2003
-    public class ActivityDetails: BaseDetails
+    public abstract class BaseDetails
     {
-        public string Since { get; set; } 
-        public string Period { get; set; }
-        public int? Grade { get; set; }
+        public int? DeviceId { get; set; }
+        public int? DeviceType { get; set; }
+        public string DeviceDescription { get; set; }
+    }
+
+    public class Period
+    {
+        public bool Is24Hours { get; set; }
+        //HH:mm
+        public string PeriodStartTime { get; set; }
+        //HH:mm
+        public string PeriodEndTime { get; set; }
+    }
+
+    //Evernt 2003
+    public class UnexpectedActivityDetails: BaseDetails
+    {
+        public int Grade { get; set; }
+    }
+
+    //Evernt 2201
+    public class UnexpectedEntryExitDetails : BaseDetails
+    {
+        public Period Period { get; set; }
     }
 
     //Evernt  2103,2104
@@ -40,14 +60,6 @@ namespace Essence.Communication.Models.Dtos
         public string LastContactTime { get; set; }
     }
 
-    //Evernt 2101
-    public class DoorStatusDetails: BaseDetails
-    {
-        public int Activitytype { get; set; } //TODO: enum
-        public string DoorOpenDuration { get; set; }
-        public string DoorOpentime { get; set; }
-    }
-
     //Evernt 2001
     public class FallAlertDetails : BaseDetails
     {
@@ -58,9 +70,6 @@ namespace Essence.Communication.Models.Dtos
     //Evernt 3,156
     public class EmergencyPanicDetails: BaseDetails
     {
-        public int? RadioLevel { get; set; }
-        public int? Trigger { get; set; }
-        public int? ConflidenceLevel { get; set; }
     }
      
 

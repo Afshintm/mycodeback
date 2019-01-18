@@ -6,14 +6,15 @@ using System.Text;
 
 namespace Essence.Communication.DataBaseServices.Daos
 { 
-    public class HCSEvent
+    public class HSCEventDAO
     {
         public int Id { get; set; }
        
         public Guid EventId { get; set; } 
 
-        public Guid OriginalEventId { get; set; }
-        public EssenceEvent OriginalEvent { get; set; }
+        //nullable fk
+        public Guid? OriginalEventId { get; set; }
+        public EssenceEventDAO OriginalEvent { get; set; }
 
         public long Account { get; set; } 
         public string PanelTime { get; set; } 

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Essence.Communication.DataBaseServices.Daos
 { 
-    public class EssenceEvent
+    public class EssenceEventDAO
     {
         public Guid EventId { get; set; }
         public long Account { get; set; }
@@ -20,6 +20,7 @@ namespace Essence.Communication.DataBaseServices.Daos
         public Guid? uid { get; set; }
 
         public int Code { get; set; }
+        public string EventName { get; set; }
         public int? Severity { get; set; }
         
         public string DetailsJson { get; set; }
@@ -30,6 +31,6 @@ namespace Essence.Communication.DataBaseServices.Daos
         public string Longitude { get; set; }
         public int? HorizontalAccuracy { get; set; }
 
-        public List<HCSEvent> HCSEvents { get; set; }
+        public List<HSCEventDAO> HSCEvents { get; set; }
     }
 }

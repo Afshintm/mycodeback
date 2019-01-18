@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Essence.Communication.BusinessServices
+namespace Essence.Communication.Models.Dtos
 {
-    public interface IEventTypesManager
+    /// <summary>
+    /// mapping between provider event oode and provider event name
+    /// </summary>
+    public interface IProviderEventTypesManager
     {
         int this[string key] { get; }
     }
 
-    public class EventTypesManager : IEventTypesManager
+    public class EssenceEventTypesManager : IProviderEventTypesManager
     {
         private readonly Dictionary<string, int> _eventTypes = new Dictionary<string, int>();
-        public EventTypesManager()
+        public EssenceEventTypesManager()
         {
             _eventTypes.Add(EventTypes.EMERGENCY_PANIC_ALERM, 3);
             _eventTypes.Add(EventTypes.EMERGENCY_PANIC_ALERM_CANCELLED, 156);

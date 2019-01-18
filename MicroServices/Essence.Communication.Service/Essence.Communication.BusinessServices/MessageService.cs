@@ -9,7 +9,7 @@ namespace Essence.Communication.BusinessServices
 {
     public interface IMessageService
     {
-        Task<bool> ReceiveMessage(EventObjectStructure eventObjectStructure);
+        Task<bool> ReceiveMessage(EssenceEventObjectStructure eventObjectStructure);
     }
 
     public class MessageService : BaseBusinessServices<SuccessResponse>, IMessageService
@@ -31,7 +31,7 @@ namespace Essence.Communication.BusinessServices
             _eventBus = eventBus;
         }
 
-        public async Task<bool> ReceiveMessage(EventObjectStructure eventObjectStructure)
+        public async Task<bool> ReceiveMessage(EssenceEventObjectStructure eventObjectStructure)
         {
             var @event = eventObjectStructure;
             var result = await _eventBus.PublishAsync(@event);

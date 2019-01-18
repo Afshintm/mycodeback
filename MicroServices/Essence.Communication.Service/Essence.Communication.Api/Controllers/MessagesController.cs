@@ -32,7 +32,7 @@ namespace Essence.Communication.Api.Controllers
         // Post: api/Message
         [Route("PickMessage")]
         [HttpPost]
-        public async Task<bool> PickMessage(EventObjectStructure eventObjectStructure)
+        public async Task<bool> PickMessage(EssenceEventObjectStructure eventObjectStructure)
         {
             var result = await _messageService.ReceiveMessage(eventObjectStructure);
             return result;
