@@ -1,6 +1,8 @@
 ﻿using BuildingBlocks.EventBus.Interfaces;
 using Essence.Communication.BusinessServices.Model;
+using Essence.Communication.DataBaseServices.Daos;
 using Essence.Communication.Models.Dtos;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using HCSLocation = Essence.Communication.BusinessServices.Model.Location;
@@ -40,7 +42,6 @@ namespace Essence.Communication.BusinessServices
                 Code = eventStructure.Code,
                 Severity = eventStructure.Severity,
                 Details = detailsInstance,
-                DetailsType = detailType,
                 PanelTime = eventStructure.PanelTime,
                 ServiceProvider = eventStructure.ServiceProvider,
                 ServiceType = eventStructure.ServiceType,
@@ -51,7 +52,7 @@ namespace Essence.Communication.BusinessServices
                             {
                                 Latitude = eventStructure.Location.Latitude,
                                 Longitude = eventStructure.Location.Longitude,
-                                HorizontalAccuracy = eventStructure.Location.Longitude
+                                HorizontalAccuracy = eventStructure.Location.HorizontalAccuracy
                             }
             };
         }

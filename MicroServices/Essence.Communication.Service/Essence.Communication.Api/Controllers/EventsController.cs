@@ -23,10 +23,11 @@ namespace Essence.Communication.Api.Controllers
         }
    
         [HttpGet]
-        public async Task<bool> ReceiveEvents()
+        public async Task<IActionResult> GetByGuid(string guid)
         {
-            var result = await Task.Run(()=> true);
-            return result;
+            var result = await  _eventService.GetHSCEvent(guid);
+            return Ok(result);
+            
         }
 
         // Post: api/Message

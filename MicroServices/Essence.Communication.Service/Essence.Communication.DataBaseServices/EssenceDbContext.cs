@@ -51,6 +51,6 @@ namespace Essence.Communication.DataBaseServices
         }
 
         public DbSet<EssenceEventDAO> EssenceEvent { get; set; }
-        public DbSet<HSCEventDAO> HCSEvent { get; set; }
+        public DbSet<HSCEventDAO> HSCEvent { get; set; }
     }
 }

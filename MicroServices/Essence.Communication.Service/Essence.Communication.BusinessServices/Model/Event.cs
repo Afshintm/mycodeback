@@ -7,7 +7,8 @@ namespace Essence.Communication.BusinessServices.Model
     //Event Inheritance for HomeStay Care
     public class  HSCEvent  
     {
-        public Guid id { get; set; }
+        public Guid guid { get; set; }
+        public Guid EventId { get; set; }
         public int Account { get; set; }
         public int Code { get; set; }
         public int Severity { get; set; }
@@ -29,9 +30,9 @@ namespace Essence.Communication.BusinessServices.Model
 
     public class Location
     {
-        public long Latitude { get; set; }
-        public long Longitude { get; set; }
-        public long HorizontalAccuracy { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+        public int HorizontalAccuracy { get; set; }
     }
 
 }

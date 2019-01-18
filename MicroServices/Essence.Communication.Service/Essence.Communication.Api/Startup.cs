@@ -77,6 +77,7 @@ namespace Essence.Communication.Api
             builder.RegisterType<HttpClientManager>().As<IHttpClientManager>().SingleInstance();
             builder.RegisterType(typeof(AppSettingsConfigService)).As(typeof(IAppSettingsConfigService)).SingleInstance();
             builder.RegisterType(typeof(EssenceEventTypesManager)).As(typeof(IProviderEventTypesManager)).SingleInstance();
+            builder.RegisterType(typeof(ModelMapper)).As(typeof(IModelMapper)).SingleInstance();
             builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(AuthenticationService)).As(typeof(IAuthenticationService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(ReportingService)).As(typeof(IReportingService)).InstancePerLifetimeScope();

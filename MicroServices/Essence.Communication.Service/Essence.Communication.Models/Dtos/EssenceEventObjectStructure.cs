@@ -20,38 +20,12 @@ namespace Essence.Communication.Models.Dtos
         public int? ServiceType { get; set; }
         //Guid
         public string Id { get; set; }
-
-        public static EssenceEventDAO CreateEntity(EssenceEventObjectStructure essenceEvent)
-        {
-            //todo: automapper
-            return new EssenceEventDAO();
-        }
-
-        public static ProviderEventStructure CreateStructure(EssenceEventObjectStructure essenceEvent)
-        {
-            if (essenceEvent.Event == null)
-                return null;
-
-            return new ProviderEventStructure
-            {
-                Account = essenceEvent.Account,
-                Code = essenceEvent.Event.Code,
-                Severity = essenceEvent.Event.Severity,
-                Details = essenceEvent.Event.Details,
-                PanelTime = essenceEvent.PanelTime,
-                ServiceProvider = essenceEvent.ServiceProvider,
-                ServiceType = essenceEvent.ServiceType,
-                ServerTime = essenceEvent.ServerTime,
-                Location = essenceEvent.Event.Location
-            };
-        }
     }
 
     public class EssenceEventObject
     {
         public int Code { get; set; }
         public int Severity { get; set; }
-
         public JObject Details { get; set; }
 
         public bool? IsMobile { get; set; }
@@ -60,8 +34,8 @@ namespace Essence.Communication.Models.Dtos
 
     public class Location
     {
-        public long Latitude { get; set; }
-        public long Longitude { get; set; }
-        public long HorizontalAccuracy { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+        public int HorizontalAccuracy { get; set; }
     }
 }
