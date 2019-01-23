@@ -23,9 +23,9 @@ namespace Essence.Communication.Api.Controllers
         }
    
         [HttpGet]
-        public async Task<IActionResult> GetByGuid(string guid)
+        public async Task<IActionResult> GetByGuid(string id)
         {
-            var result = await  _eventService.GetHSCEvent(guid);
+            var result = await  _eventService.GetEvent(id);
             return Ok(result);
             
         }
@@ -35,7 +35,7 @@ namespace Essence.Communication.Api.Controllers
         [HttpPost]
         public async Task<bool> PickEvent([FromBody]EssenceEventObjectStructure eventObjectStructure)
         {
-            var result = await _eventService.ReceiveEssenceEvent(eventObjectStructure);
+            var result = await _eventService.ReceiveVendorEvent(eventObjectStructure);
             return result;
         }     
     }

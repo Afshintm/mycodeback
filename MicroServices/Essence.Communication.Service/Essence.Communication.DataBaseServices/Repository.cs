@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Essence.Communication.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,7 @@ namespace Essence.Communication.DataBaseServices
         void Remove(TEntity entity);
         int Complete();
     }
+
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly DbContext _context;
@@ -39,7 +41,7 @@ namespace Essence.Communication.DataBaseServices
 
         public void Remove(TEntity entity)
         {
-            throw new NotImplementedException();
+        
         }
 
         public int Complete()

@@ -33,13 +33,8 @@ namespace Essence.Communication.BusinessServices
 
         public async Task<bool> ReceiveMessage(EssenceEventObjectStructure eventObjectStructure)
         {
-            var @event = eventObjectStructure;
-            var result = await _eventBus.PublishAsync(@event);
-
-            var MessageId = result.MessageId;
-            if (!string.IsNullOrEmpty(MessageId))
-                return true;
-            return false;
+ 
+                return true; 
         }
 
         public override void SetApiEndpointAddress()

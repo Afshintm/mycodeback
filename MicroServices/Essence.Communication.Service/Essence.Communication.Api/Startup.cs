@@ -90,8 +90,6 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(UsersProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(EssenceEventRepository)).As(typeof(IEssenceEventRepository)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(HSCEventRepository)).As(typeof(IHSCEventRepository)).InstancePerLifetimeScope();
             return builder;
         }
         

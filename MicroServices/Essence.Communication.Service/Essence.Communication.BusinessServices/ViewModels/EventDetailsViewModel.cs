@@ -1,24 +1,16 @@
 ﻿using BuildingBlocks.EventBus.Events;
+using Essence.Communication.Models.ValueObjects;
 using System.Collections.Generic;
 
 namespace Essence.Communication.BusinessServices.Model
 {
+    // the view model of details is same as model at the stage
     public abstract class BaseDetails
     {
         public int? DeviceId { get; set; }
         public int? DeviceType { get; set; }
         public string DeviceDescription { get; set; }
     }
-
-    public class Period
-    {
-        public bool Is24Hours { get; set; }
-        //HH:mm
-        public string PeriodStartTime { get; set; }
-        //HH:mm
-        public string PeriodEndTime { get; set; }
-    }
-
     //Evernt 2003
     public class UnexpectedActivityDetails: BaseDetails
     {
@@ -70,6 +62,7 @@ namespace Essence.Communication.BusinessServices.Model
     //Evernt 3,156
     public class EmergencyPanicDetails: BaseDetails
     {
+
     }
      
 

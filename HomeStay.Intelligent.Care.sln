@@ -39,9 +39,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks.EventBus.Mes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity.Management.Service", "Identity.Management.Service", "{3F95D345-7987-469A-A267-E6A52F82D670}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Essence.Communication.DataBaseServices", "MicroServices\Essence.Communication.Service\Essence.Communication.DataBaseServices\Essence.Communication.DataBaseServices.csproj", "{75D692DB-8B8F-4E51-95A1-FE7C5A4F0909}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Essence.Communication.DataAccessLayer", "MicroServices\Essence.Communication.Service\Essence.Communication.DataBaseServices\Essence.Communication.DataAccessLayer.csproj", "{75D692DB-8B8F-4E51-95A1-FE7C5A4F0909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essence.Communication.DataBase.Migrations", "Essence.Communication.DataBase.Migrations\Essence.Communication.DataBase.Migrations.csproj", "{4CB9E8AE-E518-4518-AC09-251358DDC12A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Essence.Communication.DataBase.Migrations", "Essence.Communication.DataBase.Migrations\Essence.Communication.DataBase.Migrations.csproj", "{4CB9E8AE-E518-4518-AC09-251358DDC12A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
