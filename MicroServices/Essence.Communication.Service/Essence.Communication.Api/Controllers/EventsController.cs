@@ -24,9 +24,9 @@ namespace Essence.Communication.Api.Controllers
    
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetByGuid(string id)
+        public IActionResult GetById(string id)
         {
-            var result = await  _eventService.GetEvent(id);
+            var result =  _eventService.GetEvent(id);
             return Ok(result);
             
         }

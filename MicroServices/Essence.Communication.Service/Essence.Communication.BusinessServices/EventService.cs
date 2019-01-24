@@ -12,7 +12,7 @@ namespace Essence.Communication.BusinessServices
     public interface IEventService
     {
         Task<bool> ReceiveVendorEvent(EssenceEventObjectStructure eventObjectStructure);
-        Task<IEvent> GetEvent(string id);
+        IEvent GetEvent(string id);
     }
 
     public class EventService : BaseBusinessServices<SuccessResponse>, IEventService
@@ -41,9 +41,10 @@ namespace Essence.Communication.BusinessServices
             _appData = appData;
         }
 
-        public Task<IEvent> GetEvent(string id)
+        public IEvent GetEvent(string id)
         {
-            throw new NotImplementedException();
+            var result = _appData.GetEvent(id);
+            return result;
         }
 
         public async Task<bool> ReceiveVendorEvent(EssenceEventObjectStructure vendorEvent)

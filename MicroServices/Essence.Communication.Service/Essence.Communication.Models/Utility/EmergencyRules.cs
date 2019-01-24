@@ -12,8 +12,8 @@ namespace Essence.Communication.Models.Utility
     public class EmergencyRules  : IEventEmergencyRules
     {
         private readonly IVendorEventList _eventList;
-        private Dictionary<string, EmergencyCategory> _rules;
-        public EmergencyRules(VendorEventList eventList)
+        private Dictionary<string, EmergencyCategory> _rules = new Dictionary<string, EmergencyCategory>();
+        public EmergencyRules(IVendorEventList eventList)
         {
             _eventList = eventList;
             _rules.Add(_eventList[EventTypes.Essence_EMERGENCY_PANIC_ALERM], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });

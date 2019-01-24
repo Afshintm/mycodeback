@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Essence.Communication.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190124050920_InitialCreate")]
+    [Migration("20190124102153_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,13 +26,13 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue("0153292b-49a9-47c5-ba9d-554ea315dafa");
+                        .HasDefaultValue("4bbc48d2-6fe7-4a9e-851e-7da5882b76ed");
 
                     b.Property<int>("Account");
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 1, 24, 5, 9, 19, 929, DateTimeKind.Utc).AddTicks(7214));
+                        .HasDefaultValue(new DateTime(2019, 1, 24, 10, 21, 52, 922, DateTimeKind.Utc).AddTicks(1210));
 
                     b.Property<string>("PanelTime");
 
@@ -42,7 +42,7 @@ namespace Essence.Communication.DataAccessLayer.Migrations
 
                     b.Property<int?>("ServiceType");
 
-                    b.Property<string>("Vender")
+                    b.Property<string>("Vendor")
                         .IsRequired();
 
                     b.HasKey("Id")
@@ -55,7 +55,7 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue("220bf0b2-5584-4c92-94c0-8f6768cbcba3");
+                        .HasDefaultValue("dd480caa-1d0b-4b9f-8d78-66f06c492cc6");
 
                     b.Property<int>("Account");
 
@@ -63,7 +63,7 @@ namespace Essence.Communication.DataAccessLayer.Migrations
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 1, 24, 5, 9, 19, 897, DateTimeKind.Utc).AddTicks(7964));
+                        .HasDefaultValue(new DateTime(2019, 1, 24, 10, 21, 52, 885, DateTimeKind.Utc).AddTicks(3521));
 
                     b.Property<string>("Discriminator")
                         .IsRequired();
@@ -80,10 +80,10 @@ namespace Essence.Communication.DataAccessLayer.Migrations
 
                     b.Property<int>("Severity");
 
-                    b.Property<string>("VenderType")
-                        .IsRequired();
-
                     b.Property<string>("VendorEventId");
+
+                    b.Property<string>("VendorType")
+                        .IsRequired();
 
                     b.HasKey("Id")
                         .HasName("PK_HCSEvent_Id");
@@ -178,7 +178,7 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                                     b2.Property<string>("EssenceEventObjectStructureId")
                                         .ValueGeneratedOnAdd();
 
-                                    b2.Property<int>("HorizontalAccuracy");
+                                    b2.Property<int?>("HorizontalAccuracy");
 
                                     b2.Property<string>("Latitude");
 
@@ -224,7 +224,7 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                             b1.Property<string>("EventBaseId")
                                 .ValueGeneratedOnAdd();
 
-                            b1.Property<int>("HorizontalAccuracy")
+                            b1.Property<int?>("HorizontalAccuracy")
                                 .HasColumnName("HorizontalAccuracy");
 
                             b1.Property<string>("Latitude")

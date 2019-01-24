@@ -15,9 +15,9 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 schema: "Application",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false, defaultValue: "0153292b-49a9-47c5-ba9d-554ea315dafa"),
-                    CreateDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 1, 24, 5, 9, 19, 929, DateTimeKind.Utc).AddTicks(7214)),
-                    Vender = table.Column<string>(nullable: false),
+                    Id = table.Column<string>(nullable: false, defaultValue: "4bbc48d2-6fe7-4a9e-851e-7da5882b76ed"),
+                    CreateDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 1, 24, 10, 21, 52, 922, DateTimeKind.Utc).AddTicks(1210)),
+                    Vendor = table.Column<string>(nullable: false),
                     Account = table.Column<int>(nullable: false),
                     Event_Code = table.Column<int>(nullable: false),
                     Event_Severity = table.Column<int>(nullable: false),
@@ -25,7 +25,7 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                     Event_IsMobile = table.Column<bool>(nullable: true),
                     Event_Location_Latitude = table.Column<string>(nullable: true),
                     Event_Location_Longitude = table.Column<string>(nullable: true),
-                    Event_Location_HorizontalAccuracy = table.Column<int>(nullable: false),
+                    Event_Location_HorizontalAccuracy = table.Column<int>(nullable: true),
                     PanelTime = table.Column<string>(nullable: true),
                     ServerTime = table.Column<string>(nullable: true),
                     ServiceProvider = table.Column<int>(nullable: true),
@@ -41,8 +41,8 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 schema: "Application",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false, defaultValue: "220bf0b2-5584-4c92-94c0-8f6768cbcba3"),
-                    CreateDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 1, 24, 5, 9, 19, 897, DateTimeKind.Utc).AddTicks(7964)),
+                    Id = table.Column<string>(nullable: false, defaultValue: "dd480caa-1d0b-4b9f-8d78-66f06c492cc6"),
+                    CreateDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 1, 24, 10, 21, 52, 885, DateTimeKind.Utc).AddTicks(3521)),
                     Account = table.Column<int>(nullable: false),
                     Code = table.Column<int>(nullable: false),
                     Severity = table.Column<int>(nullable: false),
@@ -53,8 +53,8 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                     IsMobile = table.Column<bool>(nullable: true),
                     Latitude = table.Column<string>(nullable: true),
                     Longitude = table.Column<string>(nullable: true),
-                    HorizontalAccuracy = table.Column<int>(nullable: false),
-                    VenderType = table.Column<string>(nullable: false),
+                    HorizontalAccuracy = table.Column<int>(nullable: true),
+                    VendorType = table.Column<string>(nullable: false),
                     VendorEventId = table.Column<string>(nullable: true),
                     EmergencyLevel = table.Column<int>(nullable: false),
                     EmergencyDescriptoin = table.Column<string>(nullable: true),

@@ -79,6 +79,7 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(AppSettingsConfigService)).As(typeof(IAppSettingsConfigService)).SingleInstance();
             builder.RegisterType(typeof(VendorEventCodeDetailsMapper)).As(typeof(IVendorEventCodeDetailsMapper)).SingleInstance();
             builder.RegisterType(typeof(VendorEventList)).As(typeof(IVendorEventList)).SingleInstance();
+            builder.RegisterType(typeof(EmergencyRules)).As(typeof(IEventEmergencyRules)).SingleInstance();
 
             builder.RegisterType(typeof(ModelMapper)).As(typeof(IModelMapper)).SingleInstance();
             builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
@@ -87,7 +88,6 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(UserService)).As(typeof(IAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MessageService)).As(typeof(IMessageService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventService)).As(typeof(IEventService)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(IEventEmergencyRules)).As(typeof(IEventEmergencyRules)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventCreater)).As(typeof(IEventCreater)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(UserAccountService)).As(typeof(IUserAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(UsersProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();
@@ -96,7 +96,7 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(DbContext)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(ApplicationData)).As(typeof(ApplicationData)).InstancePerDependency();
-
+           
             builder.RegisterType(typeof(Repository<>)).As(typeof(Repository<>)).InstancePerDependency();
             
             return builder;

@@ -28,10 +28,30 @@ namespace Essence.Communication.Models.Dtos
 
     public class EssenceEventObject
     {
+        private Location location;
+        public EssenceEventObject()
+        {
+            //ef core 2.0 not support null value object
+            location = new Location();
+        }
         public int Code { get; set; }
         public int Severity { get; set; }
         public JObject Details { get; set; }
         public bool? IsMobile { get; set; }
-        public Location Location { get; set; }
+        public Location Location
+        {
+            get
+            {
+                return location;
+            }
+            set
+            {
+                //ef core 2.0 not support null value object
+                if (value != default(Location))
+                {
+                    location = value;
+                }
+            }
+        }
     }
 }

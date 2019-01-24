@@ -50,7 +50,7 @@ namespace Essence.Communication.Models.Utility
         {
             if (!_eventDetaislTypes.Keys.Contains(code))
             {
-                throw new NotSupportedException();
+                return null;
             }
 
             return _eventDetaislTypes[code];

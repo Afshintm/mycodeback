@@ -3,7 +3,9 @@ using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.Enums; 
 using Essence.Communication.Models.Extensions;
 using Essence.Communication.Models.Utility;
+using Essence.Communication.Models.ValueObjects;
 using System;
+using System.Linq;
 
 namespace Essence.Communication.BusinessServices
 {
@@ -17,12 +19,15 @@ namespace Essence.Communication.BusinessServices
     /// </summary>
     public class EventCreater : IEventCreater
     {
+        private const string Details_Property = "Details";
         private readonly IVendorEventCodeDetailsMapper _eventCodeDetailTypeMapper;
         private readonly IEventEmergencyRules _eventMergencyRules;
 
-        public EventCreater(IVendorEventCodeDetailsMapper eventCodeDetailTypeMapper)
+        public EventCreater(IVendorEventCodeDetailsMapper eventCodeDetailTypeMapper, 
+                    IEventEmergencyRules eventMergencyRules)
         {
             _eventCodeDetailTypeMapper = eventCodeDetailTypeMapper;
+            _eventMergencyRules = eventMergencyRules;
         }
 
         public EventBase Create(IVendorEvent eventStructure)
@@ -37,27 +42,43 @@ namespace Essence.Communication.BusinessServices
             {
                 var vendorEvent = eventStructure as EssenceEventObjectStructure;
                 if (vendorEvent?.Event == null)
-                    return null;
-            
+                    return null;          
                 
-                var detailsType = _eventCodeDetailTypeMapper.GetDetailType(vendorEvent.GetVendorEventCode(vendorEvent.Event.Code.ToString()));             
-                var detailsInstance = vendorEvent.Event.Details.ToObject(detailsType);
-                var eventInstance = GetEventWithDetailsType(detailsType) as EventBase;
-                eventInstance.EmergencyCategory = _eventMergencyRules[vendorEvent.GetVendorEventCode(vendorEvent.Event.Code.ToString())];
-                eventInstance.VendorEventId = vendorEvent.Id;
-                eventInstance.VendorType = vendorEvent.Vendor;
-                //TODO mapping vender event to event, check if eventinstance is null
-
-                return eventInstance;
+                var detailsType = _eventCodeDetailTypeMapper.GetDetailType(vendorEvent.GetVendorEventCode(vendorEvent.Event.Code.ToString()));     
+                if (detailsType == null)
+                {
+                    throw new NotImplementedException();
+                }
+                var detailsObj = vendorEvent.Event.Details.ToObject(detailsType) as IDetails;
+                var eventObj = GetEventWithDetailsType(detailsType);
+                if (eventObj == null)
+                    return null;
+                SetDetails(eventObj, detailsObj);
+                eventObj.EmergencyCategory = _eventMergencyRules[vendorEvent.GetVendorEventCode(vendorEvent.Event.Code.ToString())];
+                eventObj.VendorEventId = vendorEvent.Id;
+                eventObj.VendorType = vendorEvent.Vendor;
+             
+                return eventObj;
                   
             }
             return null;
         }
 
-        private IEvent GetEventWithDetailsType(Type detailsType)
+        private EventBase GetEventWithDetailsType(Type detailsType)
         {
             var eventType = typeof(Event<>).MakeGenericType(detailsType);
-            return Activator.CreateInstance(eventType) as IEvent;
+            return Activator.CreateInstance(eventType) as EventBase;
+        }
+
+        private void SetDetails (EventBase eventObj, IDetails detailsObj)
+        {
+            var propertyInfo = eventObj.GetType().GetProperties().FirstOrDefault(a => a.Name == Details_Property);
+            if (propertyInfo == null)
+            {
+                throw new NotImplementedException("Not support event without details property");
+            }
+
+            propertyInfo.SetValue(eventObj, detailsObj);
         }
     }
 }
