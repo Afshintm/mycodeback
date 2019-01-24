@@ -1,4 +1,5 @@
-﻿using Essence.Communication.Models.ValueObjects;
+﻿using Essence.Communication.Models.Enums;
+using Essence.Communication.Models.ValueObjects;
 
 namespace Essence.Communication.Models
 {
@@ -18,8 +19,9 @@ namespace Essence.Communication.Models
         public bool? IsMobile { get; set; }
         public Location Location { get; set; }
 
-        public string VendorEventId { get; set; }
-        public IVendorEvent VendorEvent { get; set; } 
+        //we do not set vender event as refernce for HSC event
+        public Vendor VenderType { get; set; }
+        public string VendorEventId { get; set; } 
     }
 
     public class Event<T> : EventBase where T : IDetails

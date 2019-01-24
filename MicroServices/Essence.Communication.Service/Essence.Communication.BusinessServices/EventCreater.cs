@@ -28,13 +28,13 @@ namespace Essence.Communication.BusinessServices
 
         public IEvent Create(IVendorEvent eventStructure)
         {
-            if (eventStructure.vender != Vendor.Essence)
+            if (eventStructure.Vender != Vendor.Essence)
             {
-                throw new NotSupportedException($"Vendor {eventStructure.vender.ToString()} is not supported.");
+                throw new NotSupportedException($"Vendor {eventStructure.Vender.ToString()} is not supported.");
             }
 
             //TODO vendor event factory, check if supproted
-            if (eventStructure.vender == Vendor.Essence)
+            if (eventStructure.Vender == Vendor.Essence)
             {
                 var vendorEvent = eventStructure as EssenceEventObjectStructure;
                 if (vendorEvent?.Event == null)

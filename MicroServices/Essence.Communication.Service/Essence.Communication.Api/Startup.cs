@@ -14,7 +14,7 @@ using Essence.Communication.BusinessServices;
 using BuildingBlocks.EventBus.MessageQueue;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.EventBus.MessageQueue.Interfaces;
-using Essence.Communication.DataBaseServices;
+using Essence.Communication.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Essence.Communication.Models.Dtos;
 
@@ -43,7 +43,7 @@ namespace Essence.Communication.Api
             // Add services to the collection.
             services.AddCors();
             //set entityframework connection string
-            services.AddDbContext<EventDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("Essence")));
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("Applicaiton")));
             services.AddMvc();
 
             var builder = AppContainerBuilder(services);
@@ -90,6 +90,8 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(UsersProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(DbContext)).InstancePerLifetimeScope();
             return builder;
         }
         

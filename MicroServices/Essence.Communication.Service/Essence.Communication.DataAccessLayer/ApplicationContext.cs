@@ -5,15 +5,16 @@ using Essence.Communication.Models.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Essence.Communication.DataBaseServices
+namespace Essence.Communication.DataAccessLayer
 {
-    public class EventDbContext: DbContext
+    public class ApplicationDbContext: DbContext
     {
-        public EventDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
 
         public DbSet<EssenceEventObjectStructure> EssenceEvent { get; set; }
+
         //Event hierarchy
         public DbSet<EventBase> Event { get; set; }
         public DbSet<Event<UnexpectedActivityDetails>> UnexpectedActivityEvent { get; set; }

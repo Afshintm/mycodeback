@@ -1,10 +1,7 @@
-﻿using Essence.Communication.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿ using Microsoft.EntityFrameworkCore; 
+using System.Collections.Generic; 
 
-namespace Essence.Communication.DataBaseServices
+namespace Essence.Communication.DataAccessLayer
 {
     public interface IRepository<TEntity> where TEntity : class
     {

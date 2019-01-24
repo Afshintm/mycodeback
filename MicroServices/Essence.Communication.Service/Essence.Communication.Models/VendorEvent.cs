@@ -6,13 +6,11 @@ namespace Essence.Communication.Models
 { 
     public interface IVendorEvent
     {
-        Vendor vender { get; set; }
-        List<EventBase> HSCEvents { get; set; }
+        Vendor Vender { get; set; }
     }
 
     public abstract class VendorEvent: Entity, IVendorEvent
     {
-        public Vendor vender { get; set; }
-        public List<EventBase> HSCEvents { get; set; }
+        public Vendor Vender { get; set; }
     }
 }
