@@ -14,6 +14,10 @@ namespace Essence.Communication.DataAccessLayer
         private DbContext _context;
         public ApplicationData(DbContext context)
         {
+            //TODO: regiest repostory
+            venderEventRepository = new Repository<EssenceEventObjectStructure>(context);
+            eventRepository = new Repository<EventBase>(context);
+
             _context = context;
         }
 

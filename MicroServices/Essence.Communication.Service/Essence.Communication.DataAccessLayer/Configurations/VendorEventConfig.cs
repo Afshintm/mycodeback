@@ -40,7 +40,8 @@ namespace Essence.Communication.DataAccessLayer.Configurations
             builder.Property(h => h.Vendor).HasConversion(vendorTypeConverter);
 
             //value object
-            builder.OwnsOne(e => e.Event).OwnsOne(a => a.Location);
+            builder.OwnsOne(e => e.Event);
+            builder.OwnsOne(e => e.Event).OwnsOne(b => b.Location);
             builder.OwnsOne(e => e.Event).Property(a => a.Code).IsRequired();
         }
     }

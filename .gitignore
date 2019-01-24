@@ -90,3 +90,4 @@ tmp
 .idea
 .DS_Store
 bower_components
+/MicroServices/Essence.Communication.Service/Essence.Communication.DataAccessLayer/new 5.txt

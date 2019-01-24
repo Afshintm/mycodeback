@@ -54,14 +54,21 @@ namespace Essence.Communication.BusinessServices
                 return false;
             }
 
-            //save essenceEvent 
-            _appData.AddVendorEvent(vendorEvent);
+            try
+            {
+                //save essenceEvent 
+                _appData.AddVendorEvent(vendorEvent);
 
-            //cast essenceEvent details into hcsEvent 
-            var hscEvent = _eventCreater.Create(vendorEvent);
-            _appData.AddNewEvent(hscEvent);
+                //cast essenceEvent details into hcsEvent 
+                var hscEvent = _eventCreater.Create(vendorEvent);
+                _appData.AddNewEvent(hscEvent);
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public override void SetApiEndpointAddress()
