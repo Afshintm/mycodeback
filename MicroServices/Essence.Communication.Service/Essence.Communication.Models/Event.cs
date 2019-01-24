@@ -20,7 +20,7 @@ namespace Essence.Communication.Models
         public Location Location { get; set; }
 
         //we do not set vender event as refernce for HSC event
-        public Vendor VenderType { get; set; }
+        public Vendor VendorType { get; set; }
         public string VendorEventId { get; set; } 
 
         //EmergencyCategory

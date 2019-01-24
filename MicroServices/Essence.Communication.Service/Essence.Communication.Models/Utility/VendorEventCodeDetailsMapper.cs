@@ -3,7 +3,7 @@ using Essence.Communication.Models.ValueObjects;
 using System;
 using System.Collections.Generic;
 
-namespace Essence.Communication.BusinessServices
+namespace Essence.Communication.Models.Utility
 {
     /// <summary>
     /// provide the mapping between event code and the concreate detail type

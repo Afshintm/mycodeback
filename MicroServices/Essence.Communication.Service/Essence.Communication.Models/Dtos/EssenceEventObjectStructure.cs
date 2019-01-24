@@ -13,7 +13,7 @@ namespace Essence.Communication.Models.Dtos
     {
         public EssenceEventObjectStructure()
         {
-            this.Vender = Vendor.Essence;
+            this.Vendor = Vendor.Essence;
         }
         public int Account { get; set; }
         public EssenceEventObject Event { get; set; }

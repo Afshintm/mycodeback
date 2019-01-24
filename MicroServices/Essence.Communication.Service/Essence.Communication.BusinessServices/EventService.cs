@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.EventBus.Interfaces;
+using Essence.Communication.DataAccessLayer;
 using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos; 
 using Microsoft.Extensions.Configuration;
@@ -18,25 +19,26 @@ namespace Essence.Communication.BusinessServices
     {
         private readonly IConfiguration _configuration;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IEventBus _eventBus;
         private readonly IEventCreater _eventCreater;
-        private readonly IModelMapper _modelMapper; 
- 
+        private readonly IModelMapper _modelMapper;
+        private readonly ApplicationData _appData;
+
 
         public EventService(
             IHttpClientManager httpClientManager,
             IConfiguration configuration,
             IAuthenticationService authenticationService,
-            IEventBus eventBus,
-            IEventCreater eventCreater, 
-            IModelMapper mapper
+            IEventCreater eventCreater,
+            IModelMapper mapper,
+            ApplicationData appData
             ) : base(httpClientManager, configuration)
         {
             _configuration = configuration;
             _authenticationService = authenticationService;
-            _eventBus = eventBus;
             _eventCreater = eventCreater; 
             _modelMapper = mapper;
+
+            _appData = appData;
         }
 
         public Task<IEvent> GetEvent(string id)
@@ -44,32 +46,22 @@ namespace Essence.Communication.BusinessServices
             throw new NotImplementedException();
         }
 
-        public async Task<bool> ReceiveVendorEvent(EssenceEventObjectStructure eventObjectStructure)
+        public async Task<bool> ReceiveVendorEvent(EssenceEventObjectStructure vendorEvent)
         {
-            //TODO: return status ActionResult instead of boolean
-            if (eventObjectStructure?.Event == null)
+            //TODO: exception 
+            if (vendorEvent?.Event == null)
             {
                 return false;
             }
 
             //save essenceEvent 
+            _appData.AddVendorEvent(vendorEvent);
 
-            //var ecsEventEntity = _modelMapper.GetDAO(eventObjectStructure);
-            //_essenceReposotory.Add(ecsEventEntity);
-            //_essenceReposotory.Complete();
-            ////cast essenceEvent details into hcsEvent 
-            //var hscEvent = _eventCreater.Create(_modelMapper.GetEventStructure(eventObjectStructure)); 
-
-            ////cast essent eventObjectstructure to hcs event in event creater with guid of eccense event
-            //var eventEntity = HSCEvent.MapToDAO(hscEvent);
-            //eventEntity.OriginalEventId = ecsEventEntity.EventId;
-
-            ////save hcsEvent into DB 
-            //_hscReposotory.Add(eventEntity);
-            //_hscReposotory.Complete();
+            //cast essenceEvent details into hcsEvent 
+            var hscEvent = _eventCreater.Create(vendorEvent);
+            _appData.AddNewEvent(hscEvent);
 
             return true;
-            //return false;
         }
 
         public override void SetApiEndpointAddress()

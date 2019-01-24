@@ -5,14 +5,14 @@ namespace Essence.Communication.DataAccessLayer
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        TEntity Get(int id);
+        TEntity Get(string id);
         IEnumerable<TEntity> GetAll();
         void Add(TEntity entity);
         void Remove(TEntity entity);
         int Complete();
     }
 
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly DbContext _context;
 
@@ -26,7 +26,7 @@ namespace Essence.Communication.DataAccessLayer
             _context.Add(entity);
         }
 
-        public TEntity Get(int id)
+        public TEntity Get(string id)
         {
             return _context.Set<TEntity>().Find(id);
         }

@@ -24,7 +24,7 @@ namespace Essence.Communication.DataAccessLayer.Configurations
                 v => v.ToString(),
                 v => (Vendor)Enum.Parse(typeof(Vendor), v));
 
-            builder.Property(h => h.VenderType).HasConversion(vendorTypeConverter);
+            builder.Property(h => h.VendorType).HasConversion(vendorTypeConverter);
 
             builder.Property(h => h.CreateDate)
                 .HasDefaultValue(DateTime.UtcNow)

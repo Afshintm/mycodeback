@@ -17,6 +17,7 @@ using BuildingBlocks.EventBus.MessageQueue.Interfaces;
 using Essence.Communication.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Essence.Communication.Models.Dtos;
+using Essence.Communication.Models.Utility;
 
 namespace Essence.Communication.Api
 {
@@ -84,7 +85,7 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(UserService)).As(typeof(IAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MessageService)).As(typeof(IMessageService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventService)).As(typeof(IEventService)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(VendorEventCodeDetailsMapper)).As(typeof(IVendorEventCodeDetailsMapper)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(IEventEmergencyRules)).As(typeof(IEventEmergencyRules)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventCreater)).As(typeof(IEventCreater)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(UserAccountService)).As(typeof(IUserAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(UsersProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();

@@ -37,7 +37,7 @@ namespace Essence.Communication.DataAccessLayer.Configurations
                 v => v.ToString(),
                 v => (Vendor)Enum.Parse(typeof(Vendor), v));
 
-            builder.Property(h => h.Vender).HasConversion(vendorTypeConverter);
+            builder.Property(h => h.Vendor).HasConversion(vendorTypeConverter);
 
             //value object
             builder.OwnsOne(e => e.Event).OwnsOne(a => a.Location);

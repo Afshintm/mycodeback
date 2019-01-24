@@ -8,7 +8,7 @@ namespace Essence.Communication.Models.Extensions
     {
         public static string GetVendorEventCode( this VendorEvent vEvent, string code)
         {
-            return $"{vEvent.Vender.ToString()}_{code}";
+            return $"{vEvent.Vendor.ToString()}_{code}";
         }
     }
 
