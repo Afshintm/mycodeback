@@ -23,6 +23,7 @@ namespace Essence.Communication.Api.Controllers
         }
    
         [HttpGet]
+        [Route("{id}")]
         public async Task<IActionResult> GetByGuid(string id)
         {
             var result = await  _eventService.GetEvent(id);
@@ -31,7 +32,7 @@ namespace Essence.Communication.Api.Controllers
         }
 
         // Post: api/Message
-        [Route("PickEvent")]
+        [Route("~/event")]
         [HttpPost]
         public async Task<bool> PickEvent([FromBody]EssenceEventObjectStructure eventObjectStructure)
         {

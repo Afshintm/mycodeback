@@ -20,8 +20,7 @@ namespace Essence.Communication.BusinessServices
         private readonly IAuthenticationService _authenticationService;
         private readonly IEventBus _eventBus;
         private readonly IEventCreater _eventCreater;
-        private readonly IModelMapper _modelMapper;
-
+        private readonly IModelMapper _modelMapper; 
  
 
         public EventService(
@@ -53,7 +52,8 @@ namespace Essence.Communication.BusinessServices
                 return false;
             }
 
-            //save essenceEvent
+            //save essenceEvent 
+
             //var ecsEventEntity = _modelMapper.GetDAO(eventObjectStructure);
             //_essenceReposotory.Add(ecsEventEntity);
             //_essenceReposotory.Complete();

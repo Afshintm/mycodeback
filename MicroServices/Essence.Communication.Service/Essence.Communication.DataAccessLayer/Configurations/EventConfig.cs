@@ -30,7 +30,12 @@ namespace Essence.Communication.DataAccessLayer.Configurations
                 .HasDefaultValue(DateTime.UtcNow)
                 .IsRequired();
 
-            builder.OwnsOne(l => l.Location);
+            builder.OwnsOne(l => l.Location).Property(c => c.Latitude).HasColumnName("Latitude");
+            builder.OwnsOne(l => l.Location).Property(c => c.Longitude).HasColumnName("Longitude"); ;
+            builder.OwnsOne(l => l.Location).Property(c => c.HorizontalAccuracy).HasColumnName("HorizontalAccuracy"); ;
+
+            builder.OwnsOne(l => l.EmergencyCategory).Property(c => c.Level).HasColumnName("EmergencyLevel");
+            builder.OwnsOne(l => l.EmergencyCategory).Property(c => c.Description).HasColumnName("EmergencyDescriptoin");
         }
     } 
 }

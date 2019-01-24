@@ -22,6 +22,9 @@ namespace Essence.Communication.Models
         //we do not set vender event as refernce for HSC event
         public Vendor VenderType { get; set; }
         public string VendorEventId { get; set; } 
+
+        //EmergencyCategory
+        public EmergencyCategory EmergencyCategory { get; set; }
     }
 
     public class Event<T> : EventBase where T : IDetails

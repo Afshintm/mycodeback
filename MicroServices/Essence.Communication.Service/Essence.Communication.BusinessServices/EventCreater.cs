@@ -1,10 +1,7 @@
-﻿using BuildingBlocks.EventBus.Interfaces;
-using Essence.Communication.BusinessServices.Model;
-using Essence.Communication.Models;
+﻿using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos;
-using Essence.Communication.Models.Enums;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Essence.Communication.Models.Enums; 
+using Essence.Communication.Models.Extensions;
 using System;
 
 namespace Essence.Communication.BusinessServices
@@ -19,9 +16,9 @@ namespace Essence.Communication.BusinessServices
     /// </summary>
     public class EventCreater : IEventCreater
     {
-        private readonly IEventCodeDetailsTypeMapper _eventCodeDetailTypeMapper;
+        private readonly IVendorEventCodeDetailsMapper _eventCodeDetailTypeMapper;
 
-        public EventCreater(IEventCodeDetailsTypeMapper eventCodeDetailTypeMapper)
+        public EventCreater(IVendorEventCodeDetailsMapper eventCodeDetailTypeMapper)
         {
             _eventCodeDetailTypeMapper = eventCodeDetailTypeMapper;
         }
@@ -39,8 +36,9 @@ namespace Essence.Communication.BusinessServices
                 var vendorEvent = eventStructure as EssenceEventObjectStructure;
                 if (vendorEvent?.Event == null)
                     return null;
-
-                var detailsType = _eventCodeDetailTypeMapper.GetDetailType(vendorEvent.Event.Code);
+            
+                //need to conver to vendor code 
+                var detailsType = _eventCodeDetailTypeMapper.GetDetailType(vendorEvent.GetVendorEventCode(vendorEvent.Event.Code.ToString()));
                 
                 var detailsInstance = vendorEvent.Event.Details.ToObject(detailsType);
                 var eventInstance = GetEventWithDetailsType(detailsType);

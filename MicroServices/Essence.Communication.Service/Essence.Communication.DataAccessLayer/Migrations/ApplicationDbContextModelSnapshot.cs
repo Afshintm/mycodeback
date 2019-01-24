@@ -24,13 +24,13 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue("95f4e838-c3db-4859-9484-2860773d4c81");
+                        .HasDefaultValue("0153292b-49a9-47c5-ba9d-554ea315dafa");
 
                     b.Property<int>("Account");
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 1, 24, 0, 59, 51, 282, DateTimeKind.Utc).AddTicks(6700));
+                        .HasDefaultValue(new DateTime(2019, 1, 24, 5, 9, 19, 929, DateTimeKind.Utc).AddTicks(7214));
 
                     b.Property<string>("PanelTime");
 
@@ -53,7 +53,7 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue("ae159d69-deb2-4aa9-80b1-123afbc19398");
+                        .HasDefaultValue("220bf0b2-5584-4c92-94c0-8f6768cbcba3");
 
                     b.Property<int>("Account");
 
@@ -61,7 +61,7 @@ namespace Essence.Communication.DataAccessLayer.Migrations
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 1, 24, 0, 59, 51, 254, DateTimeKind.Utc).AddTicks(9858));
+                        .HasDefaultValue(new DateTime(2019, 1, 24, 5, 9, 19, 897, DateTimeKind.Utc).AddTicks(7964));
 
                     b.Property<string>("Discriminator")
                         .IsRequired();
@@ -196,16 +196,40 @@ namespace Essence.Communication.DataAccessLayer.Migrations
 
             modelBuilder.Entity("Essence.Communication.Models.EventBase", b =>
                 {
+                    b.OwnsOne("Essence.Communication.Models.ValueObjects.EmergencyCategory", "EmergencyCategory", b1 =>
+                        {
+                            b1.Property<string>("EventBaseId")
+                                .ValueGeneratedOnAdd();
+
+                            b1.Property<string>("Description")
+                                .HasColumnName("EmergencyDescriptoin");
+
+                            b1.Property<int>("Level")
+                                .HasColumnName("EmergencyLevel");
+
+                            b1.HasKey("EventBaseId");
+
+                            b1.ToTable("Event","Application");
+
+                            b1.HasOne("Essence.Communication.Models.EventBase")
+                                .WithOne("EmergencyCategory")
+                                .HasForeignKey("Essence.Communication.Models.ValueObjects.EmergencyCategory", "EventBaseId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
+
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.Location", "Location", b1 =>
                         {
                             b1.Property<string>("EventBaseId")
                                 .ValueGeneratedOnAdd();
 
-                            b1.Property<int>("HorizontalAccuracy");
+                            b1.Property<int>("HorizontalAccuracy")
+                                .HasColumnName("HorizontalAccuracy");
 
-                            b1.Property<string>("Latitude");
+                            b1.Property<string>("Latitude")
+                                .HasColumnName("Latitude");
 
-                            b1.Property<string>("Longitude");
+                            b1.Property<string>("Longitude")
+                                .HasColumnName("Longitude");
 
                             b1.HasKey("EventBaseId");
 

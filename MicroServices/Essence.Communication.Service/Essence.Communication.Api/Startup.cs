@@ -76,7 +76,7 @@ namespace Essence.Communication.Api
             builder.Populate(services);
             builder.RegisterType<HttpClientManager>().As<IHttpClientManager>().SingleInstance();
             builder.RegisterType(typeof(AppSettingsConfigService)).As(typeof(IAppSettingsConfigService)).SingleInstance();
-            builder.RegisterType(typeof(EssenceEventTypesManager)).As(typeof(IProviderEventTypesManager)).SingleInstance();
+            builder.RegisterType(typeof(VendorEventCodeDetailsMapper)).As(typeof(IVendorEventCodeDetailsMapper)).SingleInstance();
             builder.RegisterType(typeof(ModelMapper)).As(typeof(IModelMapper)).SingleInstance();
             builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(AuthenticationService)).As(typeof(IAuthenticationService)).InstancePerLifetimeScope();
@@ -84,7 +84,7 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(UserService)).As(typeof(IAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MessageService)).As(typeof(IMessageService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventService)).As(typeof(IEventService)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(EventCodeDetailsTypeMapper)).As(typeof(IEventCodeDetailsTypeMapper)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(VendorEventCodeDetailsMapper)).As(typeof(IVendorEventCodeDetailsMapper)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventCreater)).As(typeof(IEventCreater)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(UserAccountService)).As(typeof(IUserAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(UsersProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();
