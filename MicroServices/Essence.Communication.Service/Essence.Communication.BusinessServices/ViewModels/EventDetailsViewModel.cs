@@ -2,29 +2,34 @@
 using Essence.Communication.Models.ValueObjects;
 using System.Collections.Generic;
 
-namespace Essence.Communication.BusinessServices.Model
+namespace Essence.Communication.BusinessServices.ViewModel
 {
-    // the view model of details is same as model at the stage
-    public abstract class BaseDetails
+    public interface IDetailsViewModel
     {
-        public int? DeviceId { get; set; }
-        public int? DeviceType { get; set; }
+    }
+
+    public abstract class DeviceEventDetailsViewModel : IDetailsViewModel
+    {
+        public int DeviceId { get; set; }
+        public int DeviceType { get; set; }
         public string DeviceDescription { get; set; }
     }
-    //Evernt 2003
-    public class UnexpectedActivityDetails: BaseDetails
+    
+    public class UnexpectedActivityDetailsViewModel : DeviceEventDetailsViewModel
     {
-        public int Grade { get; set; }
+        public float Grade { get; set; }
     }
-
-    //Evernt 2201
-    public class UnexpectedEntryExitDetails : BaseDetails
+    
+    public class UnexpectedEntryExitDetailsViewModel : DeviceEventDetailsViewModel
     {
-        public Period Period { get; set; }
+        public bool Is24Hours { get; set; }
+        //HH:mm
+        public string PeriodStartTime { get; set; }
+        //HH:mm
+        public string PeriodEndTime { get; set; }
     }
-
-    //Evernt  2103,2104
-    public class StayHomeDetails : BaseDetails
+    
+    public class StayHomeDetailsViewModel : IDetailsViewModel
     {
         public string ExitTime { get; set; }
         public string PeriodStartTime { get; set; }
@@ -32,38 +37,32 @@ namespace Essence.Communication.BusinessServices.Model
         public string MaximumOutOfHomeDuration { get; set; }
         public string EntryTime { get; set; }
     }
-
-    //Evernt 201/202
-    public class PowerDetails: BaseDetails
+    
+    public class PowerDetailsViewModel : DeviceEventDetailsViewModel
     {
         public string PowerFailureDuration { get; set; }
         public string PowerRestoredDuration { get; set; }
     }
-
-    //Evernt 203,204,205,206
-    public class BatteryDetails : BaseDetails
+    
+    public class BatteryDetailsViewModel : DeviceEventDetailsViewModel
     {
-        public int BatteryLevel{ get; set; }
+        public int BatteryLevel { get; set; }
     }
-
-    //Evernt 705,706
-    public class PanelStatusDetails: BaseDetails
+    
+    public class PanelStatusDetailsViewModel : IDetailsViewModel
     {
         public string LastContactTime { get; set; }
     }
-
-    //Evernt 2001
-    public class FallAlertDetails : BaseDetails
+    
+    public class FallAlertDetailsViewModel : DeviceEventDetailsViewModel
     {
         public int Activitytype { get; set; } //TODO: enum
         public string DurationInRoom { get; set; }
     }
-
-    //Evernt 3,156
-    public class EmergencyPanicDetails: BaseDetails
+    
+    public class EmergencyPanicDetailsViewModel : DeviceEventDetailsViewModel
     {
-
     }
-     
+
 
 }

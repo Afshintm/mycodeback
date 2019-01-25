@@ -49,19 +49,36 @@ namespace Essence.Communication.BusinessServices
                 {
                     throw new NotImplementedException();
                 }
-                var detailsObj = vendorEvent.Event.Details.ToObject(detailsType) as IDetails;
+
+                var deatils = vendorEvent.Event.Details;
+                var detailsObj = (deatils == null ? Activator.CreateInstance(detailsType) : deatils.ToObject(detailsType)) as IDetails;
+
                 var eventObj = GetEventWithDetailsType(detailsType);
                 if (eventObj == null)
                     return null;
                 SetDetails(eventObj, detailsObj);
                 eventObj.EmergencyCategory = _eventMergencyRules[vendorEvent.GetVendorEventCode(vendorEvent.Event.Code.ToString())];
-                eventObj.VendorEventId = vendorEvent.Id;
-                eventObj.VendorType = vendorEvent.Vendor;
-             
+                MapTo(vendorEvent, eventObj);
+
                 return eventObj;
                   
             }
             return null;
+        }
+
+        private void MapTo(EssenceEventObjectStructure source, EventBase eventObj)
+        {
+            eventObj.Account = source.Account;
+            eventObj.HSCCode = source.GetVendorEventCode(source.Event.Code.ToString());
+            eventObj.Severity = source.Event.Severity;
+            eventObj.PanelTime = source.PanelTime;
+            eventObj.ServiceProvider = source.ServiceProvider;
+            eventObj.ServiceType = source.ServiceType;
+            eventObj.ServerTime = source.ServerTime;
+            eventObj.Location = source.Event.Location;
+            eventObj.VendorEventId = source.Id;
+            eventObj.VendorType = source.Vendor;
+
         }
 
         private EventBase GetEventWithDetailsType(Type detailsType)

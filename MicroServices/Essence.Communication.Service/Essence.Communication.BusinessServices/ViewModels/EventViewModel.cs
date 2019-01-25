@@ -1,26 +1,50 @@
-﻿using Essence.Communication.Models.ValueObjects;
+﻿using Essence.Communication.BusinessServices.ViewModel;
+using Essence.Communication.Models.ValueObjects;
 using System; 
 
-namespace Essence.Communication.BusinessServices.Model
+namespace Essence.Communication.BusinessServices.ViewModel
 {
-    //TODO: view model content is similar as model at the stage
-    public class  EventViewModel  
+    public abstract class  EventViewModel  
     {
-        public string Id { get; set; } 
-        public int Account { get; set; }
-        public int Code { get; set; }
-        public int Severity { get; set; } 
-        public string PanelTime { get; set; }
-        public int? ServiceProvider { get; set; }
-        public int? ServiceType { get; set; }
-        public string ServerTime { get; set; }
-        public bool? IsMobile { get; set; }
-        public Location Location { get; set; }   
-        
+        public string HSCCode { get; set; }
+        public string CreateTime { get; set; }  
+        public int Level { get; set; }
+        public string EmergencyDescription { get; set; }
     }
 
-    
+    public class UnexpectedActivityEventViewModel : EventViewModel
+    {
+       public UnexpectedActivityDetailsViewModel Details { get; set; }
+    }
 
-     
+    public class UnexpectedEntryExitEventViewModel : EventViewModel
+    {
+        public UnexpectedEntryExitDetailsViewModel Details { get; set; }
+    }
 
+    public class StayHomeEventViewModel : EventViewModel
+    {
+        public StayHomeDetailsViewModel Details { get; set; }
+    }
+    public class PowerEventViewModel : EventViewModel
+    {
+        public PowerDetailsViewModel Details { get; set; }
+    }
+    public class BatteryEventViewModel : EventViewModel
+    {
+        public BatteryDetailsViewModel Details { get; set; }
+    }
+    public class PanelStatusEventViewModel : EventViewModel
+    {
+        public PanelStatusDetailsViewModel Details { get; set; }
+    }
+    public class FallAlertEventViewModel : EventViewModel
+    {
+        public FallAlertDetailsViewModel Details { get; set; }
+    }
+
+    public class EmergencyPanicEventViewModel : EventViewModel
+    {
+        public EmergencyPanicDetailsViewModel Details { get; set; }
+    }
 }

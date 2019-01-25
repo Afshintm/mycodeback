@@ -26,7 +26,14 @@ namespace Essence.Communication.Api.Controllers
         [Route("{id}")]
         public IActionResult GetById(string id)
         {
+            //TODO: check author
+
             var result =  _eventService.GetEvent(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
             
         }
@@ -34,10 +41,12 @@ namespace Essence.Communication.Api.Controllers
         // Post: api/Message
         [Route("~/event")]
         [HttpPost]
-        public async Task<bool> PickEvent([FromBody]EssenceEventObjectStructure eventObjectStructure)
+        public async Task<IActionResult> PickEvent([FromBody]EssenceEventObjectStructure eventObjectStructure)
         {
             var result = await _eventService.ReceiveVendorEvent(eventObjectStructure);
-            return result;
+            if (result)
+                return Ok();
+            return BadRequest();
         }     
     }
 }

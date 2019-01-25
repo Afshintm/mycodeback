@@ -1,5 +1,4 @@
 ﻿using Essence.Communication.BusinessServices;
-using Essence.Communication.BusinessServices.Model;
 using Essence.Communication.Models.Dtos;
 using Moq;
 using Newtonsoft.Json;
@@ -8,7 +7,7 @@ using Xunit;
 
 namespace Essence.Communication.UnitTests
 {
-    public class StubDetails : BaseDetails
+    public class StubDetails 
     {
         public int MaximumThreshold { get; set; }
         public int ActualTemperature { get; set; }
