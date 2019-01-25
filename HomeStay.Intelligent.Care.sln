@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Essence.Communication.DataB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Essence.Communication.DataAccessLayer", "MicroServices\Essence.Communication.Service\Essence.Communication.DataAccessLayer\Essence.Communication.DataAccessLayer.csproj", "{7ED883F6-9141-435D-B1A2-BF131A05DC0E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Management.Api", "MicroServices\Identity.Management.Service\Identity.Management.Api\Identity.Management.Api.csproj", "{A4E5FF13-64C3-4B11-AB40-771AB62A4ED1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{7ED883F6-9141-435D-B1A2-BF131A05DC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ED883F6-9141-435D-B1A2-BF131A05DC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ED883F6-9141-435D-B1A2-BF131A05DC0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4E5FF13-64C3-4B11-AB40-771AB62A4ED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4E5FF13-64C3-4B11-AB40-771AB62A4ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4E5FF13-64C3-4B11-AB40-771AB62A4ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4E5FF13-64C3-4B11-AB40-771AB62A4ED1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +123,7 @@ Global
 		{3F95D345-7987-469A-A267-E6A52F82D670} = {7F77526F-1F0B-4728-A877-49D314A5B46A}
 		{4CB9E8AE-E518-4518-AC09-251358DDC12A} = {E451E294-C0AA-41DB-A6CD-5CC29524F7CD}
 		{7ED883F6-9141-435D-B1A2-BF131A05DC0E} = {E451E294-C0AA-41DB-A6CD-5CC29524F7CD}
+		{A4E5FF13-64C3-4B11-AB40-771AB62A4ED1} = {3F95D345-7987-469A-A267-E6A52F82D670}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {561D1396-35DE-49CA-829E-C5EFD1E4C528}
