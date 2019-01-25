@@ -19,6 +19,9 @@ namespace Essence.Communication.BusinessServices
     { 
         public EventViewModel MapToViewModel(IEvent eventObj)
         {
+            if (eventObj == null)
+                return null;
+
             var source = eventObj as EventBase;
             var eventType = eventObj.GetType();
 

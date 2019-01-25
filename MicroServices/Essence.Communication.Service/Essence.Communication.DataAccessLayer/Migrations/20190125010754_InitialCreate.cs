@@ -15,8 +15,8 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 schema: "Application",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false, defaultValue: "4bbc48d2-6fe7-4a9e-851e-7da5882b76ed"),
-                    CreateDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 1, 24, 10, 21, 52, 922, DateTimeKind.Utc).AddTicks(1210)),
+                    Id = table.Column<string>(nullable: false, defaultValue: "6be43ac7-f584-491f-bf05-bdd62567adfb"),
+                    CreateDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 1, 25, 1, 7, 53, 724, DateTimeKind.Utc).AddTicks(9400)),
                     Vendor = table.Column<string>(nullable: false),
                     Account = table.Column<int>(nullable: false),
                     Event_Code = table.Column<int>(nullable: false),
@@ -41,10 +41,9 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 schema: "Application",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false, defaultValue: "dd480caa-1d0b-4b9f-8d78-66f06c492cc6"),
-                    CreateDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 1, 24, 10, 21, 52, 885, DateTimeKind.Utc).AddTicks(3521)),
+                    Id = table.Column<string>(nullable: false, defaultValue: "84129867-6f34-4b35-8dc6-d377ce6c3b13"),
+                    CreateDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 1, 25, 1, 7, 53, 693, DateTimeKind.Utc).AddTicks(5967)),
                     Account = table.Column<int>(nullable: false),
-                    Code = table.Column<int>(nullable: false),
                     Severity = table.Column<int>(nullable: false),
                     PanelTime = table.Column<string>(nullable: true),
                     ServiceProvider = table.Column<int>(nullable: true),
@@ -58,6 +57,8 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                     VendorEventId = table.Column<string>(nullable: true),
                     EmergencyLevel = table.Column<int>(nullable: false),
                     EmergencyDescriptoin = table.Column<string>(nullable: true),
+                    UserID = table.Column<string>(nullable: true),
+                    HSCCode = table.Column<string>(nullable: true),
                     Discriminator = table.Column<string>(nullable: false),
                     Details_DeviceId = table.Column<int>(nullable: true),
                     Details_DeviceType = table.Column<int>(nullable: true),
@@ -85,7 +86,7 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                     UnexpectedActivityDetails_Details_DeviceId = table.Column<int>(nullable: true),
                     UnexpectedActivityDetails_Details_DeviceType = table.Column<int>(nullable: true),
                     UnexpectedActivityDetails_Details_DeviceDescription = table.Column<string>(nullable: true),
-                    Details_Grade = table.Column<int>(nullable: true),
+                    Details_Grade = table.Column<float>(nullable: true),
                     UnexpectedEntryExitDetails_Details_DeviceId = table.Column<int>(nullable: true),
                     UnexpectedEntryExitDetails_Details_DeviceType = table.Column<int>(nullable: true),
                     UnexpectedEntryExitDetails_Details_DeviceDescription = table.Column<string>(nullable: true),

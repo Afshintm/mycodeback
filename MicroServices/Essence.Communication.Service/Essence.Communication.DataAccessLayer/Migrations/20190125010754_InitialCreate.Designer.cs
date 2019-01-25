@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Essence.Communication.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190124141409_UpdateDetails")]
-    partial class UpdateDetails
+    [Migration("20190125010754_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,13 +26,13 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue("6106566b-4c61-4164-97f5-4d064a4e092f");
+                        .HasDefaultValue("6be43ac7-f584-491f-bf05-bdd62567adfb");
 
                     b.Property<int>("Account");
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 1, 24, 14, 14, 9, 43, DateTimeKind.Utc).AddTicks(9722));
+                        .HasDefaultValue(new DateTime(2019, 1, 25, 1, 7, 53, 724, DateTimeKind.Utc).AddTicks(9400));
 
                     b.Property<string>("PanelTime");
 
@@ -55,18 +55,18 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue("bd6b6c27-aea7-4d9a-8ec8-dba53126cb73");
+                        .HasDefaultValue("84129867-6f34-4b35-8dc6-d377ce6c3b13");
 
                     b.Property<int>("Account");
 
-                    b.Property<int>("Code");
-
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 1, 24, 14, 14, 9, 13, DateTimeKind.Utc).AddTicks(2341));
+                        .HasDefaultValue(new DateTime(2019, 1, 25, 1, 7, 53, 693, DateTimeKind.Utc).AddTicks(5967));
 
                     b.Property<string>("Discriminator")
                         .IsRequired();
+
+                    b.Property<string>("HSCCode");
 
                     b.Property<bool?>("IsMobile");
 
@@ -79,6 +79,8 @@ namespace Essence.Communication.DataAccessLayer.Migrations
                     b.Property<int?>("ServiceType");
 
                     b.Property<int>("Severity");
+
+                    b.Property<string>("UserID");
 
                     b.Property<string>("VendorEventId");
 
