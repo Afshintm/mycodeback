@@ -17,8 +17,8 @@ namespace Essence.Communication.Models
             location = new Location();
             emergencyCategory = new EmergencyCategory();
         } 
+
         public int Account { get; set; }
-        public int Code { get; set; }
         public int Severity { get; set; }
         public string PanelTime { get; set; }
         public int? ServiceProvider { get; set; }
@@ -61,6 +61,12 @@ namespace Essence.Communication.Models
                 }
             }
         }
+
+        //TODO: need to map Hsc userID from vendor events in next MVP
+        public string UserID { get; set; }
+
+        //TODO: Map vendor's code into hsc code
+        public string HSCCode { get; set; }
     }
 
     public class Event<T> : EventBase where T : IDetails

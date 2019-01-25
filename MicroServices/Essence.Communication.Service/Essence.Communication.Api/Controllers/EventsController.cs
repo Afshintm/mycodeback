@@ -27,6 +27,7 @@ namespace Essence.Communication.Api.Controllers
         public IActionResult GetById(string id)
         {
             var result =  _eventService.GetEvent(id);
+
             return Ok(result);
             
         }

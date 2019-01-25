@@ -16,19 +16,19 @@ namespace Essence.Communication.Models.ValueObjects
         public string DeviceDescription { get; set; }
     }
 
-    //Evernt 2003
+    //EssenceEvent 2003
     public class UnexpectedActivityDetails : DeviceEventDetails
     {
-        public int Grade { get; set; }
+        public float Grade { get; set; }
     }
 
-    //Evernt 2201
+    //EssenceEvent 2201
     public class UnexpectedEntryExitDetails : DeviceEventDetails
     {
         public Period Period { get; set; }
     }
 
-    //Evernt  2103,2104
+    //EssenceEvent  2103,2104
     public class StayHomeDetails : IDetails
     {
         public string ExitTime { get; set; }
@@ -38,33 +38,33 @@ namespace Essence.Communication.Models.ValueObjects
         public string EntryTime { get; set; }
     }
 
-    //Evernt 201/202
+    //EssenceEvent 201/202
     public class PowerDetails : DeviceEventDetails
     {
         public string PowerFailureDuration { get; set; }
         public string PowerRestoredDuration { get; set; }
     }
 
-    //Evernt 203,204,205,206
+    //EssenceEvent 203,204,205,206
     public class BatteryDetails : DeviceEventDetails
     {
         public int BatteryLevel { get; set; }
     }
 
-    //Evernt 705,706
+    //EssenceEvent 705,706
     public class PanelStatusDetails : IDetails
     {
         public string LastContactTime { get; set; }
     }
 
-    //Evernt 2001
+    //EssenceEvent 2001
     public class FallAlertDetails : DeviceEventDetails
     {
         public int Activitytype { get; set; } //TODO: enum
         public string DurationInRoom { get; set; }
     }
 
-    //Evernt 3,156
+    //EssenceEvent 3,156
     public class EmergencyPanicDetails : DeviceEventDetails
     {
     }

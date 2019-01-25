@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.EventBus.Interfaces;
+﻿using Essence.Communication.BusinessServices.ViewModel;
 using Essence.Communication.DataAccessLayer;
 using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos; 
@@ -12,7 +12,7 @@ namespace Essence.Communication.BusinessServices
     public interface IEventService
     {
         Task<bool> ReceiveVendorEvent(EssenceEventObjectStructure eventObjectStructure);
-        IEvent GetEvent(string id);
+        EventViewModel GetEvent(string id);
     }
 
     public class EventService : BaseBusinessServices<SuccessResponse>, IEventService
@@ -41,10 +41,11 @@ namespace Essence.Communication.BusinessServices
             _appData = appData;
         }
 
-        public IEvent GetEvent(string id)
+        public EventViewModel GetEvent(string id)
         {
             var result = _appData.GetEvent(id);
-            return result;
+
+            return _modelMapper.MapToViewModel(result);
         }
 
         public async Task<bool> ReceiveVendorEvent(EssenceEventObjectStructure vendorEvent)
