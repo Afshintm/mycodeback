@@ -53,11 +53,9 @@ namespace Essence.Communication.BusinessServices
             //TODO: exception 
             if (vendorEvent?.Event == null)
             {
-                return false;
+                return await Task.Run(() => false); 
             }
 
-            try
-            {
                 //save essenceEvent 
                 _appData.AddVendorEvent(vendorEvent);
 
@@ -65,12 +63,7 @@ namespace Essence.Communication.BusinessServices
                 var hscEvent = _eventCreater.Create(vendorEvent);
                 _appData.AddNewEvent(hscEvent);
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+                return await Task.Run(() => true);
         }
 
         public override void SetApiEndpointAddress()

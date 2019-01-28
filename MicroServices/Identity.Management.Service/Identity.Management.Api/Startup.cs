@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Essence.Communication.DbContexts;
 using Identity.Management.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,8 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MyIdentity.DataAccess;
-using MyIdentity.Models;
 
 namespace Identity.Management.Api
 {

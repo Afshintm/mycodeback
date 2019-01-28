@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyIdentity.DataAccess\MyIdentity.DataAccess.csproj" />
+    <ProjectReference Include="..\..\Essence.Communication.Service\Essence.Communication.DbContexts\Essence.Communication.DbContexts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

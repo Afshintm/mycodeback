@@ -1,16 +1,13 @@
-﻿using IdentityModel;
+﻿using Essence.Communication.DbContexts;
+using IdentityModel;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using MyIdentity.DataAccess;
-using MyIdentity.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Identity.Management.Api
 {

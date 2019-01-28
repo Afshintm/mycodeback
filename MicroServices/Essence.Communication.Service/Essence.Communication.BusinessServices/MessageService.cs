@@ -33,8 +33,7 @@ namespace Essence.Communication.BusinessServices
 
         public async Task<bool> ReceiveMessage(EssenceEventObjectStructure eventObjectStructure)
         {
- 
-                return true; 
+            return await Task.Run(() => true);
         }
 
         public override void SetApiEndpointAddress()
