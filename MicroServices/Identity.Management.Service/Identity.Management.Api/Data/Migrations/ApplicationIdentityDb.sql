@@ -123,7 +123,7 @@ CREATE INDEX [IX_UserRoles_RoleId] ON [UserRoles] ([RoleId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190117052420_InitialCreate', N'2.2.1-servicing-10028');
+VALUES (N'20190128103507_InitialCreate', N'2.2.1-servicing-10028');
 
 GO
 
