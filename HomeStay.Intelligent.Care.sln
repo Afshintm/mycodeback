@@ -45,11 +45,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Management.Api", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services.Utilities", "Services.Utilities", "{1EDD5B11-CF8B-46CB-A1A0-D9903C06DD58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Utilities.Common", "MicroServices\Services.Utilities\Services.Utilities.Common\Services.Utilities.Common.csproj", "{B9C19DEA-A876-48DB-A71E-21F017E30625}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Utilities.Common", "MicroServices\Services.Utilities\Services.Utilities.Common\Services.Utilities.Common.csproj", "{B9C19DEA-A876-48DB-A71E-21F017E30625}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Utilities.DataAccess", "MicroServices\Services.Utilities\Services.Utilities.DataAccess\Services.Utilities.DataAccess.csproj", "{FDE041CF-E8EA-4491-9A73-22D485092B16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Utilities.DataAccess", "MicroServices\Services.Utilities\Services.Utilities.DataAccess\Services.Utilities.DataAccess.csproj", "{FDE041CF-E8EA-4491-9A73-22D485092B16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essence.Communication.DbContexts", "MicroServices\Essence.Communication.Service\Essence.Communication.DbContexts\Essence.Communication.DbContexts.csproj", "{065B1312-2119-434B-9CF0-53139C291D65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Essence.Communication.DbContexts", "MicroServices\Essence.Communication.Service\Essence.Communication.DbContexts\Essence.Communication.DbContexts.csproj", "{065B1312-2119-434B-9CF0-53139C291D65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Utilities.UnitTests", "..\Services.Utilities.UnitTests\Services.Utilities.UnitTests.csproj", "{975BB453-6ACB-4E57-97E8-C7CB93DAF3AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +119,10 @@ Global
 		{065B1312-2119-434B-9CF0-53139C291D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{065B1312-2119-434B-9CF0-53139C291D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{065B1312-2119-434B-9CF0-53139C291D65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{975BB453-6ACB-4E57-97E8-C7CB93DAF3AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{975BB453-6ACB-4E57-97E8-C7CB93DAF3AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{975BB453-6ACB-4E57-97E8-C7CB93DAF3AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{975BB453-6ACB-4E57-97E8-C7CB93DAF3AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +147,7 @@ Global
 		{B9C19DEA-A876-48DB-A71E-21F017E30625} = {1EDD5B11-CF8B-46CB-A1A0-D9903C06DD58}
 		{FDE041CF-E8EA-4491-9A73-22D485092B16} = {1EDD5B11-CF8B-46CB-A1A0-D9903C06DD58}
 		{065B1312-2119-434B-9CF0-53139C291D65} = {E451E294-C0AA-41DB-A6CD-5CC29524F7CD}
+		{975BB453-6ACB-4E57-97E8-C7CB93DAF3AA} = {1EDD5B11-CF8B-46CB-A1A0-D9903C06DD58}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {561D1396-35DE-49CA-829E-C5EFD1E4C528}

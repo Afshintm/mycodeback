@@ -1,107 +1,108 @@
-﻿//using System;
-//using System.Collections;
+﻿using System;
+using System.Collections;
 
-//namespace Services.Utilities.DataAccess
-//{
+namespace Services.Utilities.DataAccess
+{
 
-//	public class BoundedUnitOfWork<TContext> : IBoundedUnitOfWork<TContext> where TContext : IBoundedDbContext, new()
-//	{
+    //public class BoundedUnitOfWork<TContext> : IBoundedUnitOfWork<TContext> where TContext : IBoundedDbContext, new()
+    //{
 
-//		private bool _disposed;
-//		private Hashtable _repositories;
-
-
-//		private TContext _context;
-//		public TContext Context
-//		{
-//			get
-//			{
-//				return _context;
-//			}
-//			set
-//			{
-//				_context = value;
-//			}
-//		}
-
-//		public BoundedUnitOfWork(TContext context)
-//		{
-//			Context = context;
-//		}
-
-//		public BoundedUnitOfWork()
-//			: this(new TContext())
-//		{
-
-//		}
+    //    private bool _disposed;
+    //    private Hashtable _repositories;
 
 
-//		public virtual int Commit()
-//        {
-//            return Context.SaveChanges();
-//        }
-//		~BoundedUnitOfWork() 
-//        {
-//            Dispose(false);
-//        }
-//        /// <summary>
-//        /// This method is called by developers or at the end of using blocks.
-//        /// </summary>
-//        public void Dispose()
-//        {
-//            // we call Dispose with true signifing that Dispose method is being triggered from the code and not by finaliser 
-//            // and it's totally safe to disposed all other contained objects like Context
-//            Dispose(true);
-//            // If we got this far meaning we have released all the unmanaged resources and also disposed other contained objects
-//            // So there is no need for this object to be in finalizerable queue maintened by CLR and we just stop this class to be finalizeable.
-//            GC.SuppressFinalize(this);
-//        }
+    //    private TContext _context;
+    //    public TContext Context
+    //    {
+    //        get
+    //        {
+    //            return _context;
+    //        }
+    //        set
+    //        {
+    //            _context = value;
+    //        }
+    //    }
 
-//        public virtual void Save()
-//        {
-//            Context.SaveChanges();
-//        }
+    //    public BoundedUnitOfWork(TContext context)
+    //    {
+    //        Context = context;
+    //    }
 
-//        public virtual void Dispose(bool disposing)
-//        {
+    //    public BoundedUnitOfWork()
+    //        : this(new TContext())
+    //    {
 
-//            // _disposed is the safegurd not to release unmanaged resources more than once
-//            if (!_disposed)
-//            {
-//                // releasing other managed resources when this method is getting called from Dispose()
-//                // otherwise, when this method is getting called from finalizer we cannot assume other managed objects are still alive 
-//                // All we can do is releasing any unmanaged resources anyway.
-//                if (disposing) 
-//                {
-//                    Context.Dispose();
-//                }
-//                //Release unmanaged resources whatsoever
-//            }
-//            _disposed = true;
-//        }
+    //    }
 
-//        public IRepository<T> Repository<T>() where T : class
-//        {
-//            if (_repositories == null)
-//                _repositories = new Hashtable();
 
-//            var type = typeof(T).Name;
+    //    public virtual int Commit()
+    //    {
+    //        return Context.SaveChanges();
+    //    }
+    //    ~BoundedUnitOfWork()
+    //    {
+    //        Dispose(false);
+    //    }
+    //    /// <summary>
+    //    /// This method is called by developers or at the end of using blocks.
+    //    /// </summary>
+    //    public void Dispose()
+    //    {
+    //        // we call Dispose with true signifing that Dispose method is being triggered from the code and not by finaliser 
+    //        // and it's totally safe to disposed all other contained objects like Context
+    //        Dispose(true);
+    //        // If we got this far meaning we have released all the unmanaged resources and also disposed other contained objects
+    //        // So there is no need for this object to be in finalizerable queue maintened by CLR and we just stop this class to be finalizeable.
+    //        GC.SuppressFinalize(this);
+    //    }
 
-//            if (!_repositories.ContainsKey(type))
-//            {
-//                var repositoryType = typeof(Repository<>);
+    //    public virtual void Save()
+    //    {
+    //        Context.SaveChanges();
+    //    }
 
-//                var repositoryInstance =
-//                    Activator.CreateInstance(repositoryType
-//                            .MakeGenericType(typeof(T)), Context);
+    //    public virtual void Dispose(bool disposing)
+    //    {
 
-//                _repositories.Add(type, repositoryInstance);
-//            }
+    //        // _disposed is the safegurd not to release unmanaged resources more than once
+    //        if (!_disposed)
+    //        {
+    //            // releasing other managed resources when this method is getting called from Dispose()
+    //            // otherwise, when this method is getting called from finalizer we cannot assume other managed objects are still alive 
+    //            // All we can do is releasing any unmanaged resources anyway.
+    //            if (disposing)
+    //            {
+    //                Context.Dispose();
+    //            }
+    //            //Release unmanaged resources whatsoever
+    //        }
+    //        _disposed = true;
+    //    }
 
-//            return (IRepository<T>)_repositories[type];
-//        }
-    
+    //    public IRepository<T> Repository<T>() where T : class
+    //    {
+    //        if (_repositories == null)
+    //            _repositories = new Hashtable();
 
+    //        var type = typeof(T).Name;
+
+    //        if (!_repositories.ContainsKey(type))
+    //        {
+    //            var repositoryType = typeof(Repository<>);
+
+    //            var repositoryInstance =
+    //                Activator.CreateInstance(repositoryType
+    //                        .MakeGenericType(typeof(T)), Context);
+
+    //            _repositories.Add(type, repositoryInstance);
+    //        }
+
+    //        return (IRepository<T>)_repositories[type];
+    //    }
+
+    //}
+}
 
 
 
@@ -391,6 +392,6 @@
 //		//#endregion
 
 
-	
+
 //	}
 //}

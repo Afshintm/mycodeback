@@ -1,22 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Utilities.DataAccess
 {
-    public class DbContextBase<TContext> : DbContext where TContext : DbContext
+
+    public class DbContextBase<TContext> : DbContext , IDbContext where TContext : DbContext
     {
         static DbContextBase()
         {
-            //Database.SetInitializer<TContext>(null);
         }
 
-
-        public DbContextBase(DbContextOptions options) :
-            base(options){}
+        public DbContextBase(DbContextOptions<TContext> options) : base(options){ }
 
         public new DbSet<T> Set<T>() where T : class
         {

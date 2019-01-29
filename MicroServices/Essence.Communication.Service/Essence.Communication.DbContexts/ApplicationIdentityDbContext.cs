@@ -28,6 +28,8 @@ namespace Essence.Communication.DbContexts
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
+            builder.HasDefaultSchema("Application");
+
             builder.Entity<ApplicationUser>(entity =>
             {
                 entity.ToTable(name: "User");

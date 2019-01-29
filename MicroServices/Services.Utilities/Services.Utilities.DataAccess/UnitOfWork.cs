@@ -1,159 +1,160 @@
-﻿//using System;
-//using System.Collections;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections;
 
-//namespace Services.Utilities.DataAccess
-//{
-//	public interface IUnitOfWork : IDisposable
-//	{
-//		void Save();
-//		void Dispose(bool disposing);
-//		IRepository<T> Repository<T>() where T : class;
-//	}
+namespace Services.Utilities.DataAccess
+{
+    public interface IUnitOfWork : IDisposable
+    {
+        void Save();
+        void Dispose(bool disposing);
+        IRepository<T> Repository<T>() where T : class;
+    }
 
-//	public class BaseUnitOfWork : IUnitOfWork
-//	{
-//		private bool _disposed;
-//		private Hashtable _repositories;
-//		private IDbContext _context;
+    //public class BaseUnitOfWork : IUnitOfWork
+    //{
+    //    private bool _disposed;
+    //    private Hashtable _repositories;
+    //    private DbContext _context;
 
-//		public BaseUnitOfWork(IDbContext dbContext)
-//		{
-//			_context = dbContext;
-//		}
+    //    public BaseUnitOfWork(DbContext dbContext)
+    //    {
+    //        _context = dbContext;
+    //    }
 
-//		public virtual void Save()
-//		{
-//		}
+    //    public virtual void Save()
+    //    {
+    //    }
 
-//		public virtual void Dispose(bool disposing)
-//		{
-//			if (!_disposed)
-//				if (disposing)
-//				{
-//					//_repositories = null;
-//					_context.Dispose();
-//				}
+    //    public virtual void Dispose(bool disposing)
+    //    {
+    //        if (!_disposed)
+    //            if (disposing)
+    //            {
+    //                //_repositories = null;
+    //                _context.Dispose();
+    //            }
 
-//			_disposed = true;
+    //        _disposed = true;
 
-//		}
+    //    }
 
-//		public virtual IRepository<T> Repository<T>() where T : class
-//		{
-//			if (_repositories == null)
-//				_repositories = new Hashtable();
+    //    public virtual IRepository<T> Repository<T>() where T : class
+    //    {
+    //        if (_repositories == null)
+    //            _repositories = new Hashtable();
 
-//			var type = typeof(T).Name;
+    //        var type = typeof(T).Name;
 
-//			if (!_repositories.ContainsKey(type))
-//			{
-//				var repositoryType = typeof(Repository<>);
+    //        if (!_repositories.ContainsKey(type))
+    //        {
+    //            var repositoryType = typeof(Repository<>);
 
-//				var repositoryInstance =
-//					Activator.CreateInstance(repositoryType
-//							.MakeGenericType(typeof(T)), _context);
+    //            var repositoryInstance =
+    //                Activator.CreateInstance(repositoryType
+    //                        .MakeGenericType(typeof(T)), _context);
 
-//				_repositories.Add(type, repositoryInstance);
-//			}
+    //            _repositories.Add(type, repositoryInstance);
+    //        }
 
-//			return (IRepository<T>)_repositories[type];
+    //        return (IRepository<T>)_repositories[type];
 
-//		}
+    //    }
 
-//		public virtual void Dispose()
-//		{
-//			Dispose(true);
-//			GC.SuppressFinalize(this);
-//		}
-//	}
+    //    public virtual void Dispose()
+    //    {
+    //        Dispose(true);
+    //        GC.SuppressFinalize(this);
+    //    }
+    //}
 
-//	/// <summary>
-//	/// Unit of Work around a context
-//	/// </summary>
-//	/// <typeparam name="TContext"></typeparam>
-//	public interface IUnitOfWork<TContext> : IUnitOfWork where TContext : IDbContext
-//	{
-//		TContext Context { get; set;}
-		
-//	}
+    /// <summary>
+    /// Unit of Work around a context
+    /// </summary>
+    /// <typeparam name="TContext"></typeparam>
+    public interface IUnitOfWork<TContext> : IUnitOfWork where TContext : DbContextBase<TContext>
+    {
+        TContext Context { get; set; }
 
-//	public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : IDbContext, new()
-//	{
-//		private bool _disposed;
-//		private Hashtable _repositories;
-//		private TContext _context;
-//		public TContext Context
-//		{
-//			get
-//			{
-//				return _context;
-//			}
-//			set
-//			{
-//				_context = value;
-//			}
-//		}
+    }
 
-//		public UnitOfWork() : this(new TContext()) { }
+    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContextBase<TContext>, new()
+    {
+        private bool _disposed;
+        private Hashtable _repositories;
+        private TContext _context;
+        public TContext Context
+        {
+            get
+            {
+                return _context;
+            }
+            set
+            {
+                _context = value;
+            }
+        }
 
-//		public UnitOfWork(TContext context)
-//		{
-//			_context = context;
-//		}
+        public UnitOfWork() : this(new TContext()) { }
 
-//		public void Dispose()
-//		{
-//			Dispose(true);
-//			GC.SuppressFinalize(this);
-//		}
+        public UnitOfWork(TContext context)
+        {
+            _context = context;
+        }
 
-//		public virtual void Save()
-//		{
-//			_context.SaveChanges();
-//		}
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-//		public virtual void Dispose(bool disposing)
-//		{
-//			if (!_disposed)
-//				if (disposing)
-//					_context.Dispose();
+        public virtual void Save()
+        {
+            _context.SaveChanges();
+        }
 
-//			_disposed = true;
-//		}
+        public virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+                if (disposing)
+                    _context.Dispose();
 
-//		public IRepository<T> Repository<T>() where T : class
-//		{
-//			if (_repositories == null)
-//				_repositories = new Hashtable();
+            _disposed = true;
+        }
 
-//			var type = typeof(T).Name;
+        public IRepository<T> Repository<T>() where T : class
+        {
+            if (_repositories == null)
+                _repositories = new Hashtable();
 
-//			if (!_repositories.ContainsKey(type))
-//			{
-//				var repositoryType = typeof(Repository<>);
+            var type = typeof(T).Name;
 
-//				var repositoryInstance =
-//					Activator.CreateInstance(repositoryType
-//							.MakeGenericType(typeof(T)), _context);
+            if (!_repositories.ContainsKey(type))
+            {
+                var repositoryType = typeof(Repository<>);
 
-//				_repositories.Add(type, repositoryInstance);
-//			}
+                var repositoryInstance =
+                    Activator.CreateInstance(repositoryType
+                            .MakeGenericType(typeof(T)), _context);
 
-//			return (IRepository<T>)_repositories[type];
-//		}
+                _repositories.Add(type, repositoryInstance);
+            }
 
-//	}
+            return (IRepository<T>)_repositories[type];
+        }
 
-
-//	public interface IBoundedUnitOfWork
-//	{
-//		int Commit();
-//	}
-
-//	public interface IBoundedUnitOfWork<TContext> : IBoundedUnitOfWork, IUnitOfWork<TContext> where TContext : IBoundedDbContext { }
+    }
 
 
+    //public interface IBoundedUnitOfWork
+    //{
+    //    int Commit();
+    //}
+
+    //public interface IBoundedUnitOfWork<TContext> : IBoundedUnitOfWork, IUnitOfWork<TContext> where TContext : IBoundedDbContext { }
 
 
-	
-//}
+
+
+
+}

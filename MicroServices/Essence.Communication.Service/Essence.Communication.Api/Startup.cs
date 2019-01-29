@@ -44,8 +44,21 @@ namespace Essence.Communication.Api
             // Add services to the collection.
             services.AddCors();
             //set entityframework connection string
-            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("Applicaiton")));
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationIdentityConnectionString")));
+
             services.AddMvc();
+
+            services.AddAuthorization();
+            var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = IdentityServerIssuerUrl;
+                    options.RequireHttpsMetadata = false;
+                    options.ApiName = "api1";
+                });
+            
+
 
             var builder = AppContainerBuilder(services);
             //var builder = services.GetAppContainerBuilder();
@@ -98,7 +111,9 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(ApplicationData)).As(typeof(ApplicationData)).InstancePerDependency();
            
             builder.RegisterType(typeof(Repository<>)).As(typeof(Repository<>)).InstancePerDependency();
-            
+            builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency(); 
+
+
             return builder;
         }
         
@@ -120,8 +135,10 @@ namespace Essence.Communication.Api
             }
 
 
-
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseAuthentication();
+            app.UseHttpsRedirection();
+
             app.UseMvc();
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.

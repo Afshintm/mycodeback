@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Services.Utils\Services.Utils.csproj" />
     <ProjectReference Include="..\Essence.Communication.DataAccessLayer\Essence.Communication.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\Essence.Communication.DbContexts\Essence.Communication.DbContexts.csproj" />
     <ProjectReference Include="..\Essence.Communication.Models\Essence.Communication.Models.csproj" />
   </ItemGroup>
 

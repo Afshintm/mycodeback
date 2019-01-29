@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Services.Utilities.Common;
 
 namespace Services.Utilities.DataAccess
 {
@@ -21,10 +20,10 @@ namespace Services.Utilities.DataAccess
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        internal DbContext Context;
+        internal IDbContext Context;
         internal DbSet<TEntity> DbSet;
 
-        public Repository(DbContext context)
+        public Repository(IDbContext context)
         {
             Context = context;
             DbSet = context.Set<TEntity>();
