@@ -37,10 +37,15 @@ namespace Essence.Communication.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PickEvent([FromBody]EssenceEventObjectStructure eventObjectStructure)
         {
+
+            //validate essence headers
+            var headers = Request.Headers;
             var result = await _eventService.ReceiveVendorEvent(eventObjectStructure);
+
             if (result)
                 return Ok();
             return BadRequest();
-        }     
+        }
+
     }
 }

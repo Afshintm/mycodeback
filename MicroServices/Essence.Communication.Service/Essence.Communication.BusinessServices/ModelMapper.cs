@@ -113,7 +113,7 @@ namespace Essence.Communication.BusinessServices
             destination.HSCCode = source.HSCCode;
 
             //TODO: change utc time to local time
-            destination.CreateTime = source.CreateDate.ToString();
+            destination.CreateTime = source.ServerTime.ToString();
             destination.Level = source.EmergencyCategory == null ? 0 : (int)source.EmergencyCategory.Level;
             destination.EmergencyDescription = source.EmergencyCategory?.Description;
         }

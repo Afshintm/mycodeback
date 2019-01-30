@@ -113,7 +113,8 @@ namespace Essence.Communication.Api
             //builder.RegisterGeneric(typeof(DbContextBase<>)).As(typeof(IDbContext)).InstancePerDependency();
 
 
-            builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency(); 
+            builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency();
+            builder.RegisterType<EssenceRequestValidation>().As<IRequestValidation>().InstancePerDependency();
 
 
             return builder;

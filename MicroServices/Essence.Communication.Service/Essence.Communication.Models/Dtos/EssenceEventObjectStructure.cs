@@ -2,6 +2,7 @@
 using Essence.Communication.Models.Enums;
 using Essence.Communication.Models.ValueObjects;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 
 namespace Essence.Communication.Models.Dtos
@@ -24,6 +25,9 @@ namespace Essence.Communication.Models.Dtos
 
         public int? ServiceProvider { get; set; }
         public int? ServiceType { get; set; }
+
+        // Essence Original Event Id
+        public List<Guid> EventId { get; set; }
     }
 
     public class EssenceEventObject
