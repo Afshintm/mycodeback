@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Services.Utilities.DataAccess
 {
@@ -11,6 +10,5 @@ namespace Services.Utilities.DataAccess
         EntityEntry Entry(object entry);
         void Dispose();
         int SaveChanges();
-        //Database Database { get; }
     }
 }

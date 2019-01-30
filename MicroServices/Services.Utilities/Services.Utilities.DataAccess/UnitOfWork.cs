@@ -78,7 +78,7 @@ namespace Services.Utilities.DataAccess
 
     }
 
-    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContextBase<TContext>, new()
+    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContextBase<TContext>//, new()
     {
         private bool _disposed;
         private Hashtable _repositories;
@@ -95,7 +95,7 @@ namespace Services.Utilities.DataAccess
             }
         }
 
-        public UnitOfWork() : this(new TContext()) { }
+        //public UnitOfWork() : this(new TContext()) { }
 
         public UnitOfWork(TContext context)
         {
@@ -144,17 +144,5 @@ namespace Services.Utilities.DataAccess
         }
 
     }
-
-
-    //public interface IBoundedUnitOfWork
-    //{
-    //    int Commit();
-    //}
-
-    //public interface IBoundedUnitOfWork<TContext> : IBoundedUnitOfWork, IUnitOfWork<TContext> where TContext : IBoundedDbContext { }
-
-
-
-
 
 }

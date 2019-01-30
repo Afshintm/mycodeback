@@ -38,7 +38,8 @@ namespace Essence.Communication.BusinessServices
 
         public override void SetApiEndpointAddress()
         {
-            throw new NotImplementedException();
+            
         }
+        
     }
 }

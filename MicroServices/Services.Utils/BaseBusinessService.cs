@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Services.Utils
 {
-    public interface IBaseBusinessService<T>
+    public interface IBaseBusinessService<T> 
     {
         IEnumerable<T> GetAll();
         string ApiEndPoint { get; set; }

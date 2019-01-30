@@ -12,7 +12,6 @@ using BuildingBlocks.EventBus.MessageQueue;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.EventBus.MessageQueue.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.Utility;
 using Services.Utilities.DataAccess;
 using Essence.Communication.DbContexts;
@@ -42,7 +41,7 @@ namespace Essence.Communication.Api
             // Add services to the collection.
             services.AddCors();
             //set entityframework connection string
-            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationIdentityConnectionString")));
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
 
             services.AddMvc();
 
@@ -57,12 +56,10 @@ namespace Essence.Communication.Api
                 });
             
 
-
             var builder = AppContainerBuilder(services);
             //var builder = services.GetAppContainerBuilder();
 
             this.ApplicationContainer = builder.Build();
-
 
            
             // Create the IServiceProvider based on the container.
@@ -105,14 +102,15 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(DbContext)).InstancePerLifetimeScope();
+
+            //builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(DbContext)).InstancePerLifetimeScope();
 
             //builder.RegisterType(typeof(ApplicationData)).As(typeof(ApplicationData)).InstancePerDependency();
            
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerDependency();
 
             builder.RegisterGeneric(typeof(UnitOfWork<>)).As(typeof(IUnitOfWork<>)).InstancePerDependency();
-            //builder.RegisterGeneric(typeof(DbContextBase<>)).As(typeof(DbContext<>)).InstancePerDependency();
+            //builder.RegisterGeneric(typeof(DbContextBase<>)).As(typeof(IDbContext)).InstancePerDependency();
 
 
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency(); 
