@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Messaging\BuildingBlocks\BuildingBlocks.EventBus.MessageQueue\BuildingBlocks.EventBus.MessageQueue.csproj" />
     <ProjectReference Include="..\Essence.Communication.BusinessServices\Essence.Communication.BusinessServices.csproj" />
-    <ProjectReference Include="..\Essence.Communication.DataAccessLayer\Essence.Communication.DataAccessLayer.csproj" />
     <ProjectReference Include="..\Essence.Communication.DbContexts\Essence.Communication.DbContexts.csproj" />
   </ItemGroup>
   <ItemGroup>

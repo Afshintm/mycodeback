@@ -3,11 +3,13 @@ using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Essence.Communication.DbContexts.Configurations;
+using Services.Utilities.DataAccess;
+
 namespace Essence.Communication.DbContexts
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContextBase<ApplicationDbContext>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 

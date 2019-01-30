@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,10 +11,11 @@ using Essence.Communication.BusinessServices;
 using BuildingBlocks.EventBus.MessageQueue;
 using BuildingBlocks.EventBus.Interfaces;
 using BuildingBlocks.EventBus.MessageQueue.Interfaces;
-using Essence.Communication.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.Utility;
+using Services.Utilities.DataAccess;
+using Essence.Communication.DbContexts;
 
 namespace Essence.Communication.Api
 {
@@ -108,9 +106,15 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(DbContext)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(ApplicationData)).As(typeof(ApplicationData)).InstancePerDependency();
+
+            //builder.RegisterType(typeof(ApplicationData)).As(typeof(ApplicationData)).InstancePerDependency();
            
-            builder.RegisterType(typeof(Repository<>)).As(typeof(Repository<>)).InstancePerDependency();
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerDependency();
+
+            builder.RegisterGeneric(typeof(UnitOfWork<>)).As(typeof(IUnitOfWork<>)).InstancePerDependency();
+            //builder.RegisterGeneric(typeof(DbContextBase<>)).As(typeof(DbContext<>)).InstancePerDependency();
+
+
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency(); 
 
 

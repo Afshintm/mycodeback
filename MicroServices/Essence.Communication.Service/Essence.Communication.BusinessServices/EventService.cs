@@ -1,8 +1,9 @@
 ﻿using Essence.Communication.BusinessServices.ViewModel;
-using Essence.Communication.DataAccessLayer;
+using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos; 
 using Microsoft.Extensions.Configuration;
+using Services.Utilities.DataAccess;
 using Services.Utils;
 using System;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Essence.Communication.BusinessServices
         private readonly IAuthenticationService _authenticationService;
         private readonly IEventCreater _eventCreater;
         private readonly IModelMapper _modelMapper;
-        private readonly ApplicationData _appData;
+        private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
 
 
         public EventService(
@@ -30,7 +31,7 @@ namespace Essence.Communication.BusinessServices
             IAuthenticationService authenticationService,
             IEventCreater eventCreater,
             IModelMapper mapper,
-            ApplicationData appData
+            IUnitOfWork<ApplicationDbContext> unitOfWork
             ) : base(httpClientManager, configuration)
         {
             _configuration = configuration;
@@ -38,12 +39,13 @@ namespace Essence.Communication.BusinessServices
             _eventCreater = eventCreater; 
             _modelMapper = mapper;
 
-            _appData = appData;
+            _unitOfWork = unitOfWork;
         }
 
         public EventViewModel GetEvent(string id)
         {
-            var result = _appData.GetEvent(id);
+            //var result = _appData.GetEvent(id);
+            var result = _unitOfWork.Repository<EventBase>().FindById(id);
 
             return _modelMapper.MapToViewModel(result);
         }
@@ -56,14 +58,19 @@ namespace Essence.Communication.BusinessServices
                 return await Task.Run(() => false); 
             }
 
-                //save essenceEvent 
-                _appData.AddVendorEvent(vendorEvent);
+            //save essenceEvent 
+            //_appData.AddVendorEvent(vendorEvent);
+            _unitOfWork.Repository<EssenceEventObjectStructure>().Insert(vendorEvent);
+            
 
-                //cast essenceEvent details into hcsEvent 
-                var hscEvent = _eventCreater.Create(vendorEvent);
-                _appData.AddNewEvent(hscEvent);
+            //cast essenceEvent details into hcsEvent 
+            var hscEvent = _eventCreater.Create(vendorEvent);
+            //    _appData.AddNewEvent(hscEvent);
+            _unitOfWork.Repository<EventBase>().Insert(hscEvent);
 
-                return await Task.Run(() => true);
+            _unitOfWork.Save();
+
+            return await Task.Run(() => true);
         }
 
         public override void SetApiEndpointAddress()

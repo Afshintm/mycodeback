@@ -14,8 +14,12 @@ namespace Services.Utilities.DataAccess
         void Delete(object id);
         void Delete(TEntity entity);
         void Insert(TEntity entity);
-        RepositoryQuery<TEntity> Query();
 
+        void Add(TEntity entity);
+        TEntity Get(string id);
+        IEnumerable<TEntity> GetAll();
+
+        RepositoryQuery<TEntity> Query();
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
@@ -115,6 +119,22 @@ namespace Services.Utilities.DataAccess
         {
             return DbSet.Find(id);
         }
+
+        public void Add(TEntity entity)
+        {
+            DbSet.Add(entity);
+        }
+
+        public TEntity Get(string id)
+        {
+            return DbSet.Find(id);
+        }
+
+        public IEnumerable<TEntity> GetAll()
+        {
+            return DbSet;
+        }
+
         #endregion
 
         public void Dispose()

@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Services.Utilities\Services.Utilities.DataAccess\Services.Utilities.DataAccess.csproj" />
     <ProjectReference Include="..\Essence.Communication.Models\Essence.Communication.Models.csproj" />
   </ItemGroup>
 
