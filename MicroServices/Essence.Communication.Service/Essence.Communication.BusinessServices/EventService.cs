@@ -1,4 +1,5 @@
 ﻿using Essence.Communication.BusinessServices.ViewModel;
+using Essence.Communication.BusinessServices.ViewModels;
 using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos; 
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Services.Utilities.DataAccess;
 using Services.Utils;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Essence.Communication.BusinessServices
@@ -14,33 +16,77 @@ namespace Essence.Communication.BusinessServices
     {
         Task<bool> ReceiveVendorEvent(EssenceEventObjectStructure eventObjectStructure);
         EventViewModel GetEvent(string id);
+        Task<CloseEventsResponseViewModel> CloseEvent(CloseEventsRequestViewtModel closedEvent);
     }
 
-    public class EventService : BaseBusinessServices<SuccessResponse>, IEventService
+    public class EventService : BaseBusinessServicesNew, IEventService
     {
-        private readonly IConfiguration _configuration;
+        private readonly IAppSettingsConfigService _appSettingsConfigService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IEventCreater _eventCreater;
         private readonly IModelMapper _modelMapper;
         private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
+        private readonly IHttpClientManagerNew _httpClient;
 
 
         public EventService(
             IHttpClientManager httpClientManager,
-            IConfiguration configuration,
+            IAppSettingsConfigService appSettingsConfigService,
             IAuthenticationService authenticationService,
             IEventCreater eventCreater,
             IModelMapper mapper,
-            IUnitOfWork<ApplicationDbContext> unitOfWork
-            ) : base(httpClientManager, configuration)
+            IUnitOfWork<ApplicationDbContext> unitOfWork,
+            IHttpClientManagerNew httpClient
+            ) : base()
         {
-            _configuration = configuration;
+            _appSettingsConfigService = appSettingsConfigService;
             _authenticationService = authenticationService;
             _eventCreater = eventCreater; 
             _modelMapper = mapper;
-
+            _httpClient = httpClient;
             _unitOfWork = unitOfWork;
         }
+
+        public async Task<CloseEventsResponseViewModel> CloseEvent(CloseEventsRequestViewtModel closedEvent)
+        {
+            //TODO: get hsc event with filters from front end
+            //TODO: implment repo to do complex operations based on filter
+            
+            //!!find by now is only for prototype
+            var hscEvent = _unitOfWork.Repository<EventBase>().FindById(closedEvent.ids[0]);
+
+            //get essence event with ID(s) to get accountId, in the prototype only 1 id is used
+            var essenceId = hscEvent.VendorEventId;
+            var essenceEvent = _unitOfWork.Repository<EssenceEventObjectStructure>().FindById(essenceId);
+            if (essenceEvent == default(EssenceEventObjectStructure))
+            {
+                //log: no essenceEvent can be found
+                return null;
+            }
+
+            //create payload
+            var closeRequest = _modelMapper.MapToCloseRequetDTO(closedEvent);
+            closeRequest.AccountNumber = essenceEvent.Account;
+
+            //get token
+            var login = new LoginRequest { password = _appSettingsConfigService.Password, userName = _appSettingsConfigService.UserName };
+            var authResponse = await _authenticationService.Login(login);
+            if(!authResponse.Value)
+            {
+                return new CloseEventsResponseViewModel { ResponseCode = ViewModels.ResponseCode.AuthenticationFailed };
+            }
+
+            //get close event response
+            var header = new Dictionary<string, string>();
+            header.Add("Authorization", authResponse.token);
+            header.Add("Host", _appSettingsConfigService.HostName);
+            _httpClient.ConfigurateHttpClient(_appSettingsConfigService.EssenceBaseUrl, header);
+            var result =  await _httpClient.PostAsync<CloseEventsResponse>("Alerts/CloseEvents", closeRequest);
+
+            //map to viewmodel
+            return _modelMapper.MapToCloseResponseDTO(result);
+        }
+        
 
         public EventViewModel GetEvent(string id)
         {
@@ -71,11 +117,6 @@ namespace Essence.Communication.BusinessServices
             _unitOfWork.Save();
 
             return await Task.Run(() => true);
-        }
-
-        public override void SetApiEndpointAddress()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using Essence.Communication.BusinessServices.ViewModel;
+using Essence.Communication.BusinessServices.ViewModels;
 using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.ValueObjects;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Essence.Communication.BusinessServices
@@ -12,11 +14,13 @@ namespace Essence.Communication.BusinessServices
 
     public interface IModelMapper
     { 
-        EventViewModel MapToViewModel(IEvent eventObj); 
+        EventViewModel MapToViewModel(IEvent eventObj);
+        CloseEventsRequest MapToCloseRequetDTO(CloseEventsRequestViewtModel viewModel);
+        CloseEventsResponseViewModel MapToCloseResponseDTO(CloseEventsResponse viewModel);
     }
-    
+
     public class ModelMapper : IModelMapper
-    { 
+    {
         public EventViewModel MapToViewModel(IEvent eventObj)
         {
             if (eventObj == null)
@@ -28,6 +32,28 @@ namespace Essence.Communication.BusinessServices
             return CreateViewModel(eventType, source);
         }
 
+        public CloseEventsRequest MapToCloseRequetDTO(CloseEventsRequestViewtModel viewModel)
+        {
+            return new CloseEventsRequest()
+            {
+                AccountNumber = viewModel.AccountNumber,
+                CloseReason = viewModel.CloseReason,
+                HandingConclusion = viewModel.HandingConclusion,
+                SessionData = viewModel.SessionData,
+                Filter = new CloseEventsFilters { EventTypes = null, Ids = viewModel.ids }
+            };
+        }
+        public CloseEventsResponseViewModel MapToCloseResponseDTO(CloseEventsResponse dtoModel)
+        {
+            return new CloseEventsResponseViewModel()
+            {
+                Description = dtoModel.Message,
+                ValidationResult = dtoModel.ValidationResult.CloseEventsFilterValidatorResult == null ? null : dtoModel.ValidationResult.CloseEventsFilterValidatorResult.Select(x => x.Message).ToList(),
+                ResponseCode = 0
+            };
+        }
+
+  
         private EventViewModel CreateViewModel(Type eventType, EventBase source)
         {
             if (eventType == typeof(Event<BatteryDetails>))

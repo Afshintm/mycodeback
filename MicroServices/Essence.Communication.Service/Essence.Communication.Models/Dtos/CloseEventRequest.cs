@@ -24,7 +24,7 @@ namespace Essence.Communication.Models.Dtos
 
     public class CloseEventsFilters
     {
-        public List<EventHandlingEventTypeFilterEnum> ActiveEmergencyCall { get; set; }
+        public List<EventHandlingEventTypeFilterEnum> EventTypes { get; set; }
         public List<Guid> Ids { get; set; }
     }
 

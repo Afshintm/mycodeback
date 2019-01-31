@@ -102,15 +102,10 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
-
-            //builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(DbContext)).InstancePerLifetimeScope();
-
-            //builder.RegisterType(typeof(ApplicationData)).As(typeof(ApplicationData)).InstancePerDependency();
            
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerDependency();
 
             builder.RegisterGeneric(typeof(UnitOfWork<>)).As(typeof(IUnitOfWork<>)).InstancePerDependency();
-            //builder.RegisterGeneric(typeof(DbContextBase<>)).As(typeof(IDbContext)).InstancePerDependency();
 
 
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency();

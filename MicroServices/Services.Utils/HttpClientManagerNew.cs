@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace Services.Utils
 {
-    
-
     public interface IHttpClientManagerNew
     {
         Task<T> GetAsync<T>(string path, string parameters = null) where T : class;
@@ -19,15 +17,19 @@ namespace Services.Utils
 
     }
 
+    /// <summary>
+    /// compared with old HttpClientManager
+    /// 1> Return unsuccessful response content;
+    /// 2> Be able to add request headers
+    /// 3> Encapsulate process of sending request and handle response in sperated function "InvokeAsync"
+    /// </summary>
     public class HttpClientManagerNew : IHttpClientManagerNew
     {
         private HttpClient _client;
         public HttpClientManagerNew()
         {
             _client = new HttpClient();
-        }
-
-        HttpClient Client => _client ?? (_client = new HttpClient());
+        }  
 
         public async Task<T> GetAsync<T>(string path, string parameters = null) where T : class
         {
@@ -69,7 +71,6 @@ namespace Services.Utils
             return apiParameters;
         }
 
-
         private async Task<T> InvokeAsync<T>(
                 Func<HttpClient, Task<HttpResponseMessage>> operation,
                 Func<HttpResponseMessage, Task<T>> callBackAction = null)
@@ -81,8 +82,9 @@ namespace Services.Utils
 
             if (!response.IsSuccessStatusCode)
             {
-                var exception = new Exception($"Resource server returned an error. StatusCode : {response.StatusCode}");
-                exception.Data.Add("StatusCode", response.StatusCode);
+                var exception = new HttpClientManagerException ($"Resource server returned an error. StatusCode : {response.StatusCode}");
+                exception.StatusCode = response.StatusCode;
+                exception.ResponseConetent = response.Content;
                 throw exception;
             }
             if (callBackAction != null)

@@ -10,6 +10,7 @@ namespace Services.Utilities.DataAccess
     public interface IRepository<TEntity> : IDisposable where TEntity : class
     {
         TEntity FindById(object id);
+        
         void Update(TEntity entity);
         void Delete(object id);
         void Delete(TEntity entity);

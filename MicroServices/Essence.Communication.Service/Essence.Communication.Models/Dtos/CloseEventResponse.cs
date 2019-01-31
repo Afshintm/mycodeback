@@ -4,11 +4,8 @@ using System.Text;
 
 namespace Essence.Communication.Models.Dtos
 {
-    public class CloseEventsResponse
+    public class CloseEventsResponse : ResponseBase
     {
-        public ResponseCode Response { get; set; }
-        public string ResponseDescription { get; set; }
-        public bool Value { get; set; }
         public ValidationResult ValidationResult { get; set; }
     }
 
@@ -21,6 +18,7 @@ namespace Essence.Communication.Models.Dtos
     {
         public string ValidationCategory { get; set; }
         public List<CategoryParameter> Parameters { get; set; }
+        public string Message { get; set; }
     }
 
     public class CategoryParameter

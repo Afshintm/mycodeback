@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Essence.Communication.BusinessServices;
+using Essence.Communication.BusinessServices.ViewModels;
 using Essence.Communication.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Services.Utils;
 
 namespace Essence.Communication.Api.Controllers
 {
@@ -45,6 +48,28 @@ namespace Essence.Communication.Api.Controllers
             if (result)
                 return Ok();
             return BadRequest();
+        }
+
+        // Post: api/Message
+        [Route("$close")]
+        [HttpPost]
+        public async Task<ActionResult> CloseEvent([FromBody]CloseEventsRequestViewtModel eventClosed)
+        {
+            //TODO :validate headers 
+
+            try
+            {
+                var result =  await _eventService.CloseEvent(eventClosed);
+                return Ok(result);
+            }
+            catch (HttpClientManagerException ex)
+            {
+                return BadRequest(ex.ResponseConetent);
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
     }
