@@ -60,22 +60,22 @@ namespace Essence.Communication.BusinessServices
             }
 
             //need 2 parameters
-            var contentyTypes = contentTypeValue.Split(';');
-            if (contentyTypes.Length != 2)
+            var contentTypes = contentTypeValue.Split(';');
+            if (contentTypes.Length != 2)
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
 
             //not support json
-            if (!contentyTypes[0].Equals(jsonCententType, StringComparison.CurrentCultureIgnoreCase))
+            if (!contentTypes[0].Equals(jsonCententType, StringComparison.CurrentCultureIgnoreCase))
             {
                 return new HttpResponseMessage(HttpStatusCode.UnsupportedMediaType);
             }
 
-            if (!contentyTypes[0].Equals(jsonCententType, StringComparison.CurrentCultureIgnoreCase))
+            if (!contentTypes[0].Equals(jsonCententType, StringComparison.CurrentCultureIgnoreCase))
             {
                 return new HttpResponseMessage(HttpStatusCode.UnsupportedMediaType);
             }
 
-            var profiles = contentyTypes[1].Trim();
+            var profiles = contentTypes[1].Trim();
             var start = profiles.IndexOf('"') + 1;
             var length = profiles.LastIndexOf('"') - start;
 

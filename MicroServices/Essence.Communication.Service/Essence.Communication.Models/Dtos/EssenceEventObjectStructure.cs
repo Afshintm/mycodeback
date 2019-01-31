@@ -27,7 +27,7 @@ namespace Essence.Communication.Models.Dtos
         public int? ServiceType { get; set; }
 
         // Essence Original Event Id
-        public List<Guid> EventId { get; set; }
+        public List<string> Ids { get; set; }
     }
 
     public class EssenceEventObject

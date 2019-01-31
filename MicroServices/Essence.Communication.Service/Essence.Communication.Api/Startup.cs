@@ -88,6 +88,7 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(VendorEventCodeDetailsMapper)).As(typeof(IVendorEventCodeDetailsMapper)).SingleInstance();
             builder.RegisterType(typeof(VendorEventList)).As(typeof(IVendorEventList)).SingleInstance();
             builder.RegisterType(typeof(EmergencyRules)).As(typeof(IEventEmergencyRules)).SingleInstance();
+            builder.RegisterType(typeof(HttpClientManagerNew)).As(typeof(IHttpClientManagerNew)).SingleInstance();
 
             builder.RegisterType(typeof(ModelMapper)).As(typeof(IModelMapper)).SingleInstance();
             builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
@@ -101,15 +102,12 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(UsersProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
-           
+            builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();          
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerDependency();
-
             builder.RegisterGeneric(typeof(UnitOfWork<>)).As(typeof(IUnitOfWork<>)).InstancePerDependency();
-
-
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency();
             builder.RegisterType<EssenceRequestValidation>().As<IRequestValidation>().InstancePerDependency();
+
 
 
             return builder;
