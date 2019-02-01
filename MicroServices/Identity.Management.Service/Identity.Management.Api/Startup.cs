@@ -40,9 +40,17 @@ namespace Identity.Management.Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var oprationsConnectionString = Configuration.GetConnectionString("IdentityServerOprationsConnectionString");
-            var identityServerBuilder = services.AddIdentityServer().AddSigninCredentialFromConfig(Configuration , _logger)
+            var identityServerBuilder = services.AddIdentityServer()
+
                 //.AddDeveloperSigningCredential()
-                //.AddTestUsers(Config.GetUsers())
+                //.AddInMemoryIdentityResources(Config.GetIdentityResources())
+                //.AddInMemoryApiResources(Config.GetApiResources())
+                //.AddInMemoryClients(Config.GetClients())
+                //.AddTestUsers(Config.GetUsers());
+
+                .AddSigninCredentialFromConfig(Configuration, _logger)
+                //.AddDeveloperSigningCredential()
+                //.AddTestUsers(Config.GetUsers()).
                 // this adds the config data from DB (clients, resources)
                 .AddConfigurationStore(options =>
                 {
@@ -60,7 +68,8 @@ namespace Identity.Management.Api
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 30;
-                }).AddAspNetIdentity<ApplicationUser>(); 
+                })
+                .AddAspNetIdentity<ApplicationUser>();
 
         }
 

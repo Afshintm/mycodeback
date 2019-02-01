@@ -4,6 +4,7 @@ using Essence.Communication.Models.ValueObjects;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Essence.Communication.Models.Dtos
 {
@@ -27,6 +28,7 @@ namespace Essence.Communication.Models.Dtos
         public int? ServiceType { get; set; }
 
         // Essence Original Event Id
+        [NotMapped]
         public List<Guid> EventId { get; set; }
     }
 

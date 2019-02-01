@@ -1,6 +1,10 @@
 FROM microsoft/aspnetcore:2.0 AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 5002/tcp
+Expose 443
+ENV	ASPNETCORE_URLS http://*:5002
+
 
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src

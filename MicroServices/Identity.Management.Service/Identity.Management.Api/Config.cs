@@ -1,11 +1,8 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Identity.Management.Api
 {
@@ -27,6 +24,7 @@ namespace Identity.Management.Api
             return new List<ApiResource>
             {
                 new ApiResource("api1", "My API")
+                //,new ApiResource("Essence.Communication.Api", "Essence Communication Api")
             };
         }
 
@@ -45,7 +43,9 @@ namespace Identity.Management.Api
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "api1"
+                    //, "Essence.Communication.Api"
+                    }
                 },
 
                 // resource owner password grant client
@@ -58,7 +58,9 @@ namespace Identity.Management.Api
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "api1"
+                    //, "Essence.Communication.Api"
+                    }
                 },
 
                 // OpenID Connect hybrid flow and client credentials client (MVC)
@@ -83,6 +85,7 @@ namespace Identity.Management.Api
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "api1"
+                        //,"Essence.Communication.Api"
                     },
                     AllowOfflineAccess = true
                 }
@@ -119,5 +122,6 @@ namespace Identity.Management.Api
                 }
             };
         }
+
     }
 }

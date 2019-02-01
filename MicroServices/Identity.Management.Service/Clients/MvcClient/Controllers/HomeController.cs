@@ -5,11 +5,16 @@ using Microsoft.AspNetCore.Authentication;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using IdentityModel.Client;
+using Microsoft.Extensions.Configuration;
 
 namespace MvcClient.Controllers
 {
     public class HomeController : Controller
     {
+        IConfiguration _configuration;
+        public HomeController(IConfiguration configuration) {
+            _configuration = configuration;
+        }
         public IActionResult Index()
         {
             return View();
@@ -36,12 +41,20 @@ namespace MvcClient.Controllers
 
         public async Task<IActionResult> CallApiUsingClientCredentials()
         {
-            var tokenClient = new TokenClient("http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com/connect/token", "mvc", "secret");
-            var tokenResponse = await tokenClient.RequestClientCredentialsAsync("api1");
+            var tokenEndPoint = _configuration.GetSection("AuthenticationServer")["TokenEndPoint"];
+            var clientId = _configuration.GetSection("AuthenticationServer").GetSection("Client")["Id"];
+            var clientSecret = _configuration.GetSection("AuthenticationServer").GetSection("Client")["Secret"];
+            var scope = _configuration.GetSection("AuthenticationServer").GetSection("Client")["Scope1"];
+
+            var apiBaseUrl = _configuration.GetSection("BackendApi")["BaseUrl"];
+
+
+            var tokenClient = new TokenClient(tokenEndPoint, clientId, clientSecret);
+            var tokenResponse = await tokenClient.RequestClientCredentialsAsync(scope);
 
             var client = new HttpClient();
             client.SetBearerToken(tokenResponse.AccessToken);
-            var content = await client.GetStringAsync("http://myidentityapi-1806119154.ap-southeast-2.elb.amazonaws.com/identity");
+            var content = await client.GetStringAsync(apiBaseUrl + "/identity");
 
             ViewBag.Json = JArray.Parse(content).ToString();
             return View("Json");
@@ -49,11 +62,13 @@ namespace MvcClient.Controllers
 
         public async Task<IActionResult> CallApiUsingUserAccessToken()
         {
+            var apiBaseUrl = _configuration.GetSection("BackendApi")["BaseUrl"];
+
             var accessToken = await HttpContext.GetTokenAsync("access_token");
 
             var client = new HttpClient();
             client.SetBearerToken(accessToken);
-            var content = await client.GetStringAsync("http://myidentityapi-1806119154.ap-southeast-2.elb.amazonaws.com/identity");
+            var content = await client.GetStringAsync(apiBaseUrl + "/identity");
 
             ViewBag.Json = JArray.Parse(content).ToString();
             return View("Json");

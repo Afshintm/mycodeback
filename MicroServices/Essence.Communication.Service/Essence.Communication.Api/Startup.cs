@@ -42,17 +42,20 @@ namespace Essence.Communication.Api
             services.AddCors();
             //set entityframework connection string
             services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
+            services.AddDbContext<ApplicationIdentityDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
 
             services.AddMvc();
 
             services.AddAuthorization();
             var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
+            var apiName = Configuration.GetSection("AuthenticationServer")["ApiKey"];
+
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
                     options.Authority = IdentityServerIssuerUrl;
                     options.RequireHttpsMetadata = false;
-                    options.ApiName = "api1";
+                    options.ApiName = apiName;
                 });
             
 
@@ -103,7 +106,10 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
 
-            //builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(DbContext)).InstancePerLifetimeScope();
+            //var connectionString = Configuration.GetConnectionString("ApplicationConnectionString");
+            //var o = new DbContextOptionsBuilder<ApplicationIdentityDbContext>();
+            //o.UseSqlServer()
+            //builder.RegisterType(typeof(ApplicationIdentityDbContext)).As(typeof(DbContext)).InstancePerLifetimeScope();
 
             //builder.RegisterType(typeof(ApplicationData)).As(typeof(ApplicationData)).InstancePerDependency();
            
