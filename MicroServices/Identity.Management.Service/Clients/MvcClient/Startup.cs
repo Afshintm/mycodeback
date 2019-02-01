@@ -45,7 +45,7 @@ namespace MvcClient
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
 
-                    //options.Scope.Add("api1");
+                    options.Scope.Add("api1");
                     options.Scope.Add("Essence.Communication.Api");
                     options.Scope.Add("offline_access");
                     options.ClaimActions.MapJsonKey("website", "website");
