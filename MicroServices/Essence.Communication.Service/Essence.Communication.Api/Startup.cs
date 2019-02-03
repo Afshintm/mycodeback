@@ -20,19 +20,23 @@ namespace Essence.Communication.Api
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IConfiguration configuration,ILogger<Startup> logger)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            this.Configuration = builder.Build();
+            //var builder = new ConfigurationBuilder()
+            //    .SetBasePath(env.ContentRootPath)
+            //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            //    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            //    .AddEnvironmentVariables();
+            //this.Configuration = builder.Build();
+            Configuration = configuration;
+            HostingEnvironment = env;
+            _logger = logger;
         }
-
+        public ILogger<Startup> _logger;
+        public IHostingEnvironment HostingEnvironment { get; private set; }
         public IContainer ApplicationContainer { get; private set; }
 
-        public IConfigurationRoot Configuration { get; private set; }
+        public IConfiguration Configuration { get; private set; }
 
         // ConfigureServices is where you register dependencies. This gets
         // called by the runtime before the Configure method, below.
@@ -49,7 +53,7 @@ namespace Essence.Communication.Api
             services.AddAuthorization();
             var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
             var apiName = Configuration.GetSection("AuthenticationServer")["ApiKey"];
-
+            _logger.LogInformation("Identity Server configuration data is {0}available.",( string.IsNullOrEmpty(IdentityServerIssuerUrl)||string.IsNullOrEmpty(IdentityServerIssuerUrl)?"not":string.Empty ));
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
