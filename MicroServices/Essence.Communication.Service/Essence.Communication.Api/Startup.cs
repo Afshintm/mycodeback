@@ -15,6 +15,10 @@ using Microsoft.EntityFrameworkCore;
 using Essence.Communication.Models.Utility;
 using Services.Utilities.DataAccess;
 using Essence.Communication.DbContexts;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.Reflection;
+using System.IO;
 
 namespace Essence.Communication.Api
 {
@@ -45,6 +49,18 @@ namespace Essence.Communication.Api
 
             services.AddMvc();
 
+            //add swagger service
+            services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new Info { Title = "HomeStay API", Version = "v1" });
+                    
+                    var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+
+                    var name = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                    var xmlPath = Path.Combine(basePath, name);
+                    c.IncludeXmlComments(xmlPath);
+                });
+            
             services.AddAuthorization();
             var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
             services.AddAuthentication("Bearer")
@@ -134,8 +150,12 @@ namespace Essence.Communication.Api
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseAuthentication();
             app.UseHttpsRedirection();
-
+            app.UseSwagger();
             app.UseMvc();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "HomeStayIntelligent API V1");
+            });
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             // You can only do this if you have a direct reference to the container,

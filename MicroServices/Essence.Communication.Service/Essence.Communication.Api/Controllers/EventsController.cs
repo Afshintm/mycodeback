@@ -35,7 +35,15 @@ namespace Essence.Communication.Api.Controllers
             
         }
 
-        // Post: api/Message
+        
+        /// <summary>
+        /// Receive event notification from Essence api
+        /// </summary>
+        /// <remarks>
+        ///
+        /// </remarks>
+        /// <param name="eventObjectStructure">Essence event object structure</param>
+        /// <returns>Ture if the essence event is valid</returns>
         [Route("~/event")]
         [HttpPost]
         public async Task<IActionResult> PickEvent([FromBody]EssenceEventObjectStructure eventObjectStructure)
@@ -50,7 +58,12 @@ namespace Essence.Communication.Api.Controllers
             return BadRequest();
         }
 
-        // Post: api/Message
+
+        /// <summary>
+        /// Closing an essence event based on request from UI
+        /// </summary>
+        /// <param name="eventClosed">Event close request from UI</param>
+        /// <returns>Response of closing event action</returns>
         [Route("$close")]
         [HttpPost]
         public async Task<ActionResult> CloseEvent([FromBody]CloseEventsRequestViewtModel eventClosed)
