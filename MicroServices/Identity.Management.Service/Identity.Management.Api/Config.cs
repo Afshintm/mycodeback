@@ -24,7 +24,8 @@ namespace Identity.Management.Api
             return new List<ApiResource>
             {
                 new ApiResource("api1", "My API")
-                //,new ApiResource("Essence.Communication.Api", "Essence Communication Api")
+                ,new ApiResource("Essence.Communication.Api", "Essence Communication Api")
+                
             };
         }
 
@@ -44,7 +45,7 @@ namespace Identity.Management.Api
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = { "api1"
-                    //, "Essence.Communication.Api"
+                    , "Essence.Communication.Api"
                     }
                 },
 
@@ -59,7 +60,7 @@ namespace Identity.Management.Api
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = { "api1"
-                    //, "Essence.Communication.Api"
+                    , "Essence.Communication.Api"
                     }
                 },
 
@@ -85,43 +86,43 @@ namespace Identity.Management.Api
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "api1"
-                        //,"Essence.Communication.Api"
+                        ,"Essence.Communication.Api"
                     },
                     AllowOfflineAccess = true
                 }
             };
         }
 
-        public static List<TestUser> GetUsers()
-        {
-            return new List<TestUser>
-            {
-                new TestUser
-                {
-                    SubjectId = "1",
-                    Username = "alice",
-                    Password = "password",
+        //public static List<TestUser> GetUsers()
+        //{
+        //    return new List<TestUser>
+        //    {
+        //        new TestUser
+        //        {
+        //            SubjectId = "1",
+        //            Username = "alice",
+        //            Password = "password",
 
-                    Claims = new List<Claim>
-                    {
-                        new Claim("name", "Alice"),
-                        new Claim("website", "https://alice.com")
-                    }
-                },
-                new TestUser
-                {
-                    SubjectId = "2",
-                    Username = "bob",
-                    Password = "password",
+        //            Claims = new List<Claim>
+        //            {
+        //                new Claim("name", "Alice"),
+        //                new Claim("website", "https://alice.com")
+        //            }
+        //        },
+        //        new TestUser
+        //        {
+        //            SubjectId = "2",
+        //            Username = "bob",
+        //            Password = "password",
 
-                    Claims = new List<Claim>
-                    {
-                        new Claim("name", "Bob"),
-                        new Claim("website", "https://bob.com")
-                    }
-                }
-            };
-        }
+        //            Claims = new List<Claim>
+        //            {
+        //                new Claim("name", "Bob"),
+        //                new Claim("website", "https://bob.com")
+        //            }
+        //        }
+        //    };
+        //}
 
     }
 }
