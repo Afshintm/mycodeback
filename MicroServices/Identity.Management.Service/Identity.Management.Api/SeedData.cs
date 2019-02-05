@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
@@ -31,6 +32,19 @@ namespace Identity.Management.Api
                     context.Database.Migrate();
 
                     var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                    var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                    List<string> MyRoles = new List<string> { "AdminRole", "ResidentRole", "CaregiverRole" };
+                    foreach (var item in MyRoles)
+                    {
+                        var r = roleMgr.CreateAsync(new IdentityRole(item)).Result;
+                        if (!r.Succeeded)
+                        {
+                            throw new Exception(r.Errors.First().Description);
+                        }
+
+                    }
+
+
                     var alice = userMgr.FindByNameAsync("alice").Result;
                     if (alice == null)
                     {
@@ -51,8 +65,11 @@ namespace Identity.Management.Api
                             new Claim(JwtClaimTypes.Email, "AliceSmith@email.com"),
                             new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
                             new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
-                            new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json)
+                            new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
+                            new Claim("defClaim","defClaimValue")
                         }).Result;
+
+                        result = userMgr.AddToRoleAsync(alice, "AdminRole").Result;
                         if (!result.Succeeded)
                         {
                             throw new Exception(result.Errors.First().Description);
@@ -85,13 +102,15 @@ namespace Identity.Management.Api
                         new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
                         new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
                         new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
-                        new Claim("location", "somewhere")
-                    }).Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-                        Console.WriteLine("bob created");
+                        new Claim("location", "somewhere"),
+                        new Claim("abcClaim","abcClaimValue")
+                        }).Result;
+                        result = userMgr.AddToRoleAsync(bob, "ResidentRole").Result;    
+                        if (!result.Succeeded)    
+                        {    
+                            throw new Exception(result.Errors.First().Description);    
+                        }    
+                        Console.WriteLine("bob created");    
                     }
                     else
                     {

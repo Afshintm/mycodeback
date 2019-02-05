@@ -1,16 +1,15 @@
-﻿using IdentityServer4;
+﻿using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Identity.Management.Api
 {
     public class Config
     {
+        
         // scopes define the resources in your system
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
@@ -18,7 +17,18 @@ namespace Identity.Management.Api
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResources.Email(),
+                new IdentityResources.Email()
+                ,new IdentityResource
+                {
+                    Name = "roles",
+                    DisplayName = "Roles",
+                    Description = "Allow the service access to your user roles.",
+                    UserClaims = new[] { JwtClaimTypes.Role, ClaimTypes.Role },
+                    ShowInDiscoveryDocument = true,
+                    Required = true,
+                    //Emphasize = true
+                }
+
             };
         }
 
@@ -27,6 +37,8 @@ namespace Identity.Management.Api
             return new List<ApiResource>
             {
                 new ApiResource("api1", "My API")
+                ,new ApiResource("Essence.Communication.Api", "Essence Communication Api")
+                
             };
         }
 
@@ -45,7 +57,9 @@ namespace Identity.Management.Api
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "api1"
+                    , "Essence.Communication.Api"
+                    }
                 },
 
                 // resource owner password grant client
@@ -58,7 +72,9 @@ namespace Identity.Management.Api
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "api1"
+                    , "Essence.Communication.Api"
+                    }
                 },
 
                 // OpenID Connect hybrid flow and client credentials client (MVC)
@@ -82,42 +98,44 @@ namespace Identity.Management.Api
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "api1","Essence.Communication.Api","roles"
                     },
-                    AllowOfflineAccess = true
+                    AllowOfflineAccess = true,
+                    AlwaysSendClientClaims = true,
                 }
             };
         }
 
-        public static List<TestUser> GetUsers()
-        {
-            return new List<TestUser>
-            {
-                new TestUser
-                {
-                    SubjectId = "1",
-                    Username = "alice",
-                    Password = "password",
+        //public static List<TestUser> GetUsers()
+        //{
+        //    return new List<TestUser>
+        //    {
+        //        new TestUser
+        //        {
+        //            SubjectId = "1",
+        //            Username = "alice",
+        //            Password = "password",
 
-                    Claims = new List<Claim>
-                    {
-                        new Claim("name", "Alice"),
-                        new Claim("website", "https://alice.com")
-                    }
-                },
-                new TestUser
-                {
-                    SubjectId = "2",
-                    Username = "bob",
-                    Password = "password",
+        //            Claims = new List<Claim>
+        //            {
+        //                new Claim("name", "Alice"),
+        //                new Claim("website", "https://alice.com")
+        //            }
+        //        },
+        //        new TestUser
+        //        {
+        //            SubjectId = "2",
+        //            Username = "bob",
+        //            Password = "password",
 
-                    Claims = new List<Claim>
-                    {
-                        new Claim("name", "Bob"),
-                        new Claim("website", "https://bob.com")
-                    }
-                }
-            };
-        }
+        //            Claims = new List<Claim>
+        //            {
+        //                new Claim("name", "Bob"),
+        //                new Claim("website", "https://bob.com")
+        //            }
+        //        }
+        //    };
+        //}
+
     }
 }
