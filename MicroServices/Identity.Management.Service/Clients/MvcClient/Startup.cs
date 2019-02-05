@@ -45,10 +45,19 @@ namespace MvcClient
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
 
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.Scope.Add("offline_access");
+                    options.Scope.Add("roles");
                     options.Scope.Add("api1");
                     options.Scope.Add("Essence.Communication.Api");
-                    options.Scope.Add("offline_access");
-                    options.ClaimActions.MapJsonKey("website", "website");
+                    //==================
+                    // Fix for getting roles claims correctly :
+                    options.ClaimActions.MapJsonKey("role", "role", "role");
+                    options.TokenValidationParameters.NameClaimType = "name";
+                    options.TokenValidationParameters.RoleClaimType = "role";
+                    //===============
+
                 });
         }
 

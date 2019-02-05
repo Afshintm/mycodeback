@@ -1,4 +1,5 @@
-﻿using IdentityServer4;
+﻿using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ namespace Identity.Management.Api
 {
     public class Config
     {
+        
         // scopes define the resources in your system
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
@@ -15,7 +17,18 @@ namespace Identity.Management.Api
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResources.Email(),
+                new IdentityResources.Email()
+                ,new IdentityResource
+                {
+                    Name = "roles",
+                    DisplayName = "Roles",
+                    Description = "Allow the service access to your user roles.",
+                    UserClaims = new[] { JwtClaimTypes.Role, ClaimTypes.Role },
+                    ShowInDiscoveryDocument = true,
+                    Required = true,
+                    //Emphasize = true
+                }
+
             };
         }
 
@@ -85,10 +98,10 @@ namespace Identity.Management.Api
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
-                        ,"Essence.Communication.Api"
+                        "api1","Essence.Communication.Api","roles"
                     },
-                    AllowOfflineAccess = true
+                    AllowOfflineAccess = true,
+                    AlwaysSendClientClaims = true,
                 }
             };
         }

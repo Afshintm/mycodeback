@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Essence.Communication.DbContexts;
 using Identity.Management.Api.Extensions;
+using Identity.Management.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +41,13 @@ namespace Identity.Management.Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var oprationsConnectionString = Configuration.GetConnectionString("IdentityServerOprationsConnectionString");
-            var identityServerBuilder = services.AddIdentityServer()
+            var identityServerBuilder = services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
+            })
 
                 //.AddDeveloperSigningCredential()
                 //.AddInMemoryIdentityResources(Config.GetIdentityResources())
@@ -69,7 +76,8 @@ namespace Identity.Management.Api
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 30;
                 })
-                .AddAspNetIdentity<ApplicationUser>();
+                .AddAspNetIdentity<ApplicationUser>()
+                .AddProfileService<ProfileService>(); 
 
         }
 
