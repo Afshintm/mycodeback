@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{D4D9A315-0CC3-4929-817A-ED4E40C65442}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MicroServices", "MicroServices", "{7F77526F-1F0B-4728-A877-49D314A5B46A}"
+	ProjectSection(SolutionItems) = preProject
+		MicroServices\Build-all-db.bat = MicroServices\Build-all-db.bat
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration.Tests", "Integration.Tests", "{FE3B4FD0-91DE-4841-8944-910577947F78}"
 EndProject
