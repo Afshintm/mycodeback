@@ -8,8 +8,7 @@ namespace Essence.Communication.BusinessServices.ViewModel
     {
         public string HSCCode { get; set; }
         public string CreateTime { get; set; }  
-        public int Level { get; set; }
-        public string EmergencyDescription { get; set; }
+        public string AlertType { get; set; } 
     }
 
     public class UnexpectedActivityEventViewModel : EventViewModel

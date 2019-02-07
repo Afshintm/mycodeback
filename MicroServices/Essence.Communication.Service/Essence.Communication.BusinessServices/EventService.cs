@@ -65,7 +65,7 @@ namespace Essence.Communication.BusinessServices
             }
 
             //create payload
-            var closeRequest = _modelMapper.MapToCloseRequetDTO(closedEvent);
+            var closeRequest = _modelMapper.MapToCloseEventRequetDTO(closedEvent);
             closeRequest.AccountNumber = essenceEvent.Account;
 
             //get token
@@ -110,7 +110,7 @@ namespace Essence.Communication.BusinessServices
             
 
             //cast essenceEvent details into hcsEvent 
-            var hscEvent = _eventCreater.Create(vendorEvent);
+            var hscEvent = _eventCreater.Create(vendorEvent, "fakeaccountid");
             //    _appData.AddNewEvent(hscEvent);
             _unitOfWork.Repository<EventBase>().Insert(hscEvent);
 

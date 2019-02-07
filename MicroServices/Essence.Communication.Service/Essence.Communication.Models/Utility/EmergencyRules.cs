@@ -1,44 +1,56 @@
 ﻿
 
+using Essence.Communication.Models.Enums;
 using Essence.Communication.Models.ValueObjects;
 using System.Collections.Generic;
 
 namespace Essence.Communication.Models.Utility
 {
-    public interface IEventEmergencyRules
+    public interface IEventAlertRules
     {
-        EmergencyCategory this[string key] { get; }
+        AlertType this[string key] { get; }
     }
-    public class EmergencyRules  : IEventEmergencyRules
+
+    /// <summary>
+    /// map event's alter type against event code (i.e. vendorName_venderCode)
+    /// </summary>
+    public class AlertTypeRules  : IEventAlertRules
     {
         private readonly IVendorEventList _eventList;
-        private Dictionary<string, EmergencyCategory> _rules = new Dictionary<string, EmergencyCategory>();
-        public EmergencyRules(IVendorEventList eventList)
+        private Dictionary<string, AlertType> _rules = new Dictionary<string, AlertType>();
+        public AlertTypeRules(IVendorEventList eventList)
         {
             _eventList = eventList;
-            _rules.Add(_eventList[EventTypes.Essence_EMERGENCY_PANIC_ALERM], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_EMERGENCY_PANIC_ALERM_CANCELLED], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_POSSIBLE_FALL_ALERT], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_DOOR_LEFT_OPEN_ALERT], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_PANEL_ONLINE], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_PANEL_OFFLINE], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_LOW_BATTERY], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_LOW_BATTERY_RESET], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_EMPTY_BATTERY], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_BATTERY_RESTORED], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_MAINS_POWER_FAILURE], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_MAINS_POWER_RESTORED], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_WANDERING], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_NO_ACTIVITY], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_ACTIVITY_RESUMED], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_UNEXPECTED_ENTRY_OR_EXIT], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_EXTREME_INACTIVITY], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_UNUSUAL_ACTIVITY_ALERT], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_OUT_OF_HOME_ALERT], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
-            _rules.Add(eventList[EventTypes.Essence_BACK_AT_HOME_ALERT], new EmergencyCategory { Level = Enums.EmergencyLevels.High, Description = "" });
+            _rules.Add(eventList[EventTypes.Essence_BACK_AT_HOME_ALERT], AlertType.Event);
+            _rules.Add(eventList[EventTypes.Essence_BATTERY_RESTORED], AlertType.Event);
+            _rules.Add(eventList[EventTypes.Essence_DOOR_LEFT_OPEN_ALERT], AlertType.Alert);
+            _rules.Add(_eventList[EventTypes.Essence_EMERGENCY_PANIC_ALERM], AlertType.Emergency);
+            _rules.Add(eventList[EventTypes.Essence_EMERGENCY_PANIC_ALERM_CANCELLED], AlertType.Event);
+            _rules.Add(eventList[EventTypes.Essence_EMPTY_BATTERY], AlertType.Alert);
+            _rules.Add(eventList[EventTypes.Essence_EXTREME_INACTIVITY], AlertType.Alert);
+            _rules.Add(eventList[EventTypes.Essence_Long_Total_Sustained_Activity_Duration], AlertType.Alert);
+
+            _rules.Add(eventList[EventTypes.Essence_LOW_BATTERY], AlertType.Alert);
+            _rules.Add(eventList[EventTypes.Essence_LOW_BATTERY_RESET], AlertType.Event);
+
+            _rules.Add(eventList[EventTypes.Essence_MAINS_POWER_FAILURE], AlertType.Alert);
+            _rules.Add(eventList[EventTypes.Essence_MAINS_POWER_RESTORED], AlertType.Event);
+
+            _rules.Add(eventList[EventTypes.Essence_NO_PRESENCE], AlertType.Alert);
+            _rules.Add(eventList[EventTypes.Essence_PRESENCE], AlertType.Event);
+
+            _rules.Add(eventList[EventTypes.Essence_OUT_OF_HOME_ALERT], AlertType.Event);
+
+            _rules.Add(eventList[EventTypes.Essence_PANEL_OFFLINE], AlertType.Alert);
+            _rules.Add(eventList[EventTypes.Essence_PANEL_ONLINE], AlertType.Event);
+
+            _rules.Add(eventList[EventTypes.Essence_UNEXPECTED_ENTRY_OR_EXIT], AlertType.Alert);
+            _rules.Add(eventList[EventTypes.Essence_WANDERING], AlertType.Alert);
+
+ 
         }
 
-        public EmergencyCategory this[string key]
+        public AlertType this[string key]
         {
             get => _rules[key];
         }

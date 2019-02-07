@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Essence.Communication.Models.Enums
 {
-    public enum EmergencyLevels
+    public enum EventStatus
     {
-        UnKnown = 0,
-        High = 1,
-        Middle = 2, 
-        Low  = 3
+        New = 0,
+        Open = 1,
+        Viewed = 2, 
+        Closed = 3
     }
 }

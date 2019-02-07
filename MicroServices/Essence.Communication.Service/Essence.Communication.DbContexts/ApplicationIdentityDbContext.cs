@@ -41,7 +41,7 @@ namespace Essence.Communication.DbContexts
             builder.Entity<IdentityUserRole<string>>(entity =>
             {
                 entity.ToTable("UserRoles");
-                //in case you chagned the TKey type
+                //in case you chagned the TKey type 
                 //entity.HasKey(key => new { key.UserId, key.RoleId });
             });
 

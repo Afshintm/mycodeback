@@ -110,7 +110,7 @@ namespace Essence.Communication.Api
             builder.RegisterType(typeof(AppSettingsConfigService)).As(typeof(IAppSettingsConfigService)).SingleInstance();
             builder.RegisterType(typeof(VendorEventCodeDetailsMapper)).As(typeof(IVendorEventCodeDetailsMapper)).SingleInstance();
             builder.RegisterType(typeof(VendorEventList)).As(typeof(IVendorEventList)).SingleInstance();
-            builder.RegisterType(typeof(EmergencyRules)).As(typeof(IEventEmergencyRules)).SingleInstance();
+            builder.RegisterType(typeof(AlertTypeRules)).As(typeof(IEventAlertRules)).SingleInstance();
             builder.RegisterType(typeof(HttpClientManagerNew)).As(typeof(IHttpClientManagerNew)).SingleInstance();
 
             builder.RegisterType(typeof(ModelMapper)).As(typeof(IModelMapper)).SingleInstance();

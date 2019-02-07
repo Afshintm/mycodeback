@@ -22,6 +22,7 @@ namespace Essence.Communication.Models.Dtos
         //YYY-MM-DDTHH:mm:ss
         public string PanelTime { get; set; }
         //YYY-MM-DDTHH:mm:ss:sssZ
+        //when the event was received or generated in the backend
         public string ServerTime { get; set; }
 
         public int? ServiceProvider { get; set; }

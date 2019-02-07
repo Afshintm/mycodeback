@@ -31,11 +31,8 @@ namespace Essence.Communication.Models.Utility
             _eventTypes.Add(EventTypes.Essence_MAINS_POWER_FAILURE, $"{Vendor.Essence.ToString()}_201");
             _eventTypes.Add(EventTypes.Essence_MAINS_POWER_RESTORED, $"{Vendor.Essence.ToString()}_202");
             _eventTypes.Add(EventTypes.Essence_WANDERING, $"{Vendor.Essence.ToString()}_2117");
-            _eventTypes.Add(EventTypes.Essence_NO_ACTIVITY, $"{Vendor.Essence.ToString()}_2152");
-            _eventTypes.Add(EventTypes.Essence_ACTIVITY_RESUMED, $"{Vendor.Essence.ToString()}_2153");
             _eventTypes.Add(EventTypes.Essence_UNEXPECTED_ENTRY_OR_EXIT, $"{Vendor.Essence.ToString()}_2201");
             _eventTypes.Add(EventTypes.Essence_EXTREME_INACTIVITY, $"{Vendor.Essence.ToString()}_2116");
-            _eventTypes.Add(EventTypes.Essence_UNUSUAL_ACTIVITY_ALERT, $"{Vendor.Essence.ToString()}_2003");
             _eventTypes.Add(EventTypes.Essence_OUT_OF_HOME_ALERT, $"{Vendor.Essence.ToString()}_2103");
             _eventTypes.Add(EventTypes.Essence_BACK_AT_HOME_ALERT, $"{Vendor.Essence.ToString()}_2104");
         }
@@ -56,16 +53,16 @@ namespace Essence.Communication.Models.Utility
         public const string Essence_PANEL_OFFLINE = "Essence_PANEL_OFFLINE";
         public const string Essence_LOW_BATTERY = "Essence_LOW_BATTERY";
         public const string Essence_LOW_BATTERY_RESET = "Essence_LOW_BATTERY_RESET";
+        public const string Essence_Long_Total_Sustained_Activity_Duration = "Essence_Long_Total_Sustained_Activity_Duration";
         public const string Essence_EMPTY_BATTERY = "Essence_EMPTY_BATTERY";
         public const string Essence_BATTERY_RESTORED = "Essence_BATTERY_RESTORED";
         public const string Essence_MAINS_POWER_FAILURE = "Essence_MAINS_POWER_FAILURE";
         public const string Essence_MAINS_POWER_RESTORED = "Essence_MAINS_POWER_RESTORED";
+        public const string Essence_NO_PRESENCE = "Essence_NO_PRESENCE";
         public const string Essence_WANDERING = "Essence_WANDERING";
-        public const string Essence_NO_ACTIVITY = "Essence_NO_ACTIVITY";
-        public const string Essence_ACTIVITY_RESUMED = "Essence_ACTIVITY_RESUMED";
+        public const string Essence_PRESENCE = "Essence_PRESENCE";
         public const string Essence_UNEXPECTED_ENTRY_OR_EXIT = "Essence_UNEXPECTED_ENTRY_OR_EXIT";
         public const string Essence_EXTREME_INACTIVITY = "Essence_EXTREME_INACTIVITY";
-        public const string Essence_UNUSUAL_ACTIVITY_ALERT = "Essence_UNUSUAL_ACTIVITY_ALERT";
         public const string Essence_OUT_OF_HOME_ALERT = "Essence_OUT_OF_HOME_ALERT";
         public const string Essence_BACK_AT_HOME_ALERT = "Essence_BACK_AT_HOME_ALERT";
     }

@@ -43,7 +43,6 @@ namespace Essence.Communication.Models.Utility
             _eventDetaislTypes.Add(_eventTypesManager[EventTypes.Essence_BACK_AT_HOME_ALERT], typeof(StayHomeDetails));
             
             _eventDetaislTypes.Add(_eventTypesManager[EventTypes.Essence_UNEXPECTED_ENTRY_OR_EXIT], typeof(UnexpectedEntryExitDetails));
-            _eventDetaislTypes.Add(_eventTypesManager[EventTypes.Essence_UNUSUAL_ACTIVITY_ALERT], typeof(UnexpectedActivityDetails));
         }
 
         public Type GetDetailType(string code)

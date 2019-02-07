@@ -9,22 +9,26 @@ namespace Essence.Communication.Models
     }
     public abstract class EventBase : Entity, IEvent
     {
-        private Location location;
-        private EmergencyCategory emergencyCategory;
+        private Location location; 
         public EventBase()
         {
-            //ef core 2.0 not support null value object
+            //ef core 2.0 does not support null value object
             location = new Location();
-            emergencyCategory = new EmergencyCategory();
         } 
 
-        public int Account { get; set; }
-        public int Severity { get; set; }
+        public string AccountId { get; set; }
+        public AlertType AlertType { get; set; }
+
+        public EventStatus Status { get; set; }
         public string PanelTime { get; set; }
-        public int? ServiceProvider { get; set; }
-        public int? ServiceType { get; set; }
+        public int? ServiceProvider { get; set; } 
+
+        //time the event received or generated in the backend
         public string ServerTime { get; set; }
+
+        //if the event from mobile device
         public bool? IsMobile { get; set; }
+
         public Location Location
         {
             get
@@ -33,7 +37,7 @@ namespace Essence.Communication.Models
             }
             set
             {
-                //ef core 2.0 not support null value object
+                //ef core 2.0 does not support null value object
                 if (value != default(Location))
                 {
                     location = value;
@@ -43,29 +47,9 @@ namespace Essence.Communication.Models
 
         //we do not set vender event as refernce for HSC event
         public Vendor VendorType { get; set; }
-        public string VendorEventId { get; set; }
+        public string VendorEventId { get; set; } 
 
-        //EmergencyCategory
-        public EmergencyCategory EmergencyCategory
-        {
-            get
-            {
-                return emergencyCategory;
-            }
-            set
-            {
-                //ef core 2.0 not support null value object
-                if (value != default(EmergencyCategory))
-                {
-                    emergencyCategory = value;
-                }
-            }
-        }
-
-        //TODO: need to map Hsc userID from vendor events in next MVP
-        public string UserID { get; set; }
-
-        //TODO: Map vendor's code into hsc code
+        //TODO: Map vendor's event code into hsc code, currently using esscense event code directly
         public string HSCCode { get; set; }
     }
 
