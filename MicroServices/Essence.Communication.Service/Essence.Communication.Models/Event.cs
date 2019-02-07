@@ -14,11 +14,11 @@ namespace Essence.Communication.Models
         {
             //ef core 2.0 does not support null value object
             location = new Location();
+            Status = EventStatus.New;
         } 
-
-        public string AccountId { get; set; }
+        
+        public Account Account { get; set; }
         public AlertType AlertType { get; set; }
-
         public EventStatus Status { get; set; }
         public string PanelTime { get; set; }
         public int? ServiceProvider { get; set; } 
@@ -28,6 +28,13 @@ namespace Essence.Communication.Models
 
         //if the event from mobile device
         public bool? IsMobile { get; set; }
+
+        //we do not set vender event as refernce for HSC event
+        public Vendor Vendor { get; set; }
+        public string VendorEventId { get; set; } 
+
+        //VendorType-VendorCode
+        public string HSCCode { get; set; }
 
         public Location Location
         {
@@ -44,13 +51,6 @@ namespace Essence.Communication.Models
                 }
             }
         }
-
-        //we do not set vender event as refernce for HSC event
-        public Vendor VendorType { get; set; }
-        public string VendorEventId { get; set; } 
-
-        //TODO: Map vendor's event code into hsc code, currently using esscense event code directly
-        public string HSCCode { get; set; }
     }
 
     public class Event<T> : EventBase where T : IDetails

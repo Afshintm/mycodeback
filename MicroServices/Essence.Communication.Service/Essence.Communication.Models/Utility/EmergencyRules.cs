@@ -14,11 +14,11 @@ namespace Essence.Communication.Models.Utility
     /// <summary>
     /// map event's alter type against event code (i.e. vendorName_venderCode)
     /// </summary>
-    public class AlertTypeRules  : IEventAlertRules
+    public class HSCAlertTypeRules  : IEventAlertRules
     {
-        private readonly IVendorEventList _eventList;
+        private readonly IEventCodeList _eventList;
         private Dictionary<string, AlertType> _rules = new Dictionary<string, AlertType>();
-        public AlertTypeRules(IVendorEventList eventList)
+        public HSCAlertTypeRules(IEventCodeList eventList)
         {
             _eventList = eventList;
             _rules.Add(eventList[EventTypes.Essence_BACK_AT_HOME_ALERT], AlertType.Event);

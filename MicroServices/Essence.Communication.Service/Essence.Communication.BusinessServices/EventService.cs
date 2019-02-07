@@ -110,7 +110,7 @@ namespace Essence.Communication.BusinessServices
             
 
             //cast essenceEvent details into hcsEvent 
-            var hscEvent = _eventCreater.Create(vendorEvent, "fakeaccountid");
+            var hscEvent = _eventCreater.Create(vendorEvent, new Account());
             //    _appData.AddNewEvent(hscEvent);
             _unitOfWork.Repository<EventBase>().Insert(hscEvent);
 

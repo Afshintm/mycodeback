@@ -4,6 +4,7 @@ using Essence.Communication.Models.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Essence.Communication.DbContexts.Configurations;
 using Services.Utilities.DataAccess;
+using System;
 
 namespace Essence.Communication.DbContexts
 {
@@ -26,6 +27,9 @@ namespace Essence.Communication.DbContexts
         public DbSet<Event<FallAlertDetails>> FallAlertEvent { get; set; }
         public DbSet<Event<EmergencyPanicDetails>> EmergencyPanicEvent { get; set; }
 
+        public DbSet<Vendor> Vendor { get; set; }
+        public DbSet<Account> Account { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -44,6 +48,9 @@ namespace Essence.Communication.DbContexts
             modelBuilder.Entity<Event<PanelStatusDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<FallAlertDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<EmergencyPanicDetails>>().OwnsOne(s => s.Details);
+
+            DbContextHelper.SetIdDefaultGuidValue(modelBuilder.Entity<Vendor>());
+            DbContextHelper.SetIdDefaultGuidValue(modelBuilder.Entity<Account>()); 
         }
 
     }

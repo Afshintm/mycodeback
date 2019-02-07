@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.EventBus.Events;
 using Essence.Communication.Models.Enums;
+using Essence.Communication.Models.Utility;
 using Essence.Communication.Models.ValueObjects;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,7 +16,7 @@ namespace Essence.Communication.Models.Dtos
     {
         public EssenceEventObjectStructure()
         {
-            this.Vendor = Vendor.Essence;
+            this.Vendor = new Vendor(EventVendors.ESSENCE);
         }
         public int Account { get; set; }
         public EssenceEventObject Event { get; set; }

@@ -108,9 +108,9 @@ namespace Essence.Communication.Api
             builder.Populate(services);
             builder.RegisterType<HttpClientManager>().As<IHttpClientManager>().SingleInstance();
             builder.RegisterType(typeof(AppSettingsConfigService)).As(typeof(IAppSettingsConfigService)).SingleInstance();
-            builder.RegisterType(typeof(VendorEventCodeDetailsMapper)).As(typeof(IVendorEventCodeDetailsMapper)).SingleInstance();
-            builder.RegisterType(typeof(VendorEventList)).As(typeof(IVendorEventList)).SingleInstance();
-            builder.RegisterType(typeof(AlertTypeRules)).As(typeof(IEventAlertRules)).SingleInstance();
+            builder.RegisterType(typeof(HSCCodeDetailsMapper)).As(typeof(IEventCodeDetailsMapper)).SingleInstance();
+            builder.RegisterType(typeof(HSCEventCodeList)).As(typeof(IEventCodeList)).SingleInstance();
+            builder.RegisterType(typeof(HSCAlertTypeRules)).As(typeof(IEventAlertRules)).SingleInstance();
             builder.RegisterType(typeof(HttpClientManagerNew)).As(typeof(IHttpClientManagerNew)).SingleInstance();
 
             builder.RegisterType(typeof(ModelMapper)).As(typeof(IModelMapper)).SingleInstance();

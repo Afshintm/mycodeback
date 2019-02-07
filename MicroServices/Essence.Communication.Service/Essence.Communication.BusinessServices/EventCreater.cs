@@ -1,7 +1,6 @@
 ﻿using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.Enums; 
-using Essence.Communication.Models.Extensions;
 using Essence.Communication.Models.Utility;
 using Essence.Communication.Models.ValueObjects;
 using System;
@@ -11,7 +10,7 @@ namespace Essence.Communication.BusinessServices
 {
     public interface IEventCreater
     {
-        EventBase Create(IVendorEvent providerEvent, string hscAccountId);
+        EventBase Create(IVendorEvent providerEvent, Account hscAccount);
     }
     
     /// <summary>
@@ -20,69 +19,66 @@ namespace Essence.Communication.BusinessServices
     public class EventCreater : IEventCreater
     {
         private const string Details_Property = "Details";
-        private readonly IVendorEventCodeDetailsMapper _eventCodeDetailTypeMapper;
+        private readonly IEventCodeDetailsMapper _eventCodeDetailTypeMapper;
         private readonly IEventAlertRules _eventAlertRule;
 
-        public EventCreater(IVendorEventCodeDetailsMapper eventCodeDetailTypeMapper,
+        public EventCreater(IEventCodeDetailsMapper eventCodeDetailTypeMapper,
                     IEventAlertRules eventMergencyRules)
         {
             _eventCodeDetailTypeMapper = eventCodeDetailTypeMapper;
             _eventAlertRule = eventMergencyRules;
         }
 
-        public EventBase Create(IVendorEvent eventStructure, string hscAccountId)
+        public EventBase Create(IVendorEvent eventStructure, Account hscAccount)
         {
-            if (eventStructure.Vendor != Vendor.Essence)
+            switch(eventStructure.Vendor.Name)
             {
-                throw new NotSupportedException($"Vendor {eventStructure.Vendor.ToString()} is not supported.");
+                case EventVendors.ESSENCE:
+                    return CreateEssenceEvent(eventStructure, hscAccount);
+                default: return null;
             }
-            
-            if (eventStructure.Vendor == Vendor.Essence)
-            {
-                var vendorEvent = eventStructure as EssenceEventObjectStructure;
-                if (vendorEvent?.Event == null)
-                    return null;          
-                
-                //get details of event against vendor event code
-                var detailsType = _eventCodeDetailTypeMapper.GetDetailType(vendorEvent.GetVendorEventCode(vendorEvent.Event.Code.ToString()));     
-                if (detailsType == null)
-                {
-                    throw new NotImplementedException();
-                }
-
-                var deatils = vendorEvent.Event.Details;
-                var detailsObj = (deatils == null ? Activator.CreateInstance(detailsType) : deatils.ToObject(detailsType)) as IDetails;
-
-                //create specific hsc event object based on the details type
-                var eventObj = GetEventWithDetailsType(detailsType);
-                if (eventObj == null)
-                    return null;
-                //set  properties
-                eventObj.AccountId = hscAccountId;
-                SetDetails(eventObj, detailsObj);
-                eventObj.AlertType = _eventAlertRule[vendorEvent.GetVendorEventCode(vendorEvent.Event.Code.ToString())];
-
-                MapTo(vendorEvent, eventObj);
-                return eventObj;             
-            }
-
-            return null;
         }
 
-        /// <summary>
-        /// map commen essence event into hsc event
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="eventObj"></param>
+       
+        /// map essence event common fields into hsc event
         private void MapTo(EssenceEventObjectStructure source, EventBase eventObj)
         {
-            eventObj.HSCCode = source.GetVendorEventCode(source.Event.Code.ToString());
+            eventObj.HSCCode = HSCEventHelper.GetEventCodeFromEssence(source.Event.Code.ToString());
             eventObj.PanelTime = source.PanelTime;
             eventObj.ServiceProvider = source.ServiceProvider;
             eventObj.ServerTime = source.ServerTime;
             eventObj.Location = source.Event.Location;
             eventObj.VendorEventId = source.Id;
-            eventObj.VendorType = source.Vendor;
+            eventObj.Vendor= source.Vendor;
+        }
+
+        private EventBase CreateEssenceEvent(IVendorEvent eventStructure, Account hscAccount)
+        {
+            var vendorEvent = eventStructure as EssenceEventObjectStructure;
+            if (vendorEvent?.Event == null)
+                return null;
+
+            //get details of event against vendor event code
+            var detailsType = _eventCodeDetailTypeMapper.GetDetailType(HSCEventHelper.GetEventCodeFromEssence(vendorEvent.Event.Code.ToString()));
+            if (detailsType == null)
+            {
+                throw new NotImplementedException();
+            }
+
+            var deatils = vendorEvent.Event.Details;
+            var detailsObj = (deatils == null ? Activator.CreateInstance(detailsType) : deatils.ToObject(detailsType)) as IDetails;
+
+            //create specific hsc event object based on the details type
+            var eventObj = GetEventWithDetailsType(detailsType);
+            if (eventObj == null)
+                return null;
+            //set  properties
+            eventObj.Account = hscAccount;
+            SetDetails(eventObj, detailsObj);
+            eventObj.AlertType = _eventAlertRule[HSCEventHelper.GetEventCodeFromEssence(vendorEvent.Event.Code.ToString())];
+
+            MapTo(vendorEvent, eventObj);
+            return eventObj;
         }
 
         private EventBase GetEventWithDetailsType(Type detailsType)
@@ -93,6 +89,7 @@ namespace Essence.Communication.BusinessServices
 
         private void SetDetails (EventBase eventObj, IDetails detailsObj)
         {
+            //get details property from the event instance
             var propertyInfo = eventObj.GetType().GetProperties().FirstOrDefault(a => a.Name == Details_Property);
             if (propertyInfo == null)
             {

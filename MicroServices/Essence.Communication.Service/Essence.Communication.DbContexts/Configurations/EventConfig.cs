@@ -13,15 +13,17 @@ namespace Essence.Communication.DbContexts.Configurations
         {
             builder.HasKey(h => h.Id)
                 .HasName("PK_HCSEvent_Id");
-                
+
             //Default value
-            builder.Property(h => h.Id)
-                .HasDefaultValue(Guid.NewGuid().ToString())
-                .IsRequired();
+            DbContextHelper.SetIdDefaultGuidValue(builder);
+
+            //fk  
+            builder.HasOne(e => e.Vendor).WithMany(v => v.HSCEvents).HasForeignKey("VendorId");
+            builder.HasOne(e => e.Account).WithMany(a => a.HSCEvents).HasForeignKey("AccountId");
 
             //convert enum into string
-            builder.Property(h => h.VendorType).HasConversion(DbContextHelper.GetEnumValueConverter<Vendor>());
             builder.Property(h => h.AlertType).HasConversion(DbContextHelper.GetEnumValueConverter<AlertType>());
+            builder.Property(h => h.Status).HasConversion(DbContextHelper.GetEnumValueConverter<EventStatus>());
 
             builder.Property(h => h.CreateDate)
                 .HasDefaultValue(DateTime.UtcNow)

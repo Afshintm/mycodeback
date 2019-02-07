@@ -1,46 +1,48 @@
-﻿using Essence.Communication.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Essence.Communication.Models.Utility
 {
     /// <summary>
-    /// mapping between provider event oode and provider event name
+    /// mapping between HSC event oode and  event name
     /// </summary>
-    public interface IVendorEventList
+    public interface IEventCodeList
     {
         string this[string key] { get; }
     }
 
-    public class VendorEventList : IVendorEventList
+    public class HSCEventCodeList : IEventCodeList
     {
         private readonly Dictionary<string, string> _eventTypes = new Dictionary<string, string>();
-        public VendorEventList()
+        public HSCEventCodeList()
         {
-            _eventTypes.Add(EventTypes.Essence_EMERGENCY_PANIC_ALERM, $"{Vendor.Essence.ToString()}_3");
-            _eventTypes.Add(EventTypes.Essence_EMERGENCY_PANIC_ALERM_CANCELLED, $"{Vendor.Essence.ToString()}_156");
-            _eventTypes.Add(EventTypes.Essence_POSSIBLE_FALL_ALERT, $"{Vendor.Essence.ToString()}_2001");
-            _eventTypes.Add(EventTypes.Essence_DOOR_LEFT_OPEN_ALERT, $"{Vendor.Essence.ToString()}_2101");
-            _eventTypes.Add(EventTypes.Essence_PANEL_ONLINE, $"{Vendor.Essence.ToString()}_705");
-            _eventTypes.Add(EventTypes.Essence_PANEL_OFFLINE, $"{Vendor.Essence.ToString()}_706");
-            _eventTypes.Add(EventTypes.Essence_LOW_BATTERY, $"{Vendor.Essence.ToString()}_203");
-            _eventTypes.Add(EventTypes.Essence_LOW_BATTERY_RESET, $"{Vendor.Essence.ToString()}_204");
-            _eventTypes.Add(EventTypes.Essence_EMPTY_BATTERY, $"{Vendor.Essence.ToString()}_205");
-            _eventTypes.Add(EventTypes.Essence_BATTERY_RESTORED, $"{Vendor.Essence.ToString()}_206");
-            _eventTypes.Add(EventTypes.Essence_MAINS_POWER_FAILURE, $"{Vendor.Essence.ToString()}_201");
-            _eventTypes.Add(EventTypes.Essence_MAINS_POWER_RESTORED, $"{Vendor.Essence.ToString()}_202");
-            _eventTypes.Add(EventTypes.Essence_WANDERING, $"{Vendor.Essence.ToString()}_2117");
-            _eventTypes.Add(EventTypes.Essence_UNEXPECTED_ENTRY_OR_EXIT, $"{Vendor.Essence.ToString()}_2201");
-            _eventTypes.Add(EventTypes.Essence_EXTREME_INACTIVITY, $"{Vendor.Essence.ToString()}_2116");
-            _eventTypes.Add(EventTypes.Essence_OUT_OF_HOME_ALERT, $"{Vendor.Essence.ToString()}_2103");
-            _eventTypes.Add(EventTypes.Essence_BACK_AT_HOME_ALERT, $"{Vendor.Essence.ToString()}_2104");
+            InitializeEssenceEventCodes();
         }
 
         public string this[string key]
         {
             get => _eventTypes[key];
         }
+
+        private void InitializeEssenceEventCodes()
+        {
+            _eventTypes.Add(EventTypes.Essence_EMERGENCY_PANIC_ALERM, HSCEventHelper.GetEventCodeFromEssence("3"));
+            _eventTypes.Add(EventTypes.Essence_EMERGENCY_PANIC_ALERM_CANCELLED, HSCEventHelper.GetEventCodeFromEssence("156"));
+            _eventTypes.Add(EventTypes.Essence_POSSIBLE_FALL_ALERT, HSCEventHelper.GetEventCodeFromEssence("2001"));
+            _eventTypes.Add(EventTypes.Essence_DOOR_LEFT_OPEN_ALERT, HSCEventHelper.GetEventCodeFromEssence("2101"));
+            _eventTypes.Add(EventTypes.Essence_PANEL_ONLINE, HSCEventHelper.GetEventCodeFromEssence("705"));
+            _eventTypes.Add(EventTypes.Essence_PANEL_OFFLINE, HSCEventHelper.GetEventCodeFromEssence("706"));
+            _eventTypes.Add(EventTypes.Essence_LOW_BATTERY, HSCEventHelper.GetEventCodeFromEssence("203"));
+            _eventTypes.Add(EventTypes.Essence_LOW_BATTERY_RESET, HSCEventHelper.GetEventCodeFromEssence("204"));
+            _eventTypes.Add(EventTypes.Essence_EMPTY_BATTERY, HSCEventHelper.GetEventCodeFromEssence("205"));
+            _eventTypes.Add(EventTypes.Essence_BATTERY_RESTORED, HSCEventHelper.GetEventCodeFromEssence("206"));
+            _eventTypes.Add(EventTypes.Essence_MAINS_POWER_FAILURE, HSCEventHelper.GetEventCodeFromEssence("201"));
+            _eventTypes.Add(EventTypes.Essence_MAINS_POWER_RESTORED, HSCEventHelper.GetEventCodeFromEssence("202"));
+            _eventTypes.Add(EventTypes.Essence_WANDERING, HSCEventHelper.GetEventCodeFromEssence("2117"));
+            _eventTypes.Add(EventTypes.Essence_UNEXPECTED_ENTRY_OR_EXIT, HSCEventHelper.GetEventCodeFromEssence("2201"));
+            _eventTypes.Add(EventTypes.Essence_EXTREME_INACTIVITY, HSCEventHelper.GetEventCodeFromEssence("2116"));
+            _eventTypes.Add(EventTypes.Essence_OUT_OF_HOME_ALERT, HSCEventHelper.GetEventCodeFromEssence("2103"));
+            _eventTypes.Add(EventTypes.Essence_BACK_AT_HOME_ALERT, HSCEventHelper.GetEventCodeFromEssence("2104"));
+        }     
     }
 
     public static class EventTypes
