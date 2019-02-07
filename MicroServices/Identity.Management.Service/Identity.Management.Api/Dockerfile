@@ -19,5 +19,5 @@ RUN dotnet publish "Identity.Management.Api.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENV ASPNETCORE_ENVIRONMENT="Development"
+ENV ASPNETCORE_ENVIRONMENT="Test"
 ENTRYPOINT ["dotnet", "Identity.Management.Api.dll"]
