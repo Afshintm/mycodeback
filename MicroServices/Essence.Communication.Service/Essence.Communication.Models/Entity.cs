@@ -12,6 +12,11 @@ namespace Essence.Communication.Models
 
     public class Entity :IEntity
     {
+        public Entity()
+        {
+            Id = Guid.NewGuid().ToString();
+            CreateDate = DateTime.UtcNow;
+        }
         public string Id { get; set; }
 
         //UTC time??

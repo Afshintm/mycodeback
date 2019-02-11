@@ -4,14 +4,16 @@ using Essence.Communication.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190211114251_AddUserMappingTables")]
+    partial class AddUserMappingTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,19 +25,16 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
             modelBuilder.Entity("Essence.Communication.Models.Account", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue("84a9fe4e-3ef4-45fc-81ec-4d38398709d8");
+
+                    b.Property<string>("AccountGroupId");
 
                     b.Property<DateTime>("CreateDate");
 
-                    b.Property<string>("GroupId");
-
-                    b.Property<string>("VendorId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("VendorId");
+                    b.HasIndex("AccountGroupId");
 
                     b.ToTable("Account");
                 });
@@ -64,59 +63,20 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.HasKey("AccountId", "UserId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("AccountUser");
-                });
-
-            modelBuilder.Entity("Essence.Communication.Models.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp");
-
-                    b.Property<string>("Email");
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail");
-
-                    b.Property<string>("NormalizedUserName");
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ApplicationUser");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.Dtos.EssenceEventObjectStructure", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue("7d8c9539-7e63-4305-ac4c-0296d6a6cd92");
 
                     b.Property<int>("Account");
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 2, 11, 12, 39, 53, 788, DateTimeKind.Utc).AddTicks(1587));
+                        .HasDefaultValue(new DateTime(2019, 2, 11, 11, 42, 51, 267, DateTimeKind.Utc).AddTicks(3954));
 
                     b.Property<string>("Ids");
 
@@ -141,7 +101,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
             modelBuilder.Entity("Essence.Communication.Models.EventBase", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue("256edb43-c314-444f-844e-bfcc700701c1");
 
                     b.Property<string>("AccountId");
 
@@ -185,7 +146,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
             modelBuilder.Entity("Essence.Communication.Models.Vendor", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue("7e84949d-49a5-44b4-b103-e1d77944bc96");
 
                     b.Property<DateTime>("CreateDate");
 
@@ -254,25 +216,16 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
             modelBuilder.Entity("Essence.Communication.Models.Account", b =>
                 {
-                    b.HasOne("Essence.Communication.Models.AccountGroup", "Group")
+                    b.HasOne("Essence.Communication.Models.AccountGroup")
                         .WithMany("Accounts")
-                        .HasForeignKey("GroupId");
-
-                    b.HasOne("Essence.Communication.Models.Vendor", "Vendor")
-                        .WithMany("Accounts")
-                        .HasForeignKey("VendorId");
+                        .HasForeignKey("AccountGroupId");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.AccountUser", b =>
                 {
-                    b.HasOne("Essence.Communication.Models.Account", "Account")
+                    b.HasOne("Essence.Communication.Models.Account")
                         .WithMany("AccountUsers")
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Essence.Communication.Models.ApplicationUser", "User")
-                        .WithMany("AccountUsers")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -284,7 +237,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.OwnsOne("Essence.Communication.Models.Dtos.EssenceEventObject", "Event", b1 =>
                         {
-                            b1.Property<string>("EssenceEventObjectStructureId");
+                            b1.Property<string>("EssenceEventObjectStructureId")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<int>("Code");
 
@@ -305,7 +259,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.OwnsOne("Essence.Communication.Models.ValueObjects.Location", "Location", b2 =>
                                 {
-                                    b2.Property<string>("EssenceEventObjectStructureId");
+                                    b2.Property<string>("EssenceEventObjectStructureId")
+                                        .ValueGeneratedOnAdd();
 
                                     b2.Property<int?>("HorizontalAccuracy");
 
@@ -337,7 +292,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.Location", "Location", b1 =>
                         {
-                            b1.Property<string>("EventBaseId");
+                            b1.Property<string>("EventBaseId")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<int?>("HorizontalAccuracy")
                                 .HasColumnName("HorizontalAccuracy");
@@ -363,7 +319,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.BatteryDetails", "Details", b1 =>
                         {
-                            b1.Property<string>("Event<BatteryDetails>Id");
+                            b1.Property<string>("Event<BatteryDetails>Id")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<int>("BatteryLevel");
 
@@ -388,7 +345,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.EmergencyPanicDetails", "Details", b1 =>
                         {
-                            b1.Property<string>("Event<EmergencyPanicDetails>Id");
+                            b1.Property<string>("Event<EmergencyPanicDetails>Id")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<string>("DeviceDescription")
                                 .HasColumnName("EmergencyPanicDetails_Details_DeviceDescription");
@@ -414,7 +372,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.FallAlertDetails", "Details", b1 =>
                         {
-                            b1.Property<string>("Event<FallAlertDetails>Id");
+                            b1.Property<string>("Event<FallAlertDetails>Id")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<int>("Activitytype");
 
@@ -444,7 +403,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.PanelStatusDetails", "Details", b1 =>
                         {
-                            b1.Property<string>("Event<PanelStatusDetails>Id");
+                            b1.Property<string>("Event<PanelStatusDetails>Id")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<string>("LastContactTime");
 
@@ -463,7 +423,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.PowerDetails", "Details", b1 =>
                         {
-                            b1.Property<string>("Event<PowerDetails>Id");
+                            b1.Property<string>("Event<PowerDetails>Id")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<string>("DeviceDescription")
                                 .HasColumnName("PowerDetails_Details_DeviceDescription");
@@ -493,7 +454,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.StayHomeDetails", "Details", b1 =>
                         {
-                            b1.Property<string>("Event<StayHomeDetails>Id");
+                            b1.Property<string>("Event<StayHomeDetails>Id")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<string>("EntryTime");
 
@@ -520,7 +482,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.UnexpectedActivityDetails", "Details", b1 =>
                         {
-                            b1.Property<string>("Event<UnexpectedActivityDetails>Id");
+                            b1.Property<string>("Event<UnexpectedActivityDetails>Id")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<string>("DeviceDescription")
                                 .HasColumnName("UnexpectedActivityDetails_Details_DeviceDescription");
@@ -548,7 +511,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.UnexpectedEntryExitDetails", "Details", b1 =>
                         {
-                            b1.Property<string>("Event<UnexpectedEntryExitDetails>Id");
+                            b1.Property<string>("Event<UnexpectedEntryExitDetails>Id")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<string>("DeviceDescription")
                                 .HasColumnName("UnexpectedEntryExitDetails_Details_DeviceDescription");
@@ -570,7 +534,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.OwnsOne("Essence.Communication.Models.ValueObjects.Period", "Period", b2 =>
                                 {
-                                    b2.Property<string>("UnexpectedEntryExitDetailsEvent<UnexpectedEntryExitDetails>Id");
+                                    b2.Property<string>("UnexpectedEntryExitDetailsEvent<UnexpectedEntryExitDetails>Id")
+                                        .ValueGeneratedOnAdd();
 
                                     b2.Property<bool>("Is24Hours");
 

@@ -1,4 +1,5 @@
 ﻿using Essence.Communication.DbContexts;
+using Essence.Communication.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

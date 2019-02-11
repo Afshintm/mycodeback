@@ -1,4 +1,5 @@
 ﻿using Essence.Communication.DbContexts;
+using Essence.Communication.Models;
 using IdentityModel;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
@@ -41,7 +42,6 @@ namespace Identity.Management.Api
                         {
                             throw new Exception(r.Errors.First().Description);
                         }
-
                     }
 
 

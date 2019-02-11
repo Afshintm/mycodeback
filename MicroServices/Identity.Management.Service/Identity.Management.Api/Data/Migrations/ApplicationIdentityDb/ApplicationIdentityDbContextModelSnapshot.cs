@@ -191,7 +191,7 @@ namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Essence.Communication.DbContexts.ApplicationUser")
+                    b.HasOne("Essence.Communication.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -199,7 +199,7 @@ namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Essence.Communication.DbContexts.ApplicationUser")
+                    b.HasOne("Essence.Communication.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -212,7 +212,7 @@ namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Essence.Communication.DbContexts.ApplicationUser")
+                    b.HasOne("Essence.Communication.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -220,7 +220,7 @@ namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Essence.Communication.DbContexts.ApplicationUser")
+                    b.HasOne("Essence.Communication.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

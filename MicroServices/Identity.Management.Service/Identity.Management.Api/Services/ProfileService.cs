@@ -1,4 +1,5 @@
 ﻿using Essence.Communication.DbContexts;
+using Essence.Communication.Models;
 using IdentityModel;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;

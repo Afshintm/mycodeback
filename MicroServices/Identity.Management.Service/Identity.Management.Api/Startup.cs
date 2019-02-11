@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Essence.Communication.Models;
 using Essence.Communication.DbContexts;
 using Identity.Management.Api.Extensions;
 using Identity.Management.Api.Services;

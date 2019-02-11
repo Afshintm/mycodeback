@@ -3,6 +3,7 @@
 
 
 using Essence.Communication.DbContexts;
+using Essence.Communication.Models;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;

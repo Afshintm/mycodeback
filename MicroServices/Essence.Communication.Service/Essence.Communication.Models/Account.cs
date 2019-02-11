@@ -10,5 +10,10 @@ namespace Essence.Communication.Models
         private string AccountNumber { get; set; }
 
         public ICollection<EventBase> HSCEvents { get; set; } 
+        public ICollection<AccountUser> AccountUsers { get; set; }
+
+        public AccountGroup Group { get; set; }
+        public Vendor Vendor { get; set; }
     }
+
 }

@@ -17,16 +17,10 @@ namespace Essence.Communication.DbContexts.Configurations
         {
             builder.HasKey(h => h.Id)
                 .HasName("PK_EssenceEvent_Id");
+            
 
-            //Default value
-            DbContextHelper.SetIdDefaultGuidValue(builder);
-
-            builder.Property(h => h.CreateDate)
-                .HasDefaultValue(DateTime.UtcNow)
-                .IsRequired();
-
-            //fk to vendor
-            builder.HasOne(e => e.Vendor).WithMany(a => a.VendorEvents)　.HasForeignKey("VendorId");
+            builder.Property(h => h.CreateDate).HasDefaultValue(DateTime.UtcNow)
+                .IsRequired();         
 
             //convert json obj into string
             var jsonConverter = new ValueConverter<JObject, string>(

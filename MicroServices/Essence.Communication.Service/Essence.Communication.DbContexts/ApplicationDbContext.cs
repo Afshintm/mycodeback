@@ -27,8 +27,11 @@ namespace Essence.Communication.DbContexts
         public DbSet<Event<FallAlertDetails>> FallAlertEvent { get; set; }
         public DbSet<Event<EmergencyPanicDetails>> EmergencyPanicEvent { get; set; }
 
+        public DbSet<AccountGroup> AccountGroup { get; set; }
+        public DbSet<AccountUser> AccountUser { get; set; }
         public DbSet<Vendor> Vendor { get; set; }
         public DbSet<Account> Account { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,8 +41,9 @@ namespace Essence.Communication.DbContexts
 
             modelBuilder.ApplyConfiguration(new EventConfig());
             modelBuilder.ApplyConfiguration(new VendorEventConfig());
+            modelBuilder.ApplyConfiguration(new AccountUserConfig());
 
-            //value objects
+            //set value objects
             modelBuilder.Entity<Event<UnexpectedActivityDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<UnexpectedEntryExitDetails>>().OwnsOne(s => s.Details).OwnsOne(p => p.Period);
             modelBuilder.Entity<Event<StayHomeDetails>>().OwnsOne(s => s.Details);
@@ -47,10 +51,7 @@ namespace Essence.Communication.DbContexts
             modelBuilder.Entity<Event<BatteryDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<PanelStatusDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<FallAlertDetails>>().OwnsOne(s => s.Details);
-            modelBuilder.Entity<Event<EmergencyPanicDetails>>().OwnsOne(s => s.Details);
-
-            DbContextHelper.SetIdDefaultGuidValue(modelBuilder.Entity<Vendor>());
-            DbContextHelper.SetIdDefaultGuidValue(modelBuilder.Entity<Account>()); 
+            modelBuilder.Entity<Event<EmergencyPanicDetails>>().OwnsOne(s => s.Details); 
         }
 
     }
