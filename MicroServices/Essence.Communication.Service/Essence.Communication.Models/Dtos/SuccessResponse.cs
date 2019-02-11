@@ -4,11 +4,7 @@ using System.Text;
 
 namespace Essence.Communication.Models.Dtos
 {
-    public class SuccessResponse
+    public class SuccessResponse : ResponseBase
     {
-        public bool Value { get; set; }
-        public int Response { get; set; }
-        public string ResponseDescription { get; set; }
-        public string Message { get; set; }
     }
 }

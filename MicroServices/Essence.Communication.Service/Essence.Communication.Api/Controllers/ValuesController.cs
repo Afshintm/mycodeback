@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Essence.Communication.BusinessServices;
-using Essence.Communication.Models.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Essence.Communication.Api.Controllers
@@ -14,12 +12,18 @@ namespace Essence.Communication.Api.Controllers
     {
             private readonly IReportingService _reportingService;
             private readonly IAccountService _userService;
-            private readonly IEventService _eventService;
-            public ValuesController(IReportingService reportingService, IAccountService userService, IEventService eventService)
+            private readonly IMessageService _messageService;
+        private readonly IAuthService _authService;
+
+            public ValuesController(IReportingService reportingService, 
+                IAccountService userService, 
+                IMessageService messageService,
+                IAuthService authService)
             {
                 _reportingService = reportingService;
                 _userService = userService;
-                _eventService = eventService;
+                _messageService = messageService;
+                _authService = authService;
             }
         // GET api/values
         [HttpGet]
@@ -53,7 +57,23 @@ namespace Essence.Communication.Api.Controllers
         {
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("~/Identity")]
+        public IActionResult GetClaims()
+        {
+            return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
+        }
 
+        [HttpGet]
+        [Route("~/api/values/users")]
+        public ActionResult<IEnumerable<string>> GetUsers()
+        {
+            var users = _authService.GetUsers();
+            if (users.Any())
+                return Ok(users);
+            return NotFound("No User found");
+        }
 
 
 

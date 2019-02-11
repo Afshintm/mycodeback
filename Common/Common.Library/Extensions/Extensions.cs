@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -72,6 +73,14 @@ namespace Common.Library.Extensions
                 return inputDt;
             }
 
+        }
+
+        public static string MD5Hash(this string input) {
+            using (var md5 = MD5.Create())
+            {
+                var result = md5.ComputeHash(Encoding.ASCII.GetBytes(input));
+                return Encoding.ASCII.GetString(result);
+            }
         }
     }
 

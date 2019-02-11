@@ -2,33 +2,34 @@
 using Microsoft.Extensions.Configuration;
 using Services.Utils;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Essence.Communication.BusinessServices
 {
-    public interface IAuthenticationService : IBaseBusinessService<LoginResponse>
+    public interface IAuthenticationService : IBaseBusinessServiceNew
     {
         Task<LoginResponse> Login(LoginRequest loginData, string token=null);
     }
-    public class AuthenticationService : BaseBusinessServices<LoginResponse>, IAuthenticationService
+    public class AuthenticationService : BaseBusinessServicesNew, IAuthenticationService
     {
-        private readonly IConfiguration _configuration;
-        public AuthenticationService(IHttpClientManager httpClientManager, IConfiguration configuration) : base(httpClientManager, configuration)
+        private readonly IAppSettingsConfigService _configuration;
+        private readonly IHttpClientManagerNew _httpClient;
+        public AuthenticationService(IHttpClientManagerNew httpClient,IAppSettingsConfigService configuration) 
         {
             _configuration = configuration;
+            _httpClient = httpClient;
         }
-        public override void SetApiEndpointAddress()
+
+        public async Task<LoginResponse> Login(LoginRequest loginData, string token = null)
         {
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "login/login";
-        }
+            string baseUrl = $"{_configuration.EssenceBaseUrl}";
+            var headers = new Dictionary<string, string>();
+            headers.Add("Host", _configuration.HostName);
 
-        public async Task<LoginResponse> Login(LoginRequest loginData, string token = null) {
+            _httpClient.ConfigurateHttpClient(baseUrl, headers);
 
-            var response = await Task.Run(async() => {
-                var result =  await PostAsync(loginData,token);
-                return result;
-            });
-            return response;
+            return await _httpClient.PostAsync<LoginResponse>("Login/Login", loginData);
         }
 
     }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Essence.Communication.Models.Dtos;
+﻿using Essence.Communication.Models.Dtos;
 using System.Threading.Tasks;
 using Services.Utils;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Essence.Communication.BusinessServices
 {
@@ -17,10 +15,12 @@ namespace Essence.Communication.BusinessServices
     {
         private readonly IConfiguration _configuration;
         private readonly IAuthenticationService _authenticationService;
-        public ReportingService(IHttpClientManager httpClientManager, IConfiguration configuration, IAuthenticationService authenticationService) : base(httpClientManager, configuration)
+        private readonly ILogger<ReportingService> _logger;
+        public ReportingService(IHttpClientManager httpClientManager, IConfiguration configuration, IAuthenticationService authenticationService,ILogger<ReportingService> logger) : base(httpClientManager, configuration)
         {
             _configuration = configuration;
             _authenticationService = authenticationService;
+            _logger = logger;
         }
 
         public async Task<ActivityResult> GetResidentActivity(ActivityRequest activityRequest)
@@ -30,6 +30,7 @@ namespace Essence.Communication.BusinessServices
                 userName = _configuration.GetSection("ApplicationSettings")["UserName"],
                 password = _configuration.GetSection("ApplicationSettings")["Password"]
             };
+            _logger.LogInformation("Calling ResidentActivity Api ...");
             LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
             //var result = await _apiManager.PostExternalAsync<ActivityResult>("report", "GetResidentActivity", activityRequest, loginResponse.token);
             var response = await Task.Run(async () => {

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Services.Utils
 {
-    public interface IBaseBusinessService<T>
+    public interface IBaseBusinessService<T> 
     {
         IEnumerable<T> GetAll();
         string ApiEndPoint { get; set; }
@@ -61,5 +61,6 @@ namespace Services.Utils
             var result = await _httpClientManager.PostAsync<T>(ApiEndPoint,data,token);
             return result;
         }
+
     }
 }
