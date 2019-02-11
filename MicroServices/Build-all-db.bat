@@ -1,3 +1,5 @@
+Echo User $Env:ASPNETCORE_ENVIRONMENT = "Test" in powershell to set the environment variable 
+
 cd Identity.Management.Service/Identity.Management.Api
 
 
