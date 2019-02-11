@@ -19,13 +19,14 @@ namespace Essence.Communication.DbContexts.Configurations
                 .HasName("PK_EssenceEvent_Id");
 
             //Default value
-            builder.Property(h => h.Id)
-                .HasDefaultValue(Guid.NewGuid().ToString())
-                .IsRequired();
+            DbContextHelper.SetIdDefaultGuidValue(builder);
 
             builder.Property(h => h.CreateDate)
                 .HasDefaultValue(DateTime.UtcNow)
                 .IsRequired();
+
+            //fk to vendor
+            builder.HasOne(e => e.Vendor).WithMany(a => a.VendorEvents)　.HasForeignKey("VendorId");
 
             //convert json obj into string
             var jsonConverter = new ValueConverter<JObject, string>(
@@ -33,19 +34,14 @@ namespace Essence.Communication.DbContexts.Configurations
                 v =>JObject.Parse(v)
             );
             builder.OwnsOne(h => h.Event).Property(a => a.Details).HasConversion(jsonConverter);
-
-            //convert enum into string
-            var vendorTypeConverter = new ValueConverter<Vendor, string>(
-                v => v.ToString(),
-                v => (Vendor)Enum.Parse(typeof(Vendor), v));
-
-            builder.Property(h => h.Vendor).HasConversion(vendorTypeConverter);
+            
 
             //convert id list into csv string
             var idsStringConverter = new ValueConverter<List<string>, string>(
                 v => string.Join(',', v.ToArray()),
                 v => v.Split(',', StringSplitOptions.None).ToList());
             builder.Property(h => h.Ids).HasConversion(idsStringConverter);
+
             //value object
             builder.OwnsOne(e => e.Event);
             builder.OwnsOne(e => e.Event).OwnsOne(b => b.Location);

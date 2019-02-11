@@ -13,18 +13,17 @@ namespace Essence.Communication.DbContexts.Configurations
         {
             builder.HasKey(h => h.Id)
                 .HasName("PK_HCSEvent_Id");
-                
 
             //Default value
-            builder.Property(h => h.Id)
-                .HasDefaultValue(Guid.NewGuid().ToString())
-                .IsRequired();
+            DbContextHelper.SetIdDefaultGuidValue(builder);
 
-            var vendorTypeConverter = new ValueConverter<Vendor, string>(
-                v => v.ToString(),
-                v => (Vendor)Enum.Parse(typeof(Vendor), v));
+            //fk  
+            builder.HasOne(e => e.Vendor).WithMany(v => v.HSCEvents).HasForeignKey("VendorId");
+            builder.HasOne(e => e.Account).WithMany(a => a.HSCEvents).HasForeignKey("AccountId");
 
-            builder.Property(h => h.VendorType).HasConversion(vendorTypeConverter);
+            //convert enum into string
+            builder.Property(h => h.AlertType).HasConversion(DbContextHelper.GetEnumValueConverter<AlertType>());
+            builder.Property(h => h.Status).HasConversion(DbContextHelper.GetEnumValueConverter<EventStatus>());
 
             builder.Property(h => h.CreateDate)
                 .HasDefaultValue(DateTime.UtcNow)
@@ -32,10 +31,10 @@ namespace Essence.Communication.DbContexts.Configurations
 
             builder.OwnsOne(l => l.Location).Property(c => c.Latitude).HasColumnName("Latitude");
             builder.OwnsOne(l => l.Location).Property(c => c.Longitude).HasColumnName("Longitude"); ;
-            builder.OwnsOne(l => l.Location).Property(c => c.HorizontalAccuracy).HasColumnName("HorizontalAccuracy"); ;
-
-            builder.OwnsOne(l => l.EmergencyCategory).Property(c => c.Level).HasColumnName("EmergencyLevel");
-            builder.OwnsOne(l => l.EmergencyCategory).Property(c => c.Description).HasColumnName("EmergencyDescriptoin");
+            builder.OwnsOne(l => l.Location).Property(c => c.HorizontalAccuracy).HasColumnName("HorizontalAccuracy");         
         }
+
     } 
+
+    
 }

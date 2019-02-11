@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.EventBus.Events;
 using Essence.Communication.Models.Enums;
+using Essence.Communication.Models.Utility;
 using Essence.Communication.Models.ValueObjects;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,13 +16,14 @@ namespace Essence.Communication.Models.Dtos
     {
         public EssenceEventObjectStructure()
         {
-            this.Vendor = Vendor.Essence;
+            this.Vendor = new Vendor(EventVendors.ESSENCE);
         }
         public int Account { get; set; }
         public EssenceEventObject Event { get; set; }
         //YYY-MM-DDTHH:mm:ss
         public string PanelTime { get; set; }
         //YYY-MM-DDTHH:mm:ss:sssZ
+        //when the event was received or generated in the backend
         public string ServerTime { get; set; }
 
         public int? ServiceProvider { get; set; }

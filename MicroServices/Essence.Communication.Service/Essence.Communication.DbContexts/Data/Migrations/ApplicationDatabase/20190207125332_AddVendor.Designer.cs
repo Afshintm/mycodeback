@@ -4,14 +4,16 @@ using Essence.Communication.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190207125332_AddVendor")]
+    partial class AddVendor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,30 +22,17 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Essence.Communication.Models.Account", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue("675fd40b-2855-4907-8ea9-d4db23bc27ab");
-
-                    b.Property<DateTime>("CreateDate");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Account");
-                });
-
             modelBuilder.Entity("Essence.Communication.Models.Dtos.EssenceEventObjectStructure", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue("9e6abf45-5f91-4d1d-a7fe-95340c145035");
+                        .HasDefaultValue("ce4becbc-22d2-44ac-be36-8042243e09aa");
 
                     b.Property<int>("Account");
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 2, 7, 13, 23, 38, 505, DateTimeKind.Utc).AddTicks(8858));
+                        .HasDefaultValue(new DateTime(2019, 2, 7, 12, 53, 32, 133, DateTimeKind.Utc).AddTicks(6061));
 
                     b.Property<string>("Ids");
 
@@ -69,7 +58,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue("2fb6520a-acb6-4cf9-944b-54839a791ae9");
+                        .HasDefaultValue("fd6a99ee-da09-47aa-a74e-cc9ece3ba801");
 
                     b.Property<string>("AccountId");
 
@@ -78,7 +67,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 2, 7, 13, 23, 38, 461, DateTimeKind.Utc).AddTicks(3357));
+                        .HasDefaultValue(new DateTime(2019, 2, 7, 12, 53, 32, 96, DateTimeKind.Utc).AddTicks(4492));
 
                     b.Property<string>("Discriminator")
                         .IsRequired();
@@ -103,8 +92,6 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     b.HasKey("Id")
                         .HasName("PK_HCSEvent_Id");
 
-                    b.HasIndex("AccountId");
-
                     b.HasIndex("VendorId");
 
                     b.ToTable("Event");
@@ -116,7 +103,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue("0caf25c3-6b65-4bd7-bb2f-d8599bbe72b3");
+                        .HasDefaultValue("4c3ddd57-7eb3-4c21-bc43-fd61b65de8fe");
 
                     b.Property<DateTime>("CreateDate");
 
@@ -236,10 +223,6 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
             modelBuilder.Entity("Essence.Communication.Models.EventBase", b =>
                 {
-                    b.HasOne("Essence.Communication.Models.Account", "Account")
-                        .WithMany("HSCEvents")
-                        .HasForeignKey("AccountId");
-
                     b.HasOne("Essence.Communication.Models.Vendor", "Vendor")
                         .WithMany("HSCEvents")
                         .HasForeignKey("VendorId");

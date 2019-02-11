@@ -15,12 +15,17 @@ namespace Essence.Communication.BusinessServices
     public interface IModelMapper
     { 
         EventViewModel MapToViewModel(IEvent eventObj);
-        CloseEventsRequest MapToCloseRequetDTO(CloseEventsRequestViewtModel viewModel);
-        CloseEventsResponseViewModel MapToCloseResponseDTO(CloseEventsResponse viewModel);
+        CloseEventsRequest MapToCloseEventRequetDTO(CloseEventsRequestViewtModel viewModel);
+        CloseEventsResponseViewModel MapToCloseResponseDTO(CloseEventsResponse dtoModel);
     }
 
     public class ModelMapper : IModelMapper
     {
+        /// <summary>
+        /// map event model to ViewModel
+        /// </summary>
+        /// <param name="eventObj"></param>
+        /// <returns></returns>
         public EventViewModel MapToViewModel(IEvent eventObj)
         {
             if (eventObj == null)
@@ -31,8 +36,8 @@ namespace Essence.Communication.BusinessServices
 
             return CreateViewModel(eventType, source);
         }
-
-        public CloseEventsRequest MapToCloseRequetDTO(CloseEventsRequestViewtModel viewModel)
+        
+        public CloseEventsRequest MapToCloseEventRequetDTO(CloseEventsRequestViewtModel viewModel)
         {
             return new CloseEventsRequest()
             {
@@ -140,8 +145,7 @@ namespace Essence.Communication.BusinessServices
 
             //TODO: change utc time to local time
             destination.CreateTime = source.ServerTime.ToString();
-            destination.Level = source.EmergencyCategory == null ? 0 : (int)source.EmergencyCategory.Level;
-            destination.EmergencyDescription = source.EmergencyCategory?.Description;
+            destination.AlertType = source.AlertType.ToString(); 
         }
 
         private void MapBaseDeviceDetails(DeviceEventDetailsViewModel destination, DeviceEventDetails source)
@@ -149,6 +153,16 @@ namespace Essence.Communication.BusinessServices
             destination.DeviceId = source.DeviceId;
             destination.DeviceType = source.DeviceType;
             destination.DeviceDescription = source.DeviceDescription;
+        }
+
+        public CloseEventsRequest MapToCloseRequetDTO(CloseEventsRequestViewtModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public CloseEventsResponseViewModel MapToCloseEventRequetDTO(CloseEventsResponse viewModel)
+        {
+            throw new NotImplementedException();
         }
     }
 
