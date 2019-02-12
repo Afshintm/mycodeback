@@ -1,82 +1,53 @@
-﻿body {
+body {
   margin-top: 65px;
+  background: #ededed;
 }
-.navbar-header {
-  position: relative;
-  top: -4px;
+.login-container {
+  padding: 2em;
+  margin: auto;
+  width: 30em;
 }
-.navbar-brand > .icon-banner {
-  position: relative;
-  top: -2px;
-  display: inline;
+.login-container .btn.login {
+  width: 100%;
+  margin-top: 1em;
+  color: #000;
+  font-weight: 600;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  display: block;
+  line-height: 0.3em;
+  background-color: rgb(20, 174, 254);
 }
-.icon {
-  position: relative;
-  top: -10px;
+.login-container .btn.login:hover {
+  background-color: rgb(20, 174, 254, 0.7);
 }
-.logged-out iframe {
-  display: none;
-  width: 0;
-  height: 0;
+@media only screen and (max-width: 768px) {
+  .login-container .container {
+    width: 100%;
+  }
 }
-.page-consent .client-logo {
-  float: left;
+.login-container fieldset {
+  border: none;
 }
-.page-consent .client-logo img {
-  width: 80px;
-  height: 80px;
+.login-container input {
+  background-color: #fff !important;
+  padding-left: 0.5em !important;
+  box-sizing: border-box !important;
 }
-.page-consent .consent-buttons {
-  margin-top: 25px;
+.login-container input:focus {
+  border-bottom-color: rgb(20, 174, 254) !important;
 }
-.page-consent .consent-form .consent-scopecheck {
-  display: inline-block;
-  margin-right: 5px;
+.login-container .alert.alert-danger {
+  background-color: #fff6f6;
+  color: #9f3a38;
+  box-shadow: 0 0 0 1px #e0b4b4 inset, 0 0 0 0 transparent;
+  padding: 1em;
+  margin-bottom: 2em;
 }
-.page-consent .consent-form .consent-description {
-  margin-left: 25px;
+.login-container .alert.alert-danger ul {
+  margin: 0;
 }
-.page-consent .consent-form .consent-description label {
-  font-weight: normal;
-}
-.page-consent .consent-form .consent-remember {
-  padding-left: 16px;
-}
-.grants .page-header {
-  margin-bottom: 10px;
-}
-.grants .grant {
-  margin-top: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid lightgray;
-}
-.grants .grant img {
-  width: 100px;
-  height: 100px;
-}
-.grants .grant .clientname {
-  font-size: 140%;
-  font-weight: bold;
-}
-.grants .grant .granttype {
-  font-size: 120%;
-  font-weight: bold;
-}
-.grants .grant .created {
-  font-size: 120%;
-  font-weight: bold;
-}
-.grants .grant .expires {
-  font-size: 120%;
-  font-weight: bold;
-}
-.grants .grant li {
-  list-style-type: none;
-  display: inline;
-}
-.grants .grant li:after {
-  content: ', ';
-}
-.grants .grant li:last-child:after {
-  content: '';
+.panel-heading {
+  text-align: center;
+  margin-bottom: 3em;
 }
