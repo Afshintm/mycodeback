@@ -4,14 +4,16 @@ using Essence.Communication.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190211233358_AddVendorAccountIdInAccount")]
+    partial class AddVendorAccountIdInAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +41,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.HasIndex("VendorId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Account");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.AccountGroup", b =>
@@ -53,7 +55,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccountGroups");
+                    b.ToTable("AccountGroup");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.AccountUser", b =>
@@ -68,7 +70,45 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AccountUsers");
+                    b.ToTable("AccountUser");
+                });
+
+            modelBuilder.Entity("Essence.Communication.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp");
+
+                    b.Property<string>("Email");
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail");
+
+                    b.Property<string>("NormalizedUserName");
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationUser");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.Dtos.EssenceEventObjectStructure", b =>
@@ -80,7 +120,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 2, 12, 3, 22, 2, 476, DateTimeKind.Utc).AddTicks(2375));
+                        .HasDefaultValue(new DateTime(2019, 2, 11, 23, 33, 57, 645, DateTimeKind.Utc).AddTicks(9915));
 
                     b.Property<string>("Ids");
 
@@ -99,7 +139,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.HasIndex("VendorId");
 
-                    b.ToTable("EssenceEvents");
+                    b.ToTable("EssenceEvent");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.EventBase", b =>
@@ -141,25 +181,9 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.HasIndex("VendorId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Event");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("EventBase");
-                });
-
-            modelBuilder.Entity("Essence.Communication.Models.UserReference", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Email");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("UserType");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.Vendor", b =>
@@ -173,7 +197,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vendors");
+                    b.ToTable("Vendor");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.BatteryDetails>", b =>
@@ -250,7 +274,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Essence.Communication.Models.UserReference", "User")
+                    b.HasOne("Essence.Communication.Models.ApplicationUser", "User")
                         .WithMany("AccountUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -276,7 +300,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("EssenceEventObjectStructureId");
 
-                            b1.ToTable("EssenceEvents","Application");
+                            b1.ToTable("EssenceEvent","Application");
 
                             b1.HasOne("Essence.Communication.Models.Dtos.EssenceEventObjectStructure")
                                 .WithOne("Event")
@@ -295,7 +319,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                                     b2.HasKey("EssenceEventObjectStructureId");
 
-                                    b2.ToTable("EssenceEvents","Application");
+                                    b2.ToTable("EssenceEvent","Application");
 
                                     b2.HasOne("Essence.Communication.Models.Dtos.EssenceEventObject")
                                         .WithOne("Location")
@@ -330,7 +354,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("EventBaseId");
 
-                            b1.ToTable("Events","Application");
+                            b1.ToTable("Event","Application");
 
                             b1.HasOne("Essence.Communication.Models.EventBase")
                                 .WithOne("Location")
@@ -355,7 +379,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("Event<BatteryDetails>Id");
 
-                            b1.ToTable("Events","Application");
+                            b1.ToTable("Event","Application");
 
                             b1.HasOne("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.BatteryDetails>")
                                 .WithOne("Details")
@@ -381,7 +405,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("Event<EmergencyPanicDetails>Id");
 
-                            b1.ToTable("Events","Application");
+                            b1.ToTable("Event","Application");
 
                             b1.HasOne("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.EmergencyPanicDetails>")
                                 .WithOne("Details")
@@ -411,7 +435,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("Event<FallAlertDetails>Id");
 
-                            b1.ToTable("Events","Application");
+                            b1.ToTable("Event","Application");
 
                             b1.HasOne("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.FallAlertDetails>")
                                 .WithOne("Details")
@@ -430,7 +454,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("Event<PanelStatusDetails>Id");
 
-                            b1.ToTable("Events","Application");
+                            b1.ToTable("Event","Application");
 
                             b1.HasOne("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.PanelStatusDetails>")
                                 .WithOne("Details")
@@ -460,7 +484,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("Event<PowerDetails>Id");
 
-                            b1.ToTable("Events","Application");
+                            b1.ToTable("Event","Application");
 
                             b1.HasOne("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.PowerDetails>")
                                 .WithOne("Details")
@@ -487,7 +511,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("Event<StayHomeDetails>Id");
 
-                            b1.ToTable("Events","Application");
+                            b1.ToTable("Event","Application");
 
                             b1.HasOne("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.StayHomeDetails>")
                                 .WithOne("Details")
@@ -515,7 +539,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("Event<UnexpectedActivityDetails>Id");
 
-                            b1.ToTable("Events","Application");
+                            b1.ToTable("Event","Application");
 
                             b1.HasOne("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.UnexpectedActivityDetails>")
                                 .WithOne("Details")
@@ -541,7 +565,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                             b1.HasKey("Event<UnexpectedEntryExitDetails>Id");
 
-                            b1.ToTable("Events","Application");
+                            b1.ToTable("Event","Application");
 
                             b1.HasOne("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.UnexpectedEntryExitDetails>")
                                 .WithOne("Details")
@@ -560,7 +584,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                                     b2.HasKey("UnexpectedEntryExitDetailsEvent<UnexpectedEntryExitDetails>Id");
 
-                                    b2.ToTable("Events","Application");
+                                    b2.ToTable("Event","Application");
 
                                     b2.HasOne("Essence.Communication.Models.ValueObjects.UnexpectedEntryExitDetails")
                                         .WithOne("Period")

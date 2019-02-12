@@ -2,8 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using Essence.Communication.DbContexts;
-using Essence.Communication.Models;
+using Essence.Communication.Models.IdentityModels;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;

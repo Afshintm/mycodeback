@@ -1,5 +1,6 @@
 ﻿using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
+using Essence.Communication.Models.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

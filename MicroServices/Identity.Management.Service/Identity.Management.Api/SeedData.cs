@@ -1,5 +1,6 @@
 ﻿using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
+using Essence.Communication.Models.IdentityModels;
 using IdentityModel;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;

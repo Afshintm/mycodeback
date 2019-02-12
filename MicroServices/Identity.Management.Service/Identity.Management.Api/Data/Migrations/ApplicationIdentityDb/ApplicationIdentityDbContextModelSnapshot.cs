@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
+namespace Essence.Communication.DbContexts.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
     partial class ApplicationIdentityDbContextModelSnapshot : ModelSnapshot
@@ -15,12 +15,12 @@ namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("Application")
+                .HasDefaultSchema("Identity")
                 .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Essence.Communication.DbContexts.ApplicationUser", b =>
+            modelBuilder.Entity("Essence.Communication.Models.IdentityModels.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -191,7 +191,7 @@ namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Essence.Communication.Models.ApplicationUser")
+                    b.HasOne("Essence.Communication.Models.IdentityModels.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -199,7 +199,7 @@ namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Essence.Communication.Models.ApplicationUser")
+                    b.HasOne("Essence.Communication.Models.IdentityModels.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -212,7 +212,7 @@ namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Essence.Communication.Models.ApplicationUser")
+                    b.HasOne("Essence.Communication.Models.IdentityModels.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -220,7 +220,7 @@ namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Essence.Communication.Models.ApplicationUser")
+                    b.HasOne("Essence.Communication.Models.IdentityModels.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

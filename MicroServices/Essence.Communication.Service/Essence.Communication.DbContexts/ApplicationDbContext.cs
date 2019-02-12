@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Essence.Communication.DbContexts.Configurations;
 using Services.Utilities.DataAccess;
 using System;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Essence.Communication.DbContexts
 {
@@ -14,23 +16,24 @@ namespace Essence.Communication.DbContexts
         {
         }
 
-        public DbSet<EssenceEventObjectStructure> EssenceEvent { get; set; }
+        public DbSet<EssenceEventObjectStructure> EssenceEvents { get; set; }
 
         //Event hierarchy
-        public DbSet<EventBase> Event { get; set; }
-        public DbSet<Event<UnexpectedActivityDetails>> UnexpectedActivityEvent { get; set; }
-        public DbSet<Event<UnexpectedEntryExitDetails>> UnexpectedEntryExitEvent { get; set; }
+        public DbSet<EventBase> Events { get; set; }
+        public DbSet<Event<UnexpectedActivityDetails>> UnexpectedActivityEvents { get; set; }
+        public DbSet<Event<UnexpectedEntryExitDetails>> UnexpectedEntryExitEvents { get; set; }
         public DbSet<Event<StayHomeDetails>> StayHomeEvent { get; set; }
-        public DbSet<Event<PowerDetails>> PoweEvent { get; set; }
-        public DbSet<Event<BatteryDetails>> BatteryEvent { get; set; }
-        public DbSet<Event<PanelStatusDetails>> PanelStatusEvent { get; set; }
-        public DbSet<Event<FallAlertDetails>> FallAlertEvent { get; set; }
-        public DbSet<Event<EmergencyPanicDetails>> EmergencyPanicEvent { get; set; }
+        public DbSet<Event<PowerDetails>> PoweEvents { get; set; }
+        public DbSet<Event<BatteryDetails>> BatteryEvents { get; set; }
+        public DbSet<Event<PanelStatusDetails>> PanelStatusEvents { get; set; }
+        public DbSet<Event<FallAlertDetails>> FallAlertEvents { get; set; }
+        public DbSet<Event<EmergencyPanicDetails>> EmergencyPanicEvents { get; set; }
 
-        public DbSet<AccountGroup> AccountGroup { get; set; }
-        public DbSet<AccountUser> AccountUser { get; set; }
-        public DbSet<Vendor> Vendor { get; set; }
-        public DbSet<Account> Account { get; set; }
+        public DbSet<AccountGroup> AccountGroups { get; set; }
+        public DbSet<AccountUser> AccountUsers { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<UserReference> Users { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -53,6 +56,5 @@ namespace Essence.Communication.DbContexts
             modelBuilder.Entity<Event<FallAlertDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<EmergencyPanicDetails>>().OwnsOne(s => s.Details); 
         }
-
     }
 }

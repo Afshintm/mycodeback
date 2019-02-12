@@ -14,6 +14,7 @@ namespace Essence.Communication.Models
 
         public AccountGroup Group { get; set; }
         public Vendor Vendor { get; set; }
+        public string VendorAccountId { get; set; }
     }
 
 }

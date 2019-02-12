@@ -1,4 +1,4 @@
-﻿using Essence.Communication.Models;
+﻿using Essence.Communication.Models.IdentityModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +27,7 @@ namespace Essence.Communication.DbContexts
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
-            builder.HasDefaultSchema("Application");
+            builder.HasDefaultSchema("Identity");
 
             builder.Entity<ApplicationUser>(entity =>
             {

@@ -10,7 +10,7 @@ namespace Essence.Communication.Models
         public string AccountId {get;set;}
         public string UserId { get; set; }
 
-        public ApplicationUser User { get; set; }
+        public UserReference User { get; set; }
         public Account Account { get; set; }
     } 
 }
