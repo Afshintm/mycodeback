@@ -69,7 +69,7 @@ namespace Essence.Communication.Api
                 .AddIdentityServerAuthentication(options =>
                 {
                     options.Authority = IdentityServerIssuerUrl;
-                    options.RequireHttpsMetadata = false;
+                    //options.RequireHttpsMetadata = false;
                     options.ApiName = apiName;
                 });
             
