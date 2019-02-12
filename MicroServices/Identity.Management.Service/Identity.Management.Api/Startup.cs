@@ -10,12 +10,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Identity.Management.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration,ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
             _logger = logger;
@@ -27,10 +28,13 @@ namespace Identity.Management.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ConfigOptions>(Configuration);
+            var sp = services.BuildServiceProvider();
+            var configOptions = sp.GetService<IOptionsMonitor<ConfigOptions>>().CurrentValue;
 
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             
-            var applicationIdentityConnectionString = Configuration.GetConnectionString("ApplicationIdentityConnectionString");
+            var applicationIdentityConnectionString = configOptions.ConnectionStrings.ApplicationIdentityConnectionString;
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
         options.UseSqlServer(applicationIdentityConnectionString,sql=>sql.MigrationsAssembly(migrationsAssembly)));
 
@@ -40,7 +44,7 @@ namespace Identity.Management.Api
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            var oprationsConnectionString = Configuration.GetConnectionString("IdentityServerOprationsConnectionString");
+            var oprationsConnectionString = configOptions.ConnectionStrings.IdentityServerOprationsConnectionString;
             var identityServerBuilder = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
