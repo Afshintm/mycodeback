@@ -5,13 +5,11 @@ using System.Text;
 namespace Essence.Communication.Models.Dtos
 {
 
-    public class UsersForAccountResult
+    public class UsersForAccountResult : ResponseBase
     {
-        public UserProfile[] Users { get; set; }
-        public bool Value { get; set; }
-        public int Response { get; set; }
-        public string ResponseDescription { get; set; }
-        public object Message { get; set; }
+        public UsersForAccountResult() { }
+        public UsersForAccountResult(ResponseBase response): base(response){}
+        public UserProfile[] Users { get; set; } 
     }
 
     public class UserProfile

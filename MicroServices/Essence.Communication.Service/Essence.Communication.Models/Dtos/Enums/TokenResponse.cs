@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Essence.Communication.Models.Dtos.Enums
 {
-    public enum TokenResponse
+    public enum ResponseCode
     {
         WrongPassword = 2,
         AccessDenied = 30,
