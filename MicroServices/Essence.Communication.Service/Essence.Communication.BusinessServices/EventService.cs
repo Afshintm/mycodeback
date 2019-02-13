@@ -2,12 +2,15 @@
 using Essence.Communication.BusinessServices.ViewModels;
 using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
-using Essence.Communication.Models.Dtos; 
+using Essence.Communication.Models.Dtos;
+using Essence.Communication.Models.Dtos.Enums;
 using Microsoft.Extensions.Configuration;
 using Services.Utilities.DataAccess;
 using Services.Utils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace Essence.Communication.BusinessServices
@@ -118,5 +121,39 @@ namespace Essence.Communication.BusinessServices
 
             return await Task.Run(() => true);
         }
+
+        //public async Task<IList<UsersForAccountResult>> GetUsersWithAccount(string accountId)
+        //{
+        //    //get token
+        //    var authToken = await GetEssenceToken();
+        //    if (authToken.Response != (int)TokenResponse.Ok)
+        //    {
+        //        //log getting token failing description
+        //        return null;
+        //    }
+
+        //    //create request payload
+        //    var getUserRequest = new GetUsersRequest();
+        //    getUserRequest.userTypesFilter = new string[]{"Resident", "CareGiver"};
+
+        //    //get all resident recores
+        //    var header = new Dictionary<string, string>();
+        //    header.Add("Authorization", authToken.token);
+        //    header.Add("Host", _appSettingsConfigService.HostName); 
+        //    _httpClient.ConfigurateHttpClient(_appSettingsConfigService.EssenceBaseUrl, header);
+        //    var response =  await _httpClient.PostAsync<GetUsersResult>("users/GetUsersForAccount", getUserRequest);
+
+        //    if(response)
+        //}
+
+        private async Task<LoginResponse> GetEssenceToken()
+        {
+            var login = new LoginRequest { password = _appSettingsConfigService.Password, userName = _appSettingsConfigService.UserName };
+            var authResponse = await _authenticationService.Login(login);
+
+            return authResponse;
+        }
+
+ 
     }
 }

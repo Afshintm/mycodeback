@@ -23,8 +23,7 @@ namespace Essence.Communication.Models
                 _name = value;
             }
         }
-
-        public ICollection<EventBase> HSCEvents { get; set; }
+        
         public ICollection<EssenceEventObjectStructure> VendorEvents { get; set; }
         public ICollection<Account> Accounts { get; set; }
     }

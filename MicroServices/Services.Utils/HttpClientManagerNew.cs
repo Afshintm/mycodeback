@@ -129,8 +129,7 @@ namespace Services.Utils
                 {
                     _client.DefaultRequestHeaders.Host = headers["Host"];
                 }
-            }
-
+            } 
             _client.BaseAddress = new Uri(baseUrl);
             _client.Timeout = new TimeSpan(0, 0, 0, 10);
         }
