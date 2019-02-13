@@ -7,7 +7,7 @@ namespace Essence.Communication.Models
     public interface IEntity
     {
         string Id { get; set; }
-        DateTime CreateDate { get; set; }
+        DateTime CreatedDate { get; set; }
     }
 
     public class Entity :IEntity
@@ -15,12 +15,12 @@ namespace Essence.Communication.Models
         public Entity()
         {
             Id = Guid.NewGuid().ToString();
-            CreateDate = DateTime.UtcNow;
+            CreatedDate = DateTime.UtcNow;
         }
         public string Id { get; set; }
 
         //UTC time??
-        public DateTime CreateDate { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
      
 }

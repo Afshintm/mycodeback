@@ -14,5 +14,7 @@ namespace Essence.Communication.Models
         public string UserType { get; set; }
         public string Email { get; set; }
         public ICollection<AccountUser> AccountUsers { get; set; } 
+        public Vendor Vendor { get; set; }
+        public string VendorUserId { get; set; }
     }
 }

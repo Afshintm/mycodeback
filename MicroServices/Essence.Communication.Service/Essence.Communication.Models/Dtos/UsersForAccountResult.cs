@@ -7,40 +7,40 @@ namespace Essence.Communication.Models.Dtos
 
     public class UsersForAccountResult
     {
-        public User1[] users { get; set; }
+        public UserProfile[] Users { get; set; }
         public bool Value { get; set; }
         public int Response { get; set; }
         public string ResponseDescription { get; set; }
         public object Message { get; set; }
     }
 
-    public class User1
+    public class UserProfile
     {
-        public Userdetails userDetails { get; set; }
-        public Alertpreferences alertPreferences { get; set; }
-        public Communicationmethods communicationMethods { get; set; }
+        public Userdetails UserDetails { get; set; }
+        public Alertpreferences AlertPreferences { get; set; }
+        public Communicationmethods CommunicationMethods { get; set; }
     }
 
     public class Userdetails
     {
-        public string careGiverType { get; set; }
-        public bool mobileViewOnDesktop { get; set; }
-        public int userId { get; set; }
-        public string userType { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public int languageId { get; set; }
-        public string identificationNumber { get; set; }
-        public string gender { get; set; }
-        public string email { get; set; }
-        public string cellPhoneNumber { get; set; }
-        public object birthDate { get; set; }
-        public string userName { get; set; }
-        public object password { get; set; }
-        public string address { get; set; }
-        public string homePhone { get; set; }
-        public Settings settings { get; set; }
-        public int serviceType { get; set; }
-        public string activeEmergencyCallNumber { get; set; }
+        public string CareGiverType { get; set; }
+        public bool MobileViewOnDesktop { get; set; }
+        public int UserId { get; set; }
+        public string UserType { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int lLanguageId { get; set; }
+        public string IdentificationNumber { get; set; }
+        public string Gender { get; set; }
+        public string Email { get; set; }
+        public string CellPhoneNumber { get; set; }
+        public object BirthDate { get; set; }
+        public string UserName { get; set; }
+        public object Password { get; set; }
+        public string Address { get; set; }
+        public string HomePhone { get; set; }
+        public Settings Settings { get; set; }
+        public int ServiceType { get; set; }
+        public string AtiveEmergencyCallNumber { get; set; }
     }
 }

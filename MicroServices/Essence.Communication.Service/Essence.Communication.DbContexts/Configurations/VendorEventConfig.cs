@@ -19,7 +19,7 @@ namespace Essence.Communication.DbContexts.Configurations
                 .HasName("PK_EssenceEvent_Id");
             
 
-            builder.Property(h => h.CreateDate).HasDefaultValue(DateTime.UtcNow)
+            builder.Property(h => h.CreatedDate).HasDefaultValue(DateTime.UtcNow)
                 .IsRequired();         
 
             //convert json obj into string

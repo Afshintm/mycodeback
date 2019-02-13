@@ -71,7 +71,7 @@ namespace Essence.Communication.UnitTests
                 var result = context.Accounts.ToList();
                 Assert.True(result.Count == 3);
                 Assert.True(!string.IsNullOrEmpty(result[0].Id));
-                Assert.True(result[0].CreateDate.Date == DateTime.UtcNow.Date);
+                Assert.True(result[0].CreatedDate.Date == DateTime.UtcNow.Date);
                 Assert.True(result[0].VendorAccountId == testList[0].VendorAccountId);
             }
         }
@@ -96,7 +96,7 @@ namespace Essence.Communication.UnitTests
                 var result = context.Vendors.ToList();
                 Assert.True(result.Count == 3);
                 Assert.True(!string.IsNullOrEmpty(result[0].Id));
-                Assert.True(result[0].CreateDate.Date == DateTime.UtcNow.Date);
+                Assert.True(result[0].CreatedDate.Date == DateTime.UtcNow.Date);
                 Assert.True(result[0].Name == testList[0].Name);
             }
         }

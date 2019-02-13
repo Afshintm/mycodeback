@@ -18,7 +18,7 @@ namespace Essence.Communication.DbContexts.Configurations
             builder.Property(h => h.AlertType).HasConversion(DbContextHelper.GetEnumValueConverter<AlertType>());
             builder.Property(h => h.Status).HasConversion(DbContextHelper.GetEnumValueConverter<EventStatus>());
 
-            builder.Property(h => h.CreateDate).IsRequired();
+            builder.Property(h => h.CreatedDate).IsRequired();
 
             builder.OwnsOne(l => l.Location).Property(c => c.Latitude).HasColumnName("Latitude");
             builder.OwnsOne(l => l.Location).Property(c => c.Longitude).HasColumnName("Longitude"); ;

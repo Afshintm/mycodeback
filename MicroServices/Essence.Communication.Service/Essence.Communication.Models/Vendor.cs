@@ -26,5 +26,6 @@ namespace Essence.Communication.Models
         
         public ICollection<EssenceEventObjectStructure> VendorEvents { get; set; }
         public ICollection<Account> Accounts { get; set; }
+        public ICollection<UserReference> Users { get; set; }
     }
 }

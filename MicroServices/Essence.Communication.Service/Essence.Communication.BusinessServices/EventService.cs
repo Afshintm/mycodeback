@@ -7,11 +7,13 @@ using Essence.Communication.Models.Dtos.Enums;
 using Microsoft.Extensions.Configuration;
 using Services.Utilities.DataAccess;
 using Services.Utils;
+using System.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Threading.Tasks;
+using Essence.Communication.Models.Utility;
 
 namespace Essence.Communication.BusinessServices
 {
@@ -109,8 +111,7 @@ namespace Essence.Communication.BusinessServices
 
             //save essenceEvent 
             //_appData.AddVendorEvent(vendorEvent);
-            _unitOfWork.Repository<EssenceEventObjectStructure>().Insert(vendorEvent);
-            
+            _unitOfWork.Repository<EssenceEventObjectStructure>().Insert(vendorEvent);          
 
             //cast essenceEvent details into hcsEvent 
             var hscEvent = _eventCreater.Create(vendorEvent, new Account());
@@ -122,29 +123,139 @@ namespace Essence.Communication.BusinessServices
             return await Task.Run(() => true);
         }
 
-        //public async Task<IList<UsersForAccountResult>> GetUsersWithAccount(string accountId)
-        //{
-        //    //get token
-        //    var authToken = await GetEssenceToken();
-        //    if (authToken.Response != (int)TokenResponse.Ok)
-        //    {
-        //        //log getting token failing description
-        //        return null;
-        //    }
+        public async Task<UsersForAccountResult> GetUsersWithAccount(string accountId)
+        {
+            //get token
+            var authToken = await GetEssenceToken();
+            if (authToken.Response != (int)TokenResponse.Ok)
+            {
+                //log getting token failing description
+                return null;
+            }
 
-        //    //create request payload
-        //    var getUserRequest = new GetUsersRequest();
-        //    getUserRequest.userTypesFilter = new string[]{"Resident", "CareGiver"};
+            //create request payload
+            var requestObj = new { accountIdentifier = accountId };
 
-        //    //get all resident recores
-        //    var header = new Dictionary<string, string>();
-        //    header.Add("Authorization", authToken.token);
-        //    header.Add("Host", _appSettingsConfigService.HostName); 
-        //    _httpClient.ConfigurateHttpClient(_appSettingsConfigService.EssenceBaseUrl, header);
-        //    var response =  await _httpClient.PostAsync<GetUsersResult>("users/GetUsersForAccount", getUserRequest);
+            //get all resident recores
+            var header = new Dictionary<string, string>();
+            header.Add("Authorization", authToken.token);
+            header.Add("Host", _appSettingsConfigService.HostName);
+            return await _httpClient.PostAsync<UsersForAccountResult>("users/GetUsersForAccount", requestObj);
+        }
 
-        //    if(response)
-        //}
+        public async Task<GetUsersResult> GetAllResidentUsers()
+        {
+            //get token
+            var authToken = await GetEssenceToken();
+            if (authToken.Response != (int)TokenResponse.Ok)
+            {
+                //log getting token failing description
+                return null;
+            }
+
+            //create request payload
+            var getUserRequest = new GetUsersRequest();
+            getUserRequest.userTypesFilter = new string[] { "Resident", "CareGiver" };
+
+            //get all resident recores
+            var header = new Dictionary<string, string>();
+            header.Add("Authorization", authToken.token);
+            header.Add("Host", _appSettingsConfigService.HostName);
+            return await _httpClient.PostAsync<GetUsersResult>("users/GetUsers", getUserRequest);
+        }
+        
+        public async Task<bool> InitializeAcountUsers()
+        {        
+            //get all residents
+            var accounts = await GetAllResidentUsers();
+
+            //get all users linked to residents
+            foreach (var acc in accounts.users)
+            {
+                if (acc.accountDetails == null)
+                {
+                    //log
+                    continue;
+                }
+                //get users
+                 var userCollection = await GetUsersWithAccount(acc.accountDetails.account);
+                foreach (var user in userCollection.Users)
+                {
+                    //insert into db
+                    await AddAccountUsers(user, acc.accountDetails, EventVendors.ESSENCE);
+                }
+            }
+            return true;
+        }
+
+        //TODO: sync with identity
+        private async Task<bool>AddAccountUsers(UserProfile user, Accountdetails account, string VendorName)
+        {
+            var accountRepo = _unitOfWork.Repository<Account>();
+            var userRepo = _unitOfWork.Repository<UserReference>();
+            var vendorRepo = _unitOfWork.Repository<Vendor>();
+            var accountUserReo = _unitOfWork.Repository<AccountUser>();
+            
+
+            var vendor = vendorRepo.Get(x => x.Name == EventVendors.ESSENCE).FirstOrDefault();
+
+            if (vendor == default(Vendor))
+            {
+                //Add log
+                return false;
+            }
+
+            //check if current account exists
+            //TODO:map dto to model
+            Account acc = new Account { Id = account.serviceProviderAccountNumber, VendorAccountId = account.account, Vendor = vendor };
+            if (accountRepo.FindById(account.serviceProviderAccountNumber) == default(Account))
+            {
+                //insert new account
+                accountRepo.Add(acc);
+            }
+            else
+            {
+                //update
+
+            }
+
+            if (user.UserDetails == null)
+            {
+                //need to log
+                _unitOfWork.Save();
+            }
+
+            //check if current user exists
+            UserReference userRef = new UserReference
+            {
+                Id = Guid.NewGuid().ToString(),
+                Vendor = vendor,
+                VendorUserId = user.UserDetails.UserId.ToString(),
+                UserType = user.UserDetails.UserType,
+                Email = user.UserDetails.Email,
+                Name = user.UserDetails.UserName
+            };
+
+            if (userRepo.Get(a => a.VendorUserId == user.UserDetails.UserId.ToString()).FirstOrDefault() == default(UserReference))
+            {
+                //insert new account
+                userRepo.Add(userRef);
+            }
+            else
+            {
+                //update
+
+            }
+            //insert new user
+            
+            if (accountUserReo.Get(x => x.AccountId == acc.Id && x.UserId == userRef.Id).FirstOrDefault() == default(AccountUser))
+            {
+                var accUser = new AccountUser { Account = acc, User = userRef };
+            }
+
+            _unitOfWork.Save();
+            return true;
+        }
 
         private async Task<LoginResponse> GetEssenceToken()
         {
