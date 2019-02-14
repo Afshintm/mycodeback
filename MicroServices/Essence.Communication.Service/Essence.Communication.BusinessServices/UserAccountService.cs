@@ -101,8 +101,6 @@ namespace Essence.Communication.BusinessServices
             return await SendRequestToEssence<GetUsersResult>("users/GetUsers", header, getUserRequest);
         }
 
-
-
         public async Task<bool> InitializeAcountUsers()
         {
             //get token
@@ -124,8 +122,8 @@ namespace Essence.Communication.BusinessServices
 
             _accountRepo.InsertRange(accountList);
             _userRepo.InsertRange(userList);
+            //_unitOfWork.Save();
             _accountUserRepo.InsertRange(accountUserList);
-
             _unitOfWork.Save();
             return true;
         }
@@ -167,12 +165,23 @@ namespace Essence.Communication.BusinessServices
 
                 //check if account has been existed
                 var accFound = existedAccount.Where(x => x.VendorAccountNo == account.VendorAccountNo && x.Vendor.Name == EventVendors.ESSENCE).FirstOrDefault();
-                if (accFound != default(Account))
+                if (accFound == default(Account))
                 {
-                    account.Id = accFound.Id;
+                    //check if account has been added in the list
+                    if (!accountList.Any(x => x.VendorAccountNo == account.VendorAccountNo && x.Vendor.Name == EventVendors.ESSENCE))
+                    {
+                        accountList.Add(account);
+                    }
+                }
+                else
+                {
+                    //account.Id = accFound.Id;
+
+                    //TODO: update 
+                   // continue;
                 }
 
-                accountList.Add(account);
+              
 
                 //get users
                 var userCollection = await GetUsersForAccount(resident.accountDetails.account, token);
@@ -195,17 +204,29 @@ namespace Essence.Communication.BusinessServices
 
                     //check if user has been existed
                     var userFound = existedUsers.Where(x => x.VendorUserId == userRef.VendorUserId && x.Vendor.Name == EventVendors.ESSENCE).FirstOrDefault();
-                    if (userFound != default(UserReference))
+                    if (userFound == default(UserReference))
                     {
-                        userRef.Id = userFound.Id;
+                        //check if account has been added in the list
+                        if (!userList.Any(x => x.VendorUserId == userRef.VendorUserId && x.Vendor.Name == EventVendors.ESSENCE))
+                        {
+                            userList.Add(userRef);
+                        }
                     }
-                    userList.Add(userRef);
+                    else
+                    {
+                        //update
+                    }                   
 
                     //check if user/account has been existed
                     var accUserFound = existedAccountUsers.Where(x => x.UserId == userRef.Id && x.AccountId == account.Id).FirstOrDefault();
                     if (accUserFound == default(AccountUser))
                     {
-                        accountUserList.Add(accUserFound);
+                        var accUser = new AccountUser()
+                        {
+                            Account = account,
+                            User = userRef
+                        };
+                        accountUserList.Add(accUser);
                     }
                 }
             }
