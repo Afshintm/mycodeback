@@ -13,7 +13,8 @@ namespace Services.Utils
         Task<T> GetAsync<T>(string path, string parameters = null) where T : class;
         Task<T> PostAsync<T>(string path, object body) where T : class;
         string ParamBuilder(string controller, string action = null, Dictionary<string, string> parameters = null, bool keyValuPairFlag = false);
-        void ConfigurateHttpClient(string baseUrl, IDictionary<string, string> headers);
+        void ConfigurateHttpClient(IDictionary<string, string> headers);
+        void SetBaseUrl(string baseUrl);
 
     }
 
@@ -26,11 +27,23 @@ namespace Services.Utils
     public class HttpClientManagerNew : IHttpClientManagerNew
     {
         private HttpClient _client;
+        private bool baseUrlSet = false;    
         public HttpClientManagerNew()
         {
-            _client = new HttpClient();
+            _client = new HttpClient(); 
+            _client.Timeout = new TimeSpan(0, 0, 0, 10);
         }  
 
+        //because the baseurl can not be modified since it is set
+        //this client manager can only work for one baseUrl in as a single instance
+        public void SetBaseUrl(string baseUrl)
+        {
+            if (!baseUrlSet)
+            {
+                _client.BaseAddress = new Uri(baseUrl);
+                baseUrlSet = true;
+            }
+        }
         public async Task<T> GetAsync<T>(string path, string parameters = null) where T : class
         {
             var p = parameters ?? string.Empty;
@@ -102,22 +115,16 @@ namespace Services.Utils
             _client.DefaultRequestHeaders.Clear();
         }
 
-        public void ConfigurateHttpClient(string baseUrl, IDictionary<string, string> headers)
+        public void ConfigurateHttpClient(IDictionary<string, string> headers)
         {
             //clear headers
             ResetConfiguration();
 
-            // do this first
-            if (string.IsNullOrEmpty(baseUrl))
-            {
-                throw new Exception("BaseAddress is required!");
-            }
-
             if (headers != null)
             {
                 if (headers.Keys.Contains("Authorization"))
-                {
-                    _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue($"Token {headers["Authorization"]}");
+                { 
+                    _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", $"{headers["Authorization"]}");
                 }
 
                 if (headers.Keys.Contains("Accept"))
@@ -130,8 +137,6 @@ namespace Services.Utils
                     _client.DefaultRequestHeaders.Host = headers["Host"];
                 }
             } 
-            _client.BaseAddress = new Uri(baseUrl);
-            _client.Timeout = new TimeSpan(0, 0, 0, 10);
         }
 
     }

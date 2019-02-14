@@ -23,13 +23,23 @@ namespace Essence.Communication.BusinessServices
 
     public class UserAccountService : EssenceServiceBase, IUserAccountService
     {
+        private IRepository<Account> _accountRepo;
+        private IRepository<UserReference> _userRepo;
+        private IRepository<Vendor> _vendorRepo;
+        private IRepository<AccountUser> _accountUserRepo;
+
         public UserAccountService(IHttpClientManagerNew httpClientManager,
             IAppSettingsConfigService appSettingsConfigService,
             IAuthenticationService authenticationService,
             IUnitOfWork<ApplicationDbContext> unitOfWork,
-            ModelMapper modelMapper
+            IModelMapper modelMapper
             ) : base(httpClientManager, appSettingsConfigService, authenticationService, unitOfWork, modelMapper)
-        { }
+        {
+            _accountRepo = _unitOfWork.Repository<Account>();
+            _userRepo = _unitOfWork.Repository<UserReference>();
+            _vendorRepo = _unitOfWork.Repository<Vendor>();
+            _accountUserRepo = _unitOfWork.Repository<AccountUser>();
+        }
 
         /// <summary>
         /// 
@@ -54,14 +64,14 @@ namespace Essence.Communication.BusinessServices
                     //log getting token failing description
                     return new UsersForAccountResult(authToken);
                 }
-                token = authToken.token;
+                token = authToken.Token;
             }
 
             //get all resident recores
             var header = new Dictionary<string, string>();
             header.Add("Authorization", token);
             header.Add("Host", _appSettingsConfigService.HostName);
-            return await _httpClient.PostAsync<UsersForAccountResult>("users/GetUsersForAccount", usersForAccountRequest);
+            return await SendRequestToEssence<UsersForAccountResult>("users/GetUsersForAccount", header, usersForAccountRequest);
         }
 
         public async Task<GetUsersResult> GetAllResidentUsers(string token = null)
@@ -80,10 +90,16 @@ namespace Essence.Communication.BusinessServices
 
             //get all resident recores
             var header = new Dictionary<string, string>();
-            header.Add("Authorization", authToken.token);
+            header.Add("Authorization", authToken.Token);
             header.Add("Host", _appSettingsConfigService.HostName);
-            return await _httpClient.PostAsync<GetUsersResult>("users/GetUsers", getUserRequest);
+            //_httpClient.ConfigurateHttpClient(_appSettingsConfigService.EssenceBaseUrl, header);
+            //return await _httpClient.PostAsync<GetUsersResult>("users/GetUsers", getUserRequest);
+
+            //TODO refactor
+            return await SendRequestToEssence<GetUsersResult>("users/GetUsers", header, getUserRequest);
         }
+
+
 
         public async Task<bool> InitializeAcountUsers()
         {
@@ -96,94 +112,97 @@ namespace Essence.Communication.BusinessServices
             }
 
             //get all residents
-            var accounts = await GetAllResidentUsers(authToken.token);
+            var accountResultList = await GetAllResidentUsers(authToken.Token);
 
-            //get all users linked to residents
-            foreach (var resident in accounts.users)
-            {
-                if (resident.accountDetails == null)
-                {
-                    //log
-                    continue;
-                }
-                //get users
-                var userCollection = await GetUsersForAccount(resident.accountDetails.account, authToken.token);
-                foreach (var user in userCollection.Users)
-                {
-                    //insert into db
-                    await AddAccountUsers(user, resident.accountDetails, EventVendors.ESSENCE);
-                }
-            }
+            var accountList = new List<Account>();
+            var userList = new List<UserReference>();
+            var accountUserList = new List<AccountUser>();
+
+            await AddAccountUsers(accountResultList.users, accountList, userList, accountUserList, authToken.Token);
+
+            _accountRepo.InsertRange(accountList);
+            _userRepo.InsertRange(userList);
+            _accountUserRepo.InsertRange(accountUserList);
+
+            _unitOfWork.Save();
             return true;
         }
 
         //TODO: sync with identity
-        private async Task<bool> AddAccountUsers(UserProfile user, Accountdetails account, string VendorName)
+        private async Task<bool> AddAccountUsers(UserResult[] users, List<Account> accountList, List<UserReference> userList, List<AccountUser> accountUserList, string token)
         {
-            var accountRepo = _unitOfWork.Repository<Account>();
-            var userRepo = _unitOfWork.Repository<UserReference>();
-            var vendorRepo = _unitOfWork.Repository<Vendor>();
-            var accountUserReo = _unitOfWork.Repository<AccountUser>();
+            var existedAccount = _accountRepo.GetAll();
+            var existedUsers = _userRepo.GetAll();
+            var existedAccountUsers = _accountUserRepo.GetAll();
 
-
-            var vendor = vendorRepo.Get(x => x.Name == EventVendors.ESSENCE).FirstOrDefault();
-
+            var vendor = _vendorRepo.Get(x => x.Name == EventVendors.ESSENCE).FirstOrDefault();
             if (vendor == default(Vendor))
             {
                 //Add log
                 return false;
             }
 
-            //check if current account exists
-            //TODO:map dto to model
-            Account acc = new Account { Id = account.serviceProviderAccountNumber, VendorAccountId = account.account, Vendor = vendor };
-            if (accountRepo.FindById(account.serviceProviderAccountNumber) == default(Account))
+            //get all users linked to residents
+            foreach (var resident in users)
             {
-                //insert new account
-                accountRepo.Add(acc);
+                if (resident.accountDetails == null)
+                {
+                    //log
+                    continue;
+                }
+
+                //handle accounts
+                var account = new Account
+                {
+                    AccountNo = resident.accountDetails.serviceProviderAccountNumber,
+                    VendorAccountNo = resident.accountDetails.account,
+                    Vendor = vendor
+                };
+
+                //check if account has been existed
+                var accFound = existedAccount.Where(x => x.VendorAccountNo == account.VendorAccountNo && x.Vendor.Name == EventVendors.ESSENCE).FirstOrDefault();
+                if (accFound != default(Account))
+                {
+                    account.Id = accFound.Id;
+                }
+
+                accountList.Add(account);
+
+                //get users
+                var userCollection = await GetUsersForAccount(resident.accountDetails.account, token);
+                foreach (var user in userCollection.Users)
+                {
+                    if (user.UserDetails == null)
+                    {
+                        continue;
+                    }
+
+                    var userRef = new UserReference
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Vendor = vendor,
+                        VendorUserId = user.UserDetails.UserId.ToString(),
+                        UserType = user.UserDetails.UserType,
+                        Email = user.UserDetails.Email,
+                        Name = user.UserDetails.UserName
+                    };
+
+                    //check if user has been existed
+                    var userFound = existedUsers.Where(x => x.VendorUserId == userRef.VendorUserId && x.Vendor.Name == EventVendors.ESSENCE).FirstOrDefault();
+                    if (userFound != default(UserReference))
+                    {
+                        userRef.Id = userFound.Id;
+                    }
+                    userList.Add(userRef);
+
+                    //check if user/account has been existed
+                    var accUserFound = existedAccountUsers.Where(x => x.UserId == userRef.Id && x.AccountId == account.Id).FirstOrDefault();
+                    if (accUserFound == default(AccountUser))
+                    {
+                        accountUserList.Add(accUserFound);
+                    }
+                }
             }
-            else
-            {
-                //update
-
-            }
-
-            if (user.UserDetails == null)
-            {
-                //need to log
-                _unitOfWork.Save();
-            }
-
-            //check if current user exists
-            //TODO:mapper dto to model
-            UserReference userRef = new UserReference
-            {
-                Id = Guid.NewGuid().ToString(),
-                Vendor = vendor,
-                VendorUserId = user.UserDetails.UserId.ToString(),
-                UserType = user.UserDetails.UserType,
-                Email = user.UserDetails.Email,
-                Name = user.UserDetails.UserName
-            };
-
-            if (userRepo.Get(a => a.VendorUserId == user.UserDetails.UserId.ToString()).FirstOrDefault() == default(UserReference))
-            {
-                //insert new account
-                userRepo.Add(userRef);
-            }
-            else
-            {
-                //update
-
-            }
-            //insert new user
-
-            if (accountUserReo.Get(x => x.AccountId == acc.Id && x.UserId == userRef.Id).FirstOrDefault() == default(AccountUser))
-            {
-                var accUser = new AccountUser { Account = acc, User = userRef };
-            }
-
-            _unitOfWork.Save();
             return true;
         }
 

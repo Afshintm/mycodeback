@@ -15,9 +15,9 @@ namespace Essence.Communication.UnitTests
         { 
             return new List<Account>()
             {
-                new Account(){ VendorAccountId = "VenderAccount1"},
-                new Account(){ VendorAccountId = "VenderAccount2"},
-                new Account() { VendorAccountId = "VenderAccount3" }
+                new Account(){ VendorAccountNo = "VenderAccount1"},
+                new Account(){ VendorAccountNo = "VenderAccount2"},
+                new Account() { VendorAccountNo = "VenderAccount3" }
             };
         }
 
@@ -72,7 +72,7 @@ namespace Essence.Communication.UnitTests
                 Assert.True(result.Count == 3);
                 Assert.True(!string.IsNullOrEmpty(result[0].Id));
                 Assert.True(result[0].CreatedDate.Date == DateTime.UtcNow.Date);
-                Assert.True(result[0].VendorAccountId == testList[0].VendorAccountId);
+                Assert.True(result[0].VendorAccountNo == testList[0].VendorAccountNo);
             }
         }
 
@@ -143,7 +143,7 @@ namespace Essence.Communication.UnitTests
 
                 context.Accounts.AddRange(testAccountList);
                 context.Users.AddRange(testUserList);
-                context.SaveChanges();
+              //  context.SaveChanges();
                 context.AccountUsers.AddRange(testAccountUserList);
                 context.SaveChanges();
 

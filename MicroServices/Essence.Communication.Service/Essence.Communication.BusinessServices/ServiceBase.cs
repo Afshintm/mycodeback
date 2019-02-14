@@ -21,7 +21,7 @@ namespace Essence.Communication.BusinessServices
             IAppSettingsConfigService appSettingsConfigService,
             IAuthenticationService authenticationService,
             IUnitOfWork<ApplicationDbContext> unitOfWork,
-            ModelMapper modelMapper
+            IModelMapper modelMapper
             )
         {
             _appSettingsConfigService = appSettingsConfigService;
@@ -30,18 +30,27 @@ namespace Essence.Communication.BusinessServices
             _unitOfWork = unitOfWork;
             _modelMapper = modelMapper;
 
+            //as a singleton intance, _httpClient's baseUrl canonly be set once
+            _httpClient.SetBaseUrl(_appSettingsConfigService.EssenceBaseUrl);
+
         }
 
         protected virtual async Task<LoginResponse> GetEssenceToken(string passedInToken = null)
         {
-            if (string.IsNullOrEmpty(passedInToken))
+            if (!string.IsNullOrEmpty(passedInToken))
             {
-                return new LoginResponse(new SuccessResponse()) { token = passedInToken };
+                return new LoginResponse(new SuccessResponse()) { Token = passedInToken };
             }
             var login = new LoginRequest { password = _appSettingsConfigService.Password, userName = _appSettingsConfigService.UserName };
             var authResponse = await _authenticationService.Login(login);
 
             return authResponse;
+        }
+
+        protected virtual async Task<T> SendRequestToEssence<T>(string path, Dictionary<string, string> headers, object payload) where T : class
+        {
+            _httpClient.ConfigurateHttpClient(headers);
+            return await _httpClient.PostAsync<T>(path, payload);
         }
     }
 }

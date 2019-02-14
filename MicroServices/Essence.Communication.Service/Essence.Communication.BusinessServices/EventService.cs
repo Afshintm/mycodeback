@@ -83,9 +83,9 @@ namespace Essence.Communication.BusinessServices
 
             //get close event response
             var header = new Dictionary<string, string>();
-            header.Add("Authorization", authResponse.token);
+            header.Add("Authorization", authResponse.Token);
             header.Add("Host", _appSettingsConfigService.HostName);
-            _httpClient.ConfigurateHttpClient(_appSettingsConfigService.EssenceBaseUrl, header);
+            _httpClient.ConfigurateHttpClient(header);
             var result =  await _httpClient.PostAsync<CloseEventsResponse>("Alerts/CloseEvents", closeRequest);
 
             //map to viewmodel

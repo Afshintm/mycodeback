@@ -55,6 +55,8 @@ namespace Essence.Communication.DbContexts
             modelBuilder.Entity<Event<PanelStatusDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<FallAlertDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<EmergencyPanicDetails>>().OwnsOne(s => s.Details); 
+
+            //seeding 
         }
     }
 }

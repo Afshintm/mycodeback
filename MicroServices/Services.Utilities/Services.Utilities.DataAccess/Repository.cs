@@ -15,6 +15,7 @@ namespace Services.Utilities.DataAccess
         void Delete(object id);
         void Delete(TEntity entity);
         void Insert(TEntity entity);
+        void InsertRange(IEnumerable<TEntity> entities);
 
         void Add(TEntity entity);
         TEntity Get(string id);
@@ -47,6 +48,11 @@ namespace Services.Utilities.DataAccess
         }
 
  
+        public virtual void InsertRange(IEnumerable<TEntity> entities)
+        {
+            DbSet.AddRange(entities);
+        }
+
         public virtual void Insert(TEntity entity)
         {
  

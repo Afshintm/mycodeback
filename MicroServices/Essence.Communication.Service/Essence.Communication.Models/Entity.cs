@@ -17,6 +17,7 @@ namespace Essence.Communication.Models
             Id = Guid.NewGuid().ToString();
             CreatedDate = DateTime.UtcNow;
         }
+
         public string Id { get; set; }
 
         //UTC time??
