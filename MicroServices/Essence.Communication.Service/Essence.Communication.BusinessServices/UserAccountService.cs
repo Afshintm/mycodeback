@@ -27,6 +27,7 @@ namespace Essence.Communication.BusinessServices
         private IRepository<UserReference> _userRepo;
         private IRepository<Vendor> _vendorRepo;
         private IRepository<AccountUser> _accountUserRepo;
+        private IRepository<AccountGroup> _accountGroupRepo;
 
         public UserAccountService(IHttpClientManagerNew httpClientManager,
             IAppSettingsConfigService appSettingsConfigService,
@@ -39,6 +40,7 @@ namespace Essence.Communication.BusinessServices
             _userRepo = _unitOfWork.Repository<UserReference>();
             _vendorRepo = _unitOfWork.Repository<Vendor>();
             _accountUserRepo = _unitOfWork.Repository<AccountUser>();
+            _accountGroupRepo = _unitOfWork.Repository<AccountGroup>();
         }
 
         /// <summary>
@@ -142,6 +144,9 @@ namespace Essence.Communication.BusinessServices
                 return false;
             }
 
+            //TODO: for Testing
+            var testGroup = _accountGroupRepo.Get(x => x.Name == "TestGroup").FirstOrDefault();
+
             //get all users linked to residents
             foreach (var resident in users)
             {
@@ -156,7 +161,8 @@ namespace Essence.Communication.BusinessServices
                 {
                     AccountNo = resident.accountDetails.serviceProviderAccountNumber,
                     VendorAccountNo = resident.accountDetails.account,
-                    Vendor = vendor
+                    Vendor = vendor,
+                    Group = testGroup
                 };
 
                 //check if account has been existed

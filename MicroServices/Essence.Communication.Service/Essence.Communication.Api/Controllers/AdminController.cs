@@ -25,13 +25,6 @@ namespace Essence.Communication.Api.Controllers
             _userAccountService = userAccountService;
         }
 
-        [Route("Tsst")]
-        [HttpGet]
-        public async Task<ActionResult> InitializeAccountUsers2()
-        {
-            return Ok(new { a="aaa"});
-        }
-
 
         [Route("IntializeAccountUsers")]
         [HttpPost]

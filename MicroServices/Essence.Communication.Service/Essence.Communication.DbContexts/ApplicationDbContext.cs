@@ -7,6 +7,7 @@ using Services.Utilities.DataAccess;
 using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Essence.Communication.Models.Utility;
 
 namespace Essence.Communication.DbContexts
 {
@@ -57,6 +58,10 @@ namespace Essence.Communication.DbContexts
             modelBuilder.Entity<Event<EmergencyPanicDetails>>().OwnsOne(s => s.Details); 
 
             //seeding 
+            modelBuilder.Entity<Vendor>().HasData(new Vendor(EventVendors.ESSENCE));
+
+            //test seeding data
+            modelBuilder.Entity<AccountGroup>().HasData(new AccountGroup() { Name = "TestGroup" });
         }
     }
 }
