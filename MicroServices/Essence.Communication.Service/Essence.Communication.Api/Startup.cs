@@ -50,7 +50,7 @@ namespace Essence.Communication.Api
             services.AddCors();
             //set entityframework connection string
             services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
-            services.AddDbContext<ApplicationIdentityDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
+            services.AddDbContext<IdentityDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
 
             services.AddMvc();
 
@@ -117,6 +117,7 @@ namespace Essence.Communication.Api
             builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(AuthenticationService)).As(typeof(IAuthenticationService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(ReportingService)).As(typeof(IReportingService)).InstancePerLifetimeScope();
+           
             builder.RegisterType(typeof(UserService)).As(typeof(IAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MessageService)).As(typeof(IMessageService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventService)).As(typeof(IEventService)).InstancePerLifetimeScope();
@@ -130,6 +131,9 @@ namespace Essence.Communication.Api
             builder.RegisterGeneric(typeof(UnitOfWork<>)).As(typeof(IUnitOfWork<>)).InstancePerDependency();
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency();
             builder.RegisterType<EssenceRequestValidation>().As<IRequestValidation>().InstancePerDependency();
+
+            //TODO: this service may should move to identity project later
+            builder.RegisterType(typeof(IdentityUserProfileService)).As(typeof(IIdentityUserProfileService)).InstancePerLifetimeScope();
 
 
 

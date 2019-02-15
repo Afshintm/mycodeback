@@ -15,12 +15,12 @@ namespace Services.Utilities.DataAccess
     /// Unit of Work around a context
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
-    public interface IUnitOfWork<TContext> : IUnitOfWork where TContext : DbContextBase<TContext>
+    public interface IUnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
     {
         TContext Context { get; set; }
     }
 
-    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContextBase<TContext>//, new()
+    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContext
     {
         private bool _disposed;
         private Hashtable _repositories;

@@ -11,6 +11,8 @@ namespace Essence.Communication.DbContexts.Configurations
     {
         public void Configure(EntityTypeBuilder<EventBase> builder)
         {
+            builder.ToTable("Event");
+
             builder.HasKey(h => h.Id)
                 .HasName("PK_HCSEvent_Id");
             

@@ -2,6 +2,7 @@
 using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.Dtos.Enums;
+using Essence.Communication.Models.IdentityModels;
 using Essence.Communication.Models.Utility;
 using Microsoft.Extensions.Configuration;
 using Services.Utilities.DataAccess;
@@ -29,11 +30,14 @@ namespace Essence.Communication.BusinessServices
         private IRepository<AccountUser> _accountUserRepo;
         private IRepository<AccountGroup> _accountGroupRepo;
 
+        private readonly IIdentityUserProfileService _identifyService;
+
         public UserAccountService(IHttpClientManagerNew httpClientManager,
             IAppSettingsConfigService appSettingsConfigService,
             IAuthenticationService authenticationService,
             IUnitOfWork<ApplicationDbContext> unitOfWork,
-            IModelMapper modelMapper
+            IModelMapper modelMapper,
+            IIdentityUserProfileService identifyService
             ) : base(httpClientManager, appSettingsConfigService, authenticationService, unitOfWork, modelMapper)
         {
             _accountRepo = _unitOfWork.Repository<Account>();
@@ -41,6 +45,7 @@ namespace Essence.Communication.BusinessServices
             _vendorRepo = _unitOfWork.Repository<Vendor>();
             _accountUserRepo = _unitOfWork.Repository<AccountUser>();
             _accountGroupRepo = _unitOfWork.Repository<AccountGroup>();
+            _identifyService = identifyService;
         }
 
         /// <summary>
@@ -122,13 +127,27 @@ namespace Essence.Communication.BusinessServices
 
             _accountRepo.InsertRange(accountList);
             _userRepo.InsertRange(userList);
-            //_unitOfWork.Save();
             _accountUserRepo.InsertRange(accountUserList);
+
+            //TODO: call the service with event
+            await UpdateIdentityUsers(userList.Select(
+                    x => new ApplicationUser() {
+                         Email = x.Email,
+                         UserName = x.Name,
+                         UserType = x.UserType
+                }).ToList());
+
             _unitOfWork.Save();
             return true;
         }
 
-        //TODO: sync with identity
+        //TODO: this method should be moved to other project
+        private async Task<bool> UpdateIdentityUsers(List<ApplicationUser> users)
+        {
+            await _identifyService.UpdateUserProfiles(users);
+            return true;
+        }
+
         private async Task<bool> AddAccountUsers(UserResult[] users, List<Account> accountList, List<UserReference> userList, List<AccountUser> accountUserList, string token)
         {
             var existedAccount = _accountRepo.GetAll();

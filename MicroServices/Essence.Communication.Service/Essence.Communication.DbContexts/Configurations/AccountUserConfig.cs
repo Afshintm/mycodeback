@@ -11,6 +11,7 @@ namespace Essence.Communication.DbContexts.Configurations
     {
         public void Configure(EntityTypeBuilder<AccountUser> builder)
         {
+            builder.ToTable("AccountUser");
             builder.HasKey(a => new { a.AccountId, a.UserId });
             builder.Ignore(a => a.Id);
         }

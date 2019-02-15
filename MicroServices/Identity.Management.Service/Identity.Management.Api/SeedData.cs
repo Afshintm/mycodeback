@@ -30,7 +30,7 @@ namespace Identity.Management.Api
                     EnsureSeedData(context);
                 }
                 {
-                    var context = scope.ServiceProvider.GetService<ApplicationIdentityDbContext>();
+                    var context = scope.ServiceProvider.GetService<IdentityDbContext>();
                     context.Database.Migrate();
 
                     var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();

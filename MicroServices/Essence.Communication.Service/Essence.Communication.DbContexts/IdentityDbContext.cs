@@ -2,23 +2,23 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Essence.Communication.DbContexts
 {
     
-    public class ApplicationIdentityDbContext : IdentityDbContext<ApplicationUser>
-    //IdentityDbContext<ApplicationUser, Role, Guid>
+    public class IdentityDbContext : IdentityDbContext<ApplicationUser>
     {
         /// <summary>
         /// Initializes a new instance of the db context.
         /// </summary>
         /// <param name="options">The options to be used by a <see cref="DbContext"/>.</param>
-        public ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDbContext> options) : base(options) { }
+        public IdentityDbContext(DbContextOptions<IdentityDbContext> options) : base(options) { }
 
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        protected ApplicationIdentityDbContext() { }
+        protected IdentityDbContext() { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -37,6 +37,16 @@ namespace Essence.Communication.DbContexts
             {
                 entity.ToTable(name: "Role");
             });
+
+            //seeding
+            builder.Entity<IdentityRole>().HasData(
+                new List<IdentityRole> {
+                    new IdentityRole("Resident"),
+                    new IdentityRole("CareGiver"),
+                    new IdentityRole("Administrator")
+                } 
+              );
+
             builder.Entity<IdentityUserRole<string>>(entity =>
             {
                 entity.ToTable("UserRoles");

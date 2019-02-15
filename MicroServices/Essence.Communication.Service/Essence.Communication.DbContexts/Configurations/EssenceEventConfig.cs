@@ -10,11 +10,11 @@ using System.Collections.Generic;
 
 namespace Essence.Communication.DbContexts.Configurations
 {
-    //TODO: change essence event to vender event
-    public class VendorEventConfig : IEntityTypeConfiguration<EssenceEventObjectStructure>
+    public class EssenceEventConfig : IEntityTypeConfiguration<EssenceEventObjectStructure>
     {
         public void Configure(EntityTypeBuilder<EssenceEventObjectStructure> builder)
         {
+            builder.ToTable("EssenceEvent");
             builder.HasKey(h => h.Id)
                 .HasName("PK_EssenceEvent_Id");
             

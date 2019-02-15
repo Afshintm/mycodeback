@@ -3,11 +3,11 @@ Echo User $Env:ASPNETCORE_ENVIRONMENT = "Test" in powershell to set the environm
 cd Identity.Management.Service/Identity.Management.Api
 
 
-REM dotnet ef migrations add ApplicationIdentity  -c ApplicationIdentityDbContext  -o Data/Migrations/ApplicationIdentityDb
+REM dotnet ef migrations add ApplicationIdentity  -c IdentityDbContext  -o Data/Migrations/ApplicationIdentityDb
 
-REM dotnet ef migrations script -c ApplicationIdentityDbContext -o Data/Migrations/ApplicationIdentityDb.sql
+REM dotnet ef migrations script -c IdentityDbContext -o Data/Migrations/ApplicationIdentityDb.sql
 
-dotnet ef database  update -c ApplicationIdentityDbContext 
+dotnet ef database  update -c IdentityDbContext 
 
 
 REM dotnet ef migrations add Grants -c PersistedGrantDbContext -o Data/Migrations/PersistedGrantDb

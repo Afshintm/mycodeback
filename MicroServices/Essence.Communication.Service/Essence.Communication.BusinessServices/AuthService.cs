@@ -16,10 +16,10 @@ namespace Essence.Communication.BusinessServices
     }
     public class AuthService : IAuthService
     {
-        ApplicationIdentityDbContext _applicationIdentityDbContext;
-        public AuthService(ApplicationIdentityDbContext applicationIdentityDbContext)
+        IdentityDbContext _identityDbContext;
+        public AuthService(IdentityDbContext applicationIdentityDbContext)
         {
-            _applicationIdentityDbContext = applicationIdentityDbContext;
+            _identityDbContext = applicationIdentityDbContext;
         }
         public ApplicationUser CreateUser(string username)
         {
@@ -32,7 +32,7 @@ namespace Essence.Communication.BusinessServices
         }
         public IEnumerable<string> GetUsers()
         {
-            var result = _applicationIdentityDbContext.Users.Select(x => x.UserName).AsEnumerable();
+            var result = _identityDbContext.Users.Select(x => x.UserName).AsEnumerable();
             return result;
         }
     }

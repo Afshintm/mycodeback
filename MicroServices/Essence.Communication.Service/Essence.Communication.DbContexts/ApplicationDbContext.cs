@@ -11,7 +11,7 @@ using Essence.Communication.Models.Utility;
 
 namespace Essence.Communication.DbContexts
 {
-    public class ApplicationDbContext : DbContextBase<ApplicationDbContext>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -44,7 +44,7 @@ namespace Essence.Communication.DbContexts
             modelBuilder.HasDefaultSchema("Application");
 
             modelBuilder.ApplyConfiguration(new EventConfig());
-            modelBuilder.ApplyConfiguration(new VendorEventConfig());
+            modelBuilder.ApplyConfiguration(new EssenceEventConfig());
             modelBuilder.ApplyConfiguration(new AccountUserConfig());
 
             //set value objects

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Identity.Management.Api.Data.Migrations.ApplicationIdentityDb
 {
-    [DbContext(typeof(ApplicationIdentityDbContext))]
+    [DbContext(typeof(IdentityDbContext))]
     [Migration("20190130061846_ApplicationIdentity")]
     partial class ApplicationIdentity
     {
