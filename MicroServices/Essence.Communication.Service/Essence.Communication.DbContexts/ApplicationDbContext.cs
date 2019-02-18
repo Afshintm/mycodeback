@@ -21,7 +21,7 @@ namespace Essence.Communication.DbContexts
         public DbSet<Event<UnexpectedActivityDetails>> UnexpectedActivityEvent { get; set; }
         public DbSet<Event<UnexpectedEntryExitDetails>> UnexpectedEntryExitEvent { get; set; }
         public DbSet<Event<StayHomeDetails>> StayHomeEvent { get; set; }
-        public DbSet<Event<PowerDetails>> PoweEvent { get; set; }
+        public DbSet<Event<PowerDetails>> PowerEvent { get; set; }
         public DbSet<Event<BatteryDetails>> BatteryEvent { get; set; }
         public DbSet<Event<PanelStatusDetails>> PanelStatusEvent { get; set; }
         public DbSet<Event<FallAlertDetails>> FallAlertEvent { get; set; }

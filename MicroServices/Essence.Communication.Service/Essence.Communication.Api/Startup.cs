@@ -19,6 +19,8 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.Reflection;
 using System.IO;
+using Microsoft.Extensions.Options;
+using Essence.Communication.Models.Config;
 
 namespace Essence.Communication.Api
 {
@@ -46,11 +48,16 @@ namespace Essence.Communication.Api
         // called by the runtime before the Configure method, below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            
+            services.Configure<ConfigOptions>(Configuration);
+            var serviceProvider = services.BuildServiceProvider();
+            var configOptions = serviceProvider.GetService<IOptionsMonitor<ConfigOptions>>().CurrentValue;
+
             // Add services to the collection.
             services.AddCors();
             //set entityframework connection string
-            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
-            services.AddDbContext<ApplicationIdentityDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(configOptions.ConnectionStrings.ApplicationConnectionString, b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
+            services.AddDbContext<ApplicationIdentityDbContext>(o => o.UseSqlServer(configOptions.ConnectionStrings.ApplicationConnectionString, b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
 
             services.AddMvc();
 
@@ -67,8 +74,8 @@ namespace Essence.Communication.Api
                 });
             
             services.AddAuthorization();
-            var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
-            var apiName = Configuration.GetSection("AuthenticationServer")["ApiKey"];
+            var IdentityServerIssuerUrl = configOptions.AuthenticationServer.Issuer;
+            var apiName = configOptions.AuthenticationServer.ApiKey;
             _logger.LogInformation("Identity Server configuration data is {0}available.",( string.IsNullOrEmpty(IdentityServerIssuerUrl)||string.IsNullOrEmpty(IdentityServerIssuerUrl)?"not":string.Empty ));
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
