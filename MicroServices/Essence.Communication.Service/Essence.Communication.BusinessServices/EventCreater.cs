@@ -49,7 +49,6 @@ namespace Essence.Communication.BusinessServices
             eventObj.ServerTime = source.ServerTime;
             eventObj.Location = source.Event.Location;
             eventObj.VendorEventId = source.Id;
-            eventObj.Vendor= source.Vendor;
         }
 
         private EventBase CreateEssenceEvent(IVendorEvent eventStructure, Account hscAccount)

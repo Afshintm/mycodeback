@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Essence.Communication.Models;
 using Essence.Communication.DbContexts;
 using Identity.Management.Api.Extensions;
 using Identity.Management.Api.Services;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Essence.Communication.Models.IdentityModels;
 
 namespace Identity.Management.Api
 {
@@ -31,11 +33,11 @@ namespace Identity.Management.Api
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             
             var applicationIdentityConnectionString = Configuration.GetConnectionString("ApplicationIdentityConnectionString");
-            services.AddDbContext<ApplicationIdentityDbContext>(options =>
+            services.AddDbContext<IdentityDbContext>(options =>
         options.UseSqlServer(applicationIdentityConnectionString,sql=>sql.MigrationsAssembly(migrationsAssembly)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+                .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

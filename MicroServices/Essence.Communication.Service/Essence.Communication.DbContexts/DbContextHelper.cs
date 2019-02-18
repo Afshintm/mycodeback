@@ -17,14 +17,5 @@ namespace Essence.Communication.DbContexts
                 v => (T)Enum.Parse(typeof(T), v));
             
         }
-
-        public static void SetIdDefaultGuidValue<T> (EntityTypeBuilder<T> builder) where T : Entity
-        {
-
-             builder
-                .Property(h => h.Id)
-                .HasDefaultValue(Guid.NewGuid().ToString())
-                .IsRequired();
-        }
     }
 }

@@ -5,13 +5,12 @@ using System.Text;
 namespace Essence.Communication.Models.Dtos
 {
 
-    public class GetUsersResult
+    public class GetUsersResult : ResponseBase
     {
-        public UserResult[] users { get; set; }
-        public bool Value { get; set; }
-        public int Response { get; set; }
-        public string ResponseDescription { get; set; }
-        public object Message { get; set; }
+        public GetUsersResult() { }
+        public GetUsersResult(ResponseBase response) : base(response) { }
+
+        public UserResult[] users { get; set; } 
     }
 
     public class UserResult

@@ -35,7 +35,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/GetUsers";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(getUsersRequest, loginResponse.token);
+                var result = await PostAsync(getUsersRequest, loginResponse.Token);
                 return result;
             });
             return response;

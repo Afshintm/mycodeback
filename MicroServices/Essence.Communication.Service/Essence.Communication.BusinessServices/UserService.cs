@@ -43,7 +43,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/AddUser";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(addAndAssociateUserRequest, loginResponse.token);
+                var result = await PostAsync(addAndAssociateUserRequest, loginResponse.Token);
                 return result;
             });
             return response;
@@ -60,7 +60,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/AddUser";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(associateUserToAccountRequest, loginResponse.token);
+                var result = await PostAsync(associateUserToAccountRequest, loginResponse.Token);
                 return result;
             });
             return response;
@@ -77,7 +77,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/DeactivateUser";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(deactivateUserRequest, loginResponse.token);
+                var result = await PostAsync(deactivateUserRequest, loginResponse.Token);
                 return result;
             });
             return response;
@@ -94,7 +94,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/DeleteAccount";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(deleteAccountRequest, loginResponse.token);
+                var result = await PostAsync(deleteAccountRequest, loginResponse.Token);
                 return result;
             });
             return response;
@@ -111,7 +111,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/DeleteUser";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(deleteUserRequest, loginResponse.token);
+                var result = await PostAsync(deleteUserRequest, loginResponse.Token);
                 return result;
             });
             return response;
@@ -128,7 +128,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/DisassociateUserFromAccount";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(disassociateUserFromAccountRequest, loginResponse.token);
+                var result = await PostAsync(disassociateUserFromAccountRequest, loginResponse.Token);
                 return result;
             });
             return response;
@@ -150,7 +150,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/UpdateAccountInformation";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(updateAccountInformationRequest, loginResponse.token);
+                var result = await PostAsync(updateAccountInformationRequest, loginResponse.Token);
                 return result;
             });
             return response;
@@ -167,7 +167,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/UpdateUser";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(updateUserRequest, loginResponse.token);
+                var result = await PostAsync(updateUserRequest, loginResponse.Token);
                 return result;
             });
             return response;
@@ -184,7 +184,7 @@ namespace Essence.Communication.BusinessServices
             ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/AddUser";
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(addUserRequest, loginResponse.token);
+                var result = await PostAsync(addUserRequest, loginResponse.Token);
                 return result;
             });
             return response;
