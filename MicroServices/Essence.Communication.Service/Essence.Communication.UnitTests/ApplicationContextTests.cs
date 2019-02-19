@@ -3,6 +3,7 @@ using Essence.Communication.Models;
 using Essence.Communication.Models.IdentityModels;
 using Essence.Communication.Models.Utility;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,18 @@ namespace Essence.Communication.UnitTests
                 UserRef = new UserReference{UserName = "userName2", Email = "user2@gmail.com" } },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "1223"},
                 new ApplicationUser(){UserName  = "userName3", Email = "user3@gmail.com",
                 UserRef = new UserReference{UserName = "userName3", Email = "user3@gmail.com" } },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "1223"}
+            };
+        }
+
+        private List<UserReference> CreateFakeUserRefs()
+        {
+            return new List<UserReference>()
+            {
+                new UserReference(){UserName  = "userName1", Email = "user1@gmail.com" },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "123"},
+                new UserReference(){UserName  = "userName2", Email = "user2@gmail.com",
+                User = new ApplicationUser{UserName = "userName2", Email = "user2@gmail.com" } },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "1223"},
+                new UserReference(){UserName  = "userName3", Email = "user3@gmail.com",
+                User = new ApplicationUser{UserName = "userName3", Email = "user3@gmail.com" } },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "1223"}
             };
         }
 
@@ -175,6 +188,29 @@ namespace Essence.Communication.UnitTests
                 var result = context.UserRef.ToList();
                 Assert.True(result.Count == 3);
                 Assert.True(!string.IsNullOrEmpty(result[0].Id));
+            }
+        }
+
+        [Fact]
+
+        public void UserRef_TryToSave_InvalidOperationException()
+        {
+            //arrange
+            var options = EFTestInMemoryHelper.CreateContextOptions<ApplicationDbContext>();
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                context.Database.OpenConnection();
+                context.Database.EnsureCreated();
+
+                //action
+                var testList = CreateFakeUserRefs();
+                context.UserRef.AddRange(testList);
+
+                Exception ex = Assert.Throws<InvalidOperationException>(() => context.SaveChanges());
+
+                //assert
+                Assert.Equal(ex.Message, DbContextHelper.ReadOnlyEntityMsg);
             }
         }
 

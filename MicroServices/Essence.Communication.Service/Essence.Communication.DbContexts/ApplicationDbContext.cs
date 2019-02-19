@@ -14,7 +14,7 @@ using Essence.Communication.Models.IdentityModels;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-
+using System.Linq;
 namespace Essence.Communication.DbContexts
 {
     /// <summary>
@@ -43,15 +43,10 @@ namespace Essence.Communication.DbContexts
         public DbSet<AccountUser> AccountUsers { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<UserReference> UserRef { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        { 
+        //UserRef is readonly entity that refs to User
+        public DbSet<UserReference> UserRef { get; protected set; }
 
-            LoggerFactory loggerFactory = new LoggerFactory();
-            loggerFactory.AddConsole();
-            optionsBuilder.UseLoggerFactory(loggerFactory);
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,6 +58,16 @@ namespace Essence.Communication.DbContexts
 
             OnIdentityModelsCreating(modelBuilder);
             OnApplicationModelsCreating(modelBuilder);
+        }
+
+        public override int SaveChanges()
+        {
+           if(ChangeTracker.Entries()
+                .Any( x => x.Metadata.ClrType == typeof(UserReference)))
+            {
+                throw new InvalidOperationException(DbContextHelper.ReadOnlyEntityMsg);
+            }
+            return base.SaveChanges();
         }
 
         private void  OnApplicationModelsCreating (ModelBuilder modelBuilder)
