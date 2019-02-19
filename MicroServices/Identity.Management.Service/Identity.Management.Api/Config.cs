@@ -102,7 +102,70 @@ namespace Identity.Management.Api
                     },
                     AllowOfflineAccess = true,
                     AlwaysSendClientClaims = true,
-                }
+                },
+                new Client
+                    {
+                        ClientName = "angularclient",
+                        ClientId = "angularclient",
+                        AccessTokenType = AccessTokenType.Reference,
+                        //AccessTokenLifetime = 600, // 10 minutes, default 60 minutes
+                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowAccessTokensViaBrowser = true,
+                        RedirectUris = new List<string>
+                        {
+                            "http://localhost:4200/auth-callback"
+
+                        },
+                        PostLogoutRedirectUris = new List<string>
+                        {
+                            "http://localhost:4200/Unauthorized"
+                        },
+                        AllowedCorsOrigins = new List<string>
+                        {
+                            "http://localhost:4200"
+                        },
+                        AllowedScopes = new List<string>
+                        {
+
+                            IdentityServerConstants.StandardScopes.OpenId,
+                            IdentityServerConstants.StandardScopes.Profile,
+                            IdentityServerConstants.StandardScopes.Email,
+                            "api1","Essence.Communication.Api","roles"
+                        }
+                    },
+                new Client
+                    {
+                        ClientName = "angularclient-aws",
+                        ClientId = "angularclient-aws",
+                        AccessTokenType = AccessTokenType.Reference,
+                        //AccessTokenLifetime = 600, // 10 minutes, default 60 minutes
+                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowAccessTokensViaBrowser = true,
+                        RedirectUris = new List<string>
+                        {
+                            "http://app.homestay.care/auth-callback"
+
+                        },
+                        PostLogoutRedirectUris = new List<string>
+                        {
+                            "http://app.homestay.care/Unauthorized"
+                        },
+                        AllowedCorsOrigins = new List<string>
+                        {
+                            "http://app.homestay.care"
+                        },
+                        AllowedScopes = new List<string>
+                        {
+
+                            IdentityServerConstants.StandardScopes.OpenId,
+                            IdentityServerConstants.StandardScopes.Profile,
+                            IdentityServerConstants.StandardScopes.Email,
+                            "api1","Essence.Communication.Api","roles"
+                        }
+                    }
+
+
+
             };
         }
 
