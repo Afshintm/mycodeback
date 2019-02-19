@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Services.Utilities.DataAccess;
 using System.Collections.Generic;
 
 namespace Essence.Communication.DbContexts
 {
     
-    public class IdentityDbContext : IdentityDbContext<ApplicationUser>
+    public class IdentityDbContext : IdentityDbContext<ApplicationUser>, IDbContext
     {
         /// <summary>
         /// Initializes a new instance of the db context.

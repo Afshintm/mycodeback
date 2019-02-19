@@ -11,7 +11,7 @@ using Essence.Communication.Models.Utility;
 
 namespace Essence.Communication.DbContexts
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext, IDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

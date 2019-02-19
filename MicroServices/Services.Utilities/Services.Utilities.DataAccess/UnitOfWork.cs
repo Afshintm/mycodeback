@@ -15,12 +15,12 @@ namespace Services.Utilities.DataAccess
     /// Unit of Work around a context
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
-    public interface IUnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
+    public interface IUnitOfWork<TContext> : IUnitOfWork where TContext : IDbContext
     {
         TContext Context { get; set; }
     }
 
-    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContext
+    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : IDbContext
     {
         private bool _disposed;
         private Hashtable _repositories;
@@ -79,9 +79,9 @@ namespace Services.Utilities.DataAccess
             {
                 var repositoryType = typeof(Repository<>);
 
+                var genericRepoType = repositoryType.MakeGenericType(typeof(T));
                 var repositoryInstance =
-                    Activator.CreateInstance(repositoryType
-                            .MakeGenericType(typeof(T)), _context);
+                    Activator.CreateInstance(genericRepoType, _context);
 
                 //save repository in memory
                 _repositories.Add(type, repositoryInstance);

@@ -28,7 +28,7 @@ namespace Essence.Communication.BusinessServices
     {
         private readonly IAppSettingsConfigService _appSettingsConfigService;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IEventCreater _eventCreater;
+        private readonly IEventCreator _eventCreater;
         private readonly IModelMapper _modelMapper;
         private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
         private readonly IHttpClientManagerNew _httpClient;
@@ -38,7 +38,7 @@ namespace Essence.Communication.BusinessServices
             IHttpClientManager httpClientManager,
             IAppSettingsConfigService appSettingsConfigService,
             IAuthenticationService authenticationService,
-            IEventCreater eventCreater,
+            IEventCreator eventCreater,
             IModelMapper mapper,
             IUnitOfWork<ApplicationDbContext> unitOfWork,
             IHttpClientManagerNew httpClient
@@ -130,6 +130,5 @@ namespace Essence.Communication.BusinessServices
 
             return authResponse;
         }
-
     }
 }
