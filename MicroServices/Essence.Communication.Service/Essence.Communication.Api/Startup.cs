@@ -19,6 +19,8 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.Reflection;
 using System.IO;
+using Essence.Communication.Models.IdentityModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace Essence.Communication.Api
 {
@@ -50,9 +52,14 @@ namespace Essence.Communication.Api
             services.AddCors();
             //set entityframework connection string
             services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
-            services.AddDbContext<IdentityDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
 
-            services.AddMvc();
+
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("IdentityServerOprationsConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddMvc(); 
 
             //add swagger service
             services.AddSwaggerGen(c =>
@@ -70,6 +77,7 @@ namespace Essence.Communication.Api
             var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
             var apiName = Configuration.GetSection("AuthenticationServer")["ApiKey"];
             _logger.LogInformation("Identity Server configuration data is {0}available.",( string.IsNullOrEmpty(IdentityServerIssuerUrl)||string.IsNullOrEmpty(IdentityServerIssuerUrl)?"not":string.Empty ));
+
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
@@ -78,13 +86,11 @@ namespace Essence.Communication.Api
                     options.ApiName = apiName;
                 });
             
-
             var builder = AppContainerBuilder(services);
             //var builder = services.GetAppContainerBuilder();
 
             this.ApplicationContainer = builder.Build();
-
-           
+          
             // Create the IServiceProvider based on the container.
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
@@ -133,6 +139,9 @@ namespace Essence.Communication.Api
             builder.RegisterType<EssenceRequestValidation>().As<IRequestValidation>().InstancePerDependency();
 
             //TODO: this service may should move to identity project later
+           // builder.RegisterGeneric(typeof(UserManager<>)).As(typeof(UserManager<>)).InstancePerDependency();
+          //  builder.RegisterGeneric(typeof(RoleManager<>)).As(typeof(RoleManager<>)).InstancePerDependency();
+
             builder.RegisterType(typeof(IdentityUserProfileService)).As(typeof(IIdentityUserProfileService)).InstancePerLifetimeScope();
 
 

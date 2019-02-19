@@ -69,9 +69,9 @@ namespace Essence.Communication.Api.Controllers
         [Route("~/api/values/users")]
         public ActionResult<IEnumerable<string>> GetUsers()
         {
-            var users = _authService.GetUsers();
-            if (users.Any())
-                return Ok(users);
+            //var users = _authService.GetUsers();
+            //if (users.Any())
+            //    return Ok(users);
             return NotFound("No User found");
         }
 

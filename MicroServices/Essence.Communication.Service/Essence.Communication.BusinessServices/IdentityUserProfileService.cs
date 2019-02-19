@@ -6,51 +6,66 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using Essence.Communication.Models;
+using System.Security.Claims;
 
 namespace Essence.Communication.BusinessServices
 {
     public interface IIdentityUserProfileService
     {
-        Task<bool> UpdateUserProfiles(IEnumerable<ApplicationUser> users);
+        Task<bool> UpdateUserProfiles(IEnumerable<UserReference> users);
     }
 
     public class IdentityUserProfileService : IIdentityUserProfileService
     {
-        private readonly IUnitOfWork<IdentityDbContext> _unitOfWork;
-
-        private List<IdentityRole> _roles;
-        private IRepository<ApplicationUser> _userRepo;
-        private IRepository<IdentityUserRole<string>> _userRolesRepo;
-        private IRepository<IdentityRole> _rolesRepo;
-
-        public IdentityUserProfileService (IUnitOfWork<IdentityDbContext> unitOfWork)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public IdentityUserProfileService (UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _unitOfWork = unitOfWork;
-            _userRepo = _unitOfWork.Repository<ApplicationUser>();
-            _userRolesRepo = _unitOfWork.Repository<IdentityUserRole<string>>();
-            _rolesRepo = _unitOfWork.Repository<IdentityRole>();
-            _roles = _rolesRepo.GetAll().ToList();
+           _userManager = userManager;
+           _roleManager = roleManager;
         }
 
-        public async Task<bool> UpdateUserProfiles(IEnumerable<ApplicationUser> users)
+        public async Task<bool> UpdateUserProfiles(IEnumerable<UserReference> users)
         {
-            //add /update users
-            _userRepo.InsertRange(users);
+           var appUser = new ApplicationUser { PhoneNumber = "11111", Email = "ttt@gggg.com", UserName = "Test1eee111",
+               CellPhoneNumber = "111333111"
+               , UserRef = new UserReference { CellPhoneNumber = "111333111", Email = "ttt@gggg.com", UserName = "Test1eee111" }
+           
+           };
 
-            //get user role mapping
-            var userRoles = users.Select(x => new IdentityUserRole<string> { RoleId = GetRoleId(x.UserType), UserId = x.Id })
-                .Where( r => !string.IsNullOrEmpty(r.RoleId));
-            _userRolesRepo.InsertRange(userRoles);
+           // var a = await _roleManager.CreateAsync(new IdentityRole("MyTestRole"));
+         //  if (!a.Succeeded)
+           // {
 
-            _unitOfWork.Save();
+           // }
 
+            var result = await _userManager.CreateAsync(appUser, "Pass123$");
+            if (!result.Succeeded )
+            {
+                return false;
+            }
+            result = await _userManager.AddClaimsAsync(appUser, new Claim[] {
+                             new Claim("name", "app2 test"),
+                            new Claim("given_name", "app2"),
+                            new Claim("family_name", "test"),
+                            new Claim("TestClaim", "testClaim"),
+                });
+
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+            result =await _userManager.AddToRoleAsync(appUser, "MyTestRole");
+
+            if (!result.Succeeded)
+            {
+                return false;
+            }
             return true;
+            //todo add role not belongs to existing role
         }
 
-        private string GetRoleId(string roleName)
-        {
-            var result = _roles.Where(x => string.Compare(roleName, x.Name, true) == 0).FirstOrDefault();
-            return result?.Id;
-        }
+        
     }
 }

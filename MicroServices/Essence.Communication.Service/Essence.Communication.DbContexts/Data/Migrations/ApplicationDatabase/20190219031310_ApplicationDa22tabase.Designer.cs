@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190211123954_RemoveDefaultGuidId")]
-    partial class RemoveDefaultGuidId
+    [Migration("20190219031310_ApplicationDa22tabase")]
+    partial class ApplicationDa22tabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,9 +27,13 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<string>("AccountNo");
+
+                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("GroupId");
+
+                    b.Property<string>("VendorAccountNo");
 
                     b.Property<string>("VendorId");
 
@@ -47,13 +51,21 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
 
                     b.ToTable("AccountGroup");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "6d1b3ab8-183f-453a-8e2e-e6b200006138",
+                            CreatedDate = new DateTime(2019, 2, 19, 3, 13, 9, 780, DateTimeKind.Utc).AddTicks(1878),
+                            Name = "TestGroup"
+                        });
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.AccountUser", b =>
@@ -62,51 +74,13 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.Property<string>("UserId");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTime>("CreatedDate");
 
                     b.HasKey("AccountId", "UserId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("AccountUser");
-                });
-
-            modelBuilder.Entity("Essence.Communication.Models.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp");
-
-                    b.Property<string>("Email");
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail");
-
-                    b.Property<string>("NormalizedUserName");
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ApplicationUser");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.Dtos.EssenceEventObjectStructure", b =>
@@ -116,9 +90,9 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.Property<int>("Account");
 
-                    b.Property<DateTime>("CreateDate")
+                    b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 2, 11, 12, 39, 53, 788, DateTimeKind.Utc).AddTicks(1587));
+                        .HasDefaultValue(new DateTime(2019, 2, 19, 3, 13, 9, 737, DateTimeKind.Utc).AddTicks(6603));
 
                     b.Property<string>("Ids");
 
@@ -150,7 +124,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     b.Property<string>("AlertType")
                         .IsRequired();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Discriminator")
                         .IsRequired();
@@ -170,18 +144,126 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.Property<string>("VendorEventId");
 
-                    b.Property<string>("VendorId");
-
                     b.HasKey("Id")
                         .HasName("PK_HCSEvent_Id");
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("VendorId");
-
                     b.ToTable("Event");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("EventBase");
+                });
+
+            modelBuilder.Entity("Essence.Communication.Models.IdentityModels.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id");
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("Address")
+                        .HasColumnName("Address");
+
+                    b.Property<string>("CellPhoneNumber")
+                        .HasColumnName("CellPhoneNumber");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Email")
+                        .HasColumnName("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnName("FirstName");
+
+                    b.Property<string>("Gender")
+                        .HasColumnName("Gender");
+
+                    b.Property<string>("LastName")
+                        .HasColumnName("LastName");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasColumnName("UserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("UserType")
+                        .HasColumnName("UserType");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("User","Identity");
+                });
+
+            modelBuilder.Entity("Essence.Communication.Models.UserReference", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address")
+                        .HasColumnName("Address");
+
+                    b.Property<string>("CellPhoneNumber")
+                        .HasColumnName("CellPhoneNumber");
+
+                    b.Property<string>("Email")
+                        .HasColumnName("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("FirstName")
+                        .HasColumnName("FirstName");
+
+                    b.Property<string>("Gender")
+                        .HasColumnName("Gender");
+
+                    b.Property<string>("LastName")
+                        .HasColumnName("LastName");
+
+                    b.Property<string>("UserName")
+                        .HasColumnName("UserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("UserType")
+                        .HasColumnName("UserType");
+
+                    b.Property<string>("VendorId");
+
+                    b.Property<string>("VendorUserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VendorId");
+
+                    b.ToTable("User","Identity");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.Vendor", b =>
@@ -189,13 +271,131 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
 
                     b.ToTable("Vendor");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "6dcbe9e4-c0a1-4658-ba38-85f78615985f",
+                            CreatedDate = new DateTime(2019, 2, 19, 3, 13, 9, 778, DateTimeKind.Utc).AddTicks(5098),
+                            Name = "Essence"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("Role","Identity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleClaim","Identity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClaim","Identity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("ProviderKey");
+
+                    b.Property<string>("ProviderDisplayName");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLogin","Identity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("RoleId");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRole","Identity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("UserToken","Identity");
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.BatteryDetails>", b =>
@@ -272,7 +472,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Essence.Communication.Models.ApplicationUser", "User")
+                    b.HasOne("Essence.Communication.Models.UserReference", "User")
                         .WithMany("AccountUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -333,10 +533,6 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                         .WithMany("HSCEvents")
                         .HasForeignKey("AccountId");
 
-                    b.HasOne("Essence.Communication.Models.Vendor", "Vendor")
-                        .WithMany("HSCEvents")
-                        .HasForeignKey("VendorId");
-
                     b.OwnsOne("Essence.Communication.Models.ValueObjects.Location", "Location", b1 =>
                         {
                             b1.Property<string>("EventBaseId");
@@ -359,6 +555,66 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                                 .HasForeignKey("Essence.Communication.Models.ValueObjects.Location", "EventBaseId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
+                });
+
+            modelBuilder.Entity("Essence.Communication.Models.IdentityModels.ApplicationUser", b =>
+                {
+                    b.HasOne("Essence.Communication.Models.UserReference", "UserRef")
+                        .WithOne("User")
+                        .HasForeignKey("Essence.Communication.Models.IdentityModels.ApplicationUser", "Id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Essence.Communication.Models.UserReference", b =>
+                {
+                    b.HasOne("Essence.Communication.Models.Vendor", "Vendor")
+                        .WithMany("Users")
+                        .HasForeignKey("VendorId");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Essence.Communication.Models.IdentityModels.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Essence.Communication.Models.IdentityModels.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Essence.Communication.Models.IdentityModels.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Essence.Communication.Models.IdentityModels.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Essence.Communication.Models.Event<Essence.Communication.Models.ValueObjects.BatteryDetails>", b =>

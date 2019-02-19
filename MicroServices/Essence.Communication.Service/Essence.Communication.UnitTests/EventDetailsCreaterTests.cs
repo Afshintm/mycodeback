@@ -15,9 +15,9 @@ namespace Essence.Communication.UnitTests
 
     public class EventDetailsCreaterTests
     {
-        public EventDetailsCreaterTests()
-        {
-        }
+        //public EventDetailsCreaterTests()
+        //{
+        //}
 
         //[Fact]
         //public void CreateTest_SupportableEvent_ReturnConcreteDetails()
@@ -26,14 +26,14 @@ namespace Essence.Communication.UnitTests
         //    var stubMapper = new Mock<IEventCodeDetailsTypeMapper>();
         //    stubMapper.Setup(m => m.GetDetailType(It.IsAny<int>())).Returns(typeof(StubDetails));
         //    var stubDetails = new StubDetails { DeviceDescription = "Description", DeviceId = 11, DeviceType = 22, ActualTemperature = 333, MaximumThreshold = 444 };
-        //    var stubEvent = CreateStubEvent( stubDetails);
+        //    var stubEvent = CreateStubEvent(stubDetails);
         //    var eventDetailsCreater = new EventDetailsCreater(stubMapper.Object);
 
         //    //action
         //    var result = eventDetailsCreater.Create(stubEvent);
 
         //    //assert
-        //    Assert.IsType< StubDetails>(result);
+        //    Assert.IsType<StubDetails>(result);
         //}
 
         //[Fact]
@@ -52,19 +52,19 @@ namespace Essence.Communication.UnitTests
         //    Assert.Null(result);
         //}
 
-        //[Fact]
-        //public void CreateTest_EventIsNull_ReturnNull()
-        //{
-        //    //arrange
-        //    var stubMapper = new Mock<IEventCodeDetailsTypeMapper>(); 
-        //    var eventDetailsCreater = new EventDetailsCreater(stubMapper.Object);
+        ////[Fact]
+        ////public void CreateTest_EventIsNull_ReturnNull()
+        ////{
+        ////    //arrange
+        ////    var stubMapper = new Mock<IEventCodeDetailsTypeMapper>(); 
+        ////    var eventDetailsCreater = new EventDetailsCreater(stubMapper.Object);
 
-        //    //action
-        //    var result = eventDetailsCreater.Create(null);
+        ////    //action
+        ////    var result = eventDetailsCreater.Create(null);
 
-        //    //assert
-        //    Assert.Null(result);
-        //}
+        ////    //assert
+        ////    Assert.Null(result);
+        ////}
 
 
         //private EssenceEvent CreateStubEvent(BaseDetails stubDetails = null)

@@ -8,10 +8,19 @@ using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Essence.Communication.Models.Utility;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Essence.Communication.Models.IdentityModels;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace Essence.Communication.DbContexts
 {
-    public class ApplicationDbContext : DbContext
+    /// <summary>
+    /// the 
+    /// </summary>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IDbContext, IIdentityUserContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -34,15 +43,30 @@ namespace Essence.Communication.DbContexts
         public DbSet<AccountUser> AccountUsers { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<UserReference> Users { get; set; }
+        public DbSet<UserReference> UserRef { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        { 
+
+            LoggerFactory loggerFactory = new LoggerFactory();
+            loggerFactory.AddConsole();
+            optionsBuilder.UseLoggerFactory(loggerFactory);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.HasDefaultSchema("Application");
+            modelBuilder.Entity<Account>().ToTable("Account");
+            modelBuilder.Entity<Vendor>().ToTable("Vendor");
+            modelBuilder.Entity<AccountGroup>().ToTable("AccountGroup");
 
+            OnIdentityModelsCreating(modelBuilder);
+            OnApplicationModelsCreating(modelBuilder);
+        }
+
+        private void  OnApplicationModelsCreating (ModelBuilder modelBuilder)
+        {
             modelBuilder.ApplyConfiguration(new EventConfig());
             modelBuilder.ApplyConfiguration(new EssenceEventConfig());
             modelBuilder.ApplyConfiguration(new AccountUserConfig());
@@ -55,13 +79,52 @@ namespace Essence.Communication.DbContexts
             modelBuilder.Entity<Event<BatteryDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<PanelStatusDetails>>().OwnsOne(s => s.Details);
             modelBuilder.Entity<Event<FallAlertDetails>>().OwnsOne(s => s.Details);
-            modelBuilder.Entity<Event<EmergencyPanicDetails>>().OwnsOne(s => s.Details); 
+            modelBuilder.Entity<Event<EmergencyPanicDetails>>().OwnsOne(s => s.Details);
 
             //seeding 
             modelBuilder.Entity<Vendor>().HasData(new Vendor(EventVendors.ESSENCE));
 
             //test seeding data
             modelBuilder.Entity<AccountGroup>().HasData(new AccountGroup() { Name = "TestGroup" });
+        }
+
+        private  void OnIdentityModelsCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new ApplicationUserConfig());
+            modelBuilder.ApplyConfiguration(new UserReferenceConfig());
+
+            modelBuilder.Entity<IdentityRole>(entity =>
+            {
+                entity.ToTable( "Role", "Identity");
+            });
+
+            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+            {
+                entity.ToTable("UserRole", "Identity");
+            });
+
+            modelBuilder.Entity<IdentityUserClaim<string>>(entity =>
+            {
+                entity.ToTable("UserClaim", "Identity");
+            });
+
+            modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+            {
+                entity.ToTable("UserLogin", "Identity");     
+            });
+
+            modelBuilder.Entity<IdentityRoleClaim<string>>(entity =>
+            {
+                entity.ToTable("RoleClaim", "Identity");
+
+            });
+
+            modelBuilder.Entity<IdentityUserToken<string>>(entity =>
+            {
+                entity.ToTable("UserToken", "Identity");
+            });
+
+
         }
     }
 }

@@ -15,14 +15,27 @@ namespace Essence.Communication.Api.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IUserAccountService _userAccountService;
-
+        private readonly IIdentityUserProfileService _Iservice;
+      
         /// <summary>
-        /// Admin controller
+        /// 
         /// </summary>
         /// <param name="userAccountService"></param>
-        public AdminController(IUserAccountService userAccountService)
+        /// <param name="iservice"></param>
+        public AdminController(IUserAccountService userAccountService, IIdentityUserProfileService iservice)
         {
             _userAccountService = userAccountService;
+            _Iservice = iservice;
+
+        }
+
+        [Route("TestUser")]
+        [HttpPost]
+        public async Task<ActionResult> TestAppUser()
+        {
+           await  _Iservice.UpdateUserProfiles(null);
+
+            return null;
         }
 
 
@@ -32,7 +45,7 @@ namespace Essence.Communication.Api.Controllers
         {
             try
             {
-                if (await _userAccountService.InitializeAcountUsers())
+                if (await _userAccountService.PullAccountUsers())
                 {
                     return Ok();
                 }
