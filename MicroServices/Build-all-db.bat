@@ -1,4 +1,4 @@
-Echo User $Env:ASPNETCORE_ENVIRONMENT = "Test" in powershell to set the environment variable 
+REM Echo User $Env:ASPNETCORE_ENVIRONMENT = "Test" in powershell to set the environment variable 
 
 cd Identity.Management.Service/Identity.Management.Api
 
@@ -14,7 +14,7 @@ REM dotnet ef migrations add Grants -c PersistedGrantDbContext -o Data/Migration
 
 REM dotnet ef migrations script -c PersistedGrantDbContext -o Data/Migrations/PersistedGrantDb.sql
 
-dotnet ef database update -c PersistedGrantDbContext
+dotnet ef database update -c PersistedGrantDbContext 
 
 
 REM dotnet ef migrations add Config -c ConfigurationDbContext -o Data/Migrations/ConfigurationDb

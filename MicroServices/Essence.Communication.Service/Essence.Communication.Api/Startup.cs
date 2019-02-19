@@ -66,12 +66,7 @@ namespace Essence.Communication.Api
                 {
                     c.SwaggerDoc("v1", new Info { Title = "HomeStay API", Version = "v1" });
                     
-                    var basePath = PlatformServices.Default.Application.ApplicationBasePath;
-
-                    var name = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                    var xmlPath = Path.Combine(basePath, name);
-                    c.IncludeXmlComments(xmlPath);
-                });
+                  });
             
             services.AddAuthorization();
             var IdentityServerIssuerUrl = configOptions.AuthenticationServer.Issuer;
