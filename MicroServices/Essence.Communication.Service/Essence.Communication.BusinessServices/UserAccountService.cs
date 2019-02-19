@@ -32,17 +32,14 @@ namespace Essence.Communication.BusinessServices
         private IRepository<AccountUser> _accountUserRepo;
         private IRepository<AccountGroup> _accountGroupRepo;
 
-        private readonly IIdentityUserProfileService _identifyService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IIdentityUserProfileService _identifyService; 
 
         public UserAccountService(IHttpClientManagerNew httpClientManager,
             IAppSettingsConfigService appSettingsConfigService,
             IAuthenticationService authenticationService,
             IUnitOfWork<ApplicationDbContext> unitOfWork,
             IModelMapper modelMapper,
-            UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager
+            IIdentityUserProfileService identifyService
             ) : base(httpClientManager, appSettingsConfigService, authenticationService, unitOfWork, modelMapper)
         {
             _accountRepo = _unitOfWork.Repository<Account>();
@@ -50,16 +47,9 @@ namespace Essence.Communication.BusinessServices
             _vendorRepo = _unitOfWork.Repository<Vendor>();
             _accountUserRepo = _unitOfWork.Repository<AccountUser>();
             _accountGroupRepo = _unitOfWork.Repository<AccountGroup>();
-            _userManager = userManager;
-            _roleManager = roleManager;
-
-    }
-
-
-        public async Task<bool> AddUserTest()
-        {
-            return await _identifyService.UpdateUserProfiles(null);
+            _identifyService = identifyService;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -118,35 +108,51 @@ namespace Essence.Communication.BusinessServices
             return await SendRequestToEssence<GetUsersResult>("users/GetUsers", header, getUserRequest);
         }
 
-        public async Task<bool> PullAccountUsers()
+        public async Task PullAccountUsers()
         {
             //get token
             var authToken = await GetEssenceToken(null);
             if (authToken.Response != (int)Models.Dtos.Enums.ResponseCode.Ok)
             {
                 //log getting token failing description
-                return false;
+                return;
             }
 
-            //get all residents
-            var accountResultList = await GetAllResidentUsers(authToken.Token);
+            //get all residents from Essence
+            var accountsResult = await GetAllResidentUsers(authToken.Token);
+            if (accountsResult.Response != (int)ResponseCode.Ok)
+            {
+                //log fail to get Residents
+                return;
+            }
 
-            var accountList = new List<Account>();
-            var userList = new List<UserReference>();
-            var accountUserList = new List<AccountUser>();
+            var newAccounts = new List<Account>();
+            var newUsers = new List<UserReference>(); 
+            var newAccountUserMapping = new List<AccountUser>();
 
-            await AddAccountUsers(accountResultList.users, accountList, userList, accountUserList, authToken.Token);
+            var existingAccounts = new List<Account>();
+            var existingUsers = new List<UserReference>();
+            var existingAccountUserMapping = new List<AccountUser>();
 
-            _accountRepo.InsertRange(accountList);
-            _userRepo.InsertRange(userList);
-            _accountUserRepo.InsertRange(accountUserList);
+            var allExistingAccounts = _accountRepo.GetAll();
+            var allExistingUsers = _userRepo.GetAll();
+            var allExistingAccountUserMapping = _accountUserRepo.GetAll();
+
+            await AddAccountUsers(accountsResult.users, newAccounts, newUsers, newAccountUserMapping, existingAccounts, existingUsers, existingAccountUserMapping, allExistingAccounts, allExistingUsers, allExistingAccountUserMapping, authToken.Token);
+
+            //insert new accounts
+            _accountRepo.InsertRange(newAccounts);
+
+            //create new users
+            await _identifyService.AddBatchUsers(GetUserProfiles(newUsers)); 
+
+            //create new mappings
+            _accountUserRepo.InsertRange(newAccountUserMapping);
             _unitOfWork.Save();
-
-            await SetIdentityUsers(userList);
-            return true;
+            
+            return ;
         }
-
-        private const string GeneralPassword = "Pass123$";
+        
 
         public async Task<bool> SetIdentityUsers(IEnumerable <UserReference> users)
         {
@@ -192,31 +198,14 @@ namespace Essence.Communication.BusinessServices
             }
 
             return true;
+        }     
+
+        private List<IdentityUserProfile> GetUserProfiles(List<UserReference> users)
+        {
+            var result = new List<IdentityUserProfile>();
+            return result;
         }
 
-        private string MapRoles(string userType)
-        {
-            switch (userType.ToUpper())
-            {
-                case "CareGiver":
-                    return "CaregiverRole";
-                case "StandardCareGiver":
-                    return "CaregiverRole";
-                case "MasterCareGiver":
-                    return "CaregiverRole";
-                case "Administrator":
-                    return "AdminRole";
-                default:
-                    return "ResidentRole";
-            }
-        }
-
-        //TODO: this method should be moved to other project
-        private async Task<bool> UpdateIdentityUsers(List<UserReference> users)
-        {
-            await _identifyService.UpdateUserProfiles(users);
-            return true;
-        }
 
         private async Task<bool> AddAccountUsers(UserResult[] users, List<Account> accountList, List<UserReference> userList, List<AccountUser> accountUserList, string token)
         {

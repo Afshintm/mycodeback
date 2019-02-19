@@ -8,16 +8,22 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Essence.Communication.Models;
 using System.Security.Claims;
+using Essence.Communication.Models.Dtos;
 
 namespace Essence.Communication.BusinessServices
 {
     public interface IIdentityUserProfileService
     {
-        Task<bool> UpdateUserProfiles(IEnumerable<UserReference> users);
+        Task<bool> TryAddUserProfile(ApplicationUser user);
+        Task<bool> TryAddUserClaims(ApplicationUser user, IEnumerable<Claim> claims);
+        Task<bool> TryAddUserClaims(ApplicationUser user, string role);
+
+        Task AddBatchUsers(List<IdentityUserProfile> users );
     }
 
     public class IdentityUserProfileService : IIdentityUserProfileService
     {
+        private const string tempPaassword = "Pass123$";
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         public IdentityUserProfileService (UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
@@ -25,47 +31,58 @@ namespace Essence.Communication.BusinessServices
            _userManager = userManager;
            _roleManager = roleManager;
         }
-
-        public async Task<bool> UpdateUserProfiles(IEnumerable<UserReference> users)
+        public async Task<bool> TryAddUserProfile(ApplicationUser user)
         {
-           var appUser = new ApplicationUser { PhoneNumber = "11111", Email = "ttt@gggg.com", UserName = "Test1eee111",
-               CellPhoneNumber = "111333111"
-               , UserRef = new UserReference { CellPhoneNumber = "111333111", Email = "ttt@gggg.com", UserName = "Test1eee111" }
-           
-           };
-
-           // var a = await _roleManager.CreateAsync(new IdentityRole("MyTestRole"));
-         //  if (!a.Succeeded)
-           // {
-
-           // }
-
-            var result = await _userManager.CreateAsync(appUser, "Pass123$");
-            if (!result.Succeeded )
-            {
-                return false;
-            }
-            result = await _userManager.AddClaimsAsync(appUser, new Claim[] {
-                             new Claim("name", "app2 test"),
-                            new Claim("given_name", "app2"),
-                            new Claim("family_name", "test"),
-                            new Claim("TestClaim", "testClaim"),
-                });
-
+            var result = await _userManager.CreateAsync(user, tempPaassword);
             if (!result.Succeeded)
             {
+                //log
                 return false;
             }
-            result =await _userManager.AddToRoleAsync(appUser, "MyTestRole");
-
-            if (!result.Succeeded)
-            {
-                return false;
-            }
+            
             return true;
-            //todo add role not belongs to existing role
         }
 
-        
+        public async Task<bool> TryAddUserClaims(ApplicationUser user, IEnumerable<Claim> claims)
+        {
+            var result = await _userManager.AddClaimsAsync(user, claims);
+            if (!result.Succeeded)
+            {
+                //log
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> TryAddUserClaims(ApplicationUser user, string role)
+        {
+            var result = await _userManager.AddToRoleAsync(user, role);
+            if (!result.Succeeded)
+            {
+                //log
+                return false;
+            }
+
+            return true;
+        }
+
+        private string MapRoles(string userType)
+        {
+            switch (userType.ToUpper())
+            {
+                case "CareGiver":
+                    return "CaregiverRole";
+                case "StandardCareGiver":
+                    return "CaregiverRole";
+                case "MasterCareGiver":
+                    return "CaregiverRole";
+                case "Administrator":
+                    return "AdminRole";
+                default:
+                    return "ResidentRole";
+            }
+        }
+
     }
 }
