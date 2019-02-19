@@ -2,7 +2,7 @@
 using Essence.Communication.Models.ValueObjects;
 using System.Collections.Generic;
 
-namespace Essence.Communication.BusinessServices.ViewModel
+namespace Essence.Communication.BusinessServices.ViewModels
 {
     public interface IEventDetailViewModel
     {
