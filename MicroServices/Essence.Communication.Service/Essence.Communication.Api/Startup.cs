@@ -64,7 +64,7 @@ namespace Essence.Communication.Api
             services.AddAuthorization();
             var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
             var apiName = Configuration.GetSection("AuthenticationServer")["ApiKey"];
-            _logger.LogInformation("Identity Server configuration data is {0}available.",( string.IsNullOrEmpty(IdentityServerIssuerUrl)||string.IsNullOrEmpty(IdentityServerIssuerUrl)?"not":string.Empty ));
+            _logger.LogInformation("Identity Server configuration data is {0} available.",( string.IsNullOrEmpty(IdentityServerIssuerUrl)||string.IsNullOrEmpty(IdentityServerIssuerUrl)?"not":string.Empty ));
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {

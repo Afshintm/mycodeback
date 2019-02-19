@@ -39,7 +39,11 @@ namespace Identity.Management.Api
                 .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            ///Todo:
+            ///Get the ssl certificate installed locally with the name *.homestay.care
+            ///Setup the containres to use a host *.homestay.care with the same certificate in dev environment
+            ///Install the Certificate in AWS store and setup the hostname for identity server and main api
+            ///For local tests, Api should not be run from container by the time above solution will fix the issue 
             var oprationsConnectionString = Configuration.GetConnectionString("IdentityServerOprationsConnectionString");
             var identityServerBuilder = services.AddIdentityServer(options =>
             {
@@ -47,8 +51,12 @@ namespace Identity.Management.Api
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
-                options.IssuerUri = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
-                options.PublicOrigin = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
+
+                options.IssuerUri = "https://localhost:44343";
+                options.PublicOrigin = "https://localhost:44343";
+
+                //options.IssuerUri = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
+                //options.PublicOrigin = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
             })
 
                 //.AddDeveloperSigningCredential()
