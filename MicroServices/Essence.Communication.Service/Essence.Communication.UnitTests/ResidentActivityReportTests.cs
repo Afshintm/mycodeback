@@ -1,6 +1,7 @@
 ﻿using Essence.Communication.BusinessServices;
 using Essence.Communication.BusinessServices.ViewModels;
 using Essence.Communication.Models;
+using Essence.Communication.Models.Utility;
 using Essence.Communication.Models.ValueObjects;
 using Moq;
 using Services.Utilities.DataAccess;
@@ -20,11 +21,12 @@ namespace Essence.Communication.UnitTests
             var unitOfWorkMoq = new Mock<IUnitOfWork<IDbContext>>();
             var reportingServiceMoq = new Mock<IReportingService>();
             var resActivityServiceMoq = new Mock<ResidentActivityMetaService>(reportingServiceMoq, unitOfWorkMoq);
+            //resActivityServiceMoq.Setup(s=>s.GetLast24HrActivityReportAndBeyond)
             var repoMoq = new Mock<IRepository<EventBase>>();
             var testEvents = new EventBase[] { new Event<UnexpectedActivityDetails>(), new Event<UnexpectedEntryExitDetails>() };
             repoMoq.Setup(r => r.Query().Filter(It.IsAny<Expression<Func<EventBase, bool>>>()).Get(It.IsAny<Expression<Func<EventBase, bool>>>())).Returns(()=> testEvents);
 
-//            var service = new ResidentActivityMetaService(reportingServiceMoq.Object, unitOfWorkMoq.Object, new EventCreator(), new AutoMapper());
+            var service = new ResidentActivityMetaService(reportingServiceMoq.Object, unitOfWorkMoq.Object, new EventCreator(new HSCCodeDetailsMapper(new HSCEventCodeList()), new HSCAlertTypeRules(new HSCEventCodeList())), new ModelMapper());
 
             //unitOfWorkMoq.Setup<IRepository<EventBase>>(r=> r.Repository<EventBase>()).Returns(
             //    //arrange
