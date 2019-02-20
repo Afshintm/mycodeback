@@ -7,7 +7,7 @@ namespace Essence.Communication.Models.Utility
 {
     public class EssenceDateFormatter
     {
-        const string EssencePanelDateTimeFormat = "YYYY-MM-DDTHH:mm:ss";
+        const string EssencePanelDateTimeFormat = "yyyy-MM-ddTHH:mm:ss";
         public DateTime? TryParsePanelTime(string dateAsText)
         {
             if (DateTime.TryParseExact(dateAsText, EssencePanelDateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
@@ -22,7 +22,7 @@ namespace Essence.Communication.Models.Utility
             return dt.ToString(EssencePanelDateTimeFormat);
         }
 
-        const string EssenceServerDateTimeFormat = "YYYY-MM-DDTHH:mm:ss.sssZ";
+        const string EssenceServerDateTimeFormat = "yyyy-MM-ddTHH:mm:ss.sssZ";
         public DateTime? TryParseServerPanelTime(string dateAsText)
         {
             if (DateTime.TryParseExact(dateAsText, EssenceServerDateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
@@ -37,7 +37,7 @@ namespace Essence.Communication.Models.Utility
             return dt.ToString(EssenceServerDateTimeFormat);
         }
 
-        const string EssenceBirthDateFormat = "YYYY-MM-DD";
+        const string EssenceBirthDateFormat = "yyyy-MM-dd";
         public string ToBirthDate(DateTime dt)
         {
             return dt.ToString(EssenceBirthDateFormat);

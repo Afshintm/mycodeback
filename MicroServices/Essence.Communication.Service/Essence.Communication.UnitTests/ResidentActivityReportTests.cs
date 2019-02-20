@@ -1,5 +1,6 @@
 ﻿using Essence.Communication.BusinessServices;
 using Essence.Communication.BusinessServices.ViewModels;
+using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
 using Essence.Communication.Models.Utility;
 using Essence.Communication.Models.ValueObjects;
@@ -18,15 +19,22 @@ namespace Essence.Communication.UnitTests
         [Fact]
         public void Test1()
         {
-            var unitOfWorkMoq = new Mock<IUnitOfWork<IDbContext>>();
-            var reportingServiceMoq = new Mock<IReportingService>();
-            var resActivityServiceMoq = new Mock<ResidentActivityMetaService>(reportingServiceMoq, unitOfWorkMoq);
-            //resActivityServiceMoq.Setup(s=>s.GetLast24HrActivityReportAndBeyond)
+            const string testAccountId = "9999";
+
+            var unitOfWorkMoq = new Mock<IUnitOfWork<ApplicationDbContext>>();
             var repoMoq = new Mock<IRepository<EventBase>>();
             var testEvents = new EventBase[] { new Event<UnexpectedActivityDetails>(), new Event<UnexpectedEntryExitDetails>() };
-            repoMoq.Setup(r => r.Query().Filter(It.IsAny<Expression<Func<EventBase, bool>>>()).Get(It.IsAny<Expression<Func<EventBase, bool>>>())).Returns(()=> testEvents);
+            repoMoq.Setup(r => r.Query().Filter(It.IsAny<Expression<Func<EventBase, bool>>>()).Get(It.IsAny<Expression<Func<EventBase, bool>>>())).Returns(() => testEvents);
 
-            var service = new ResidentActivityMetaService(reportingServiceMoq.Object, unitOfWorkMoq.Object, new EventCreator(new HSCCodeDetailsMapper(new HSCEventCodeList()), new HSCAlertTypeRules(new HSCEventCodeList())), new ModelMapper());
+            var essenceReportingServiceMoq = new Mock<IReportingService>();
+            essenceReportingServiceMoq.Setup(e => e.GetResidentActivity(new Models.Dtos.ActivityRequest { account = testAccountId }).Result).Returns(new Models.Dtos.ActivityResult());
+
+            var resActivityServiceMoq = new Mock<ResidentActivityMetaService>(essenceReportingServiceMoq, unitOfWorkMoq);
+            resActivityServiceMoq.Setup(s => s.GetLast24HrActivityReportAndBeyond(testAccountId).Result).Returns(new ResidentActivityViewModel { ResidentName = "Test Teser" });
+
+            var service = new ResidentActivityMetaService(essenceReportingServiceMoq.Object, unitOfWorkMoq.Object, new EventCreator(new HSCCodeDetailsMapper(new HSCEventCodeList()), new HSCAlertTypeRules(new HSCEventCodeList())), new ModelMapper());
+
+            var last24HrActivity = service.GetLast24HrActivityReportAndBeyond(testAccountId);
 
             //unitOfWorkMoq.Setup<IRepository<EventBase>>(r=> r.Repository<EventBase>()).Returns(
             //    //arrange

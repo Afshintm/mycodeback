@@ -15,8 +15,8 @@ namespace Essence.Communication.Models.Dtos
 
     public class UserResult
     {
-        public Paneldetails panelDetails { get; set; }
-        public Accountdetails accountDetails { get; set; }
+        public PanelDetails panelDetails { get; set; }
+        public AccountDetails accountDetails { get; set; }
         public string careGiverType { get; set; }
         public DateTime? birthDate { get; set; }
         public string address { get; set; }
@@ -34,7 +34,7 @@ namespace Essence.Communication.Models.Dtos
         public object servicePackage { get; set; }
     }
 
-    public class Paneldetails
+    public class PanelDetails
     {
         public string simNumber { get; set; }
         public string panelSerialNumber { get; set; }
@@ -43,7 +43,7 @@ namespace Essence.Communication.Models.Dtos
         public bool supportDeviceSync { get; set; }
     }
 
-    public class Accountdetails
+    public class AccountDetails
     {
         public string account { get; set; }
         public object activationStatus { get; set; }

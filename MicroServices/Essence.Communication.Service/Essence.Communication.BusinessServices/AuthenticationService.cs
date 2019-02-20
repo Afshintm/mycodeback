@@ -19,9 +19,8 @@ namespace Essence.Communication.BusinessServices
         {
             _configuration = configuration;
             _httpClient = httpClient;
+            _httpClient.SetBaseUrl(configuration.EssenceBaseUrl);
         }
-
-
 
         public async Task<LoginResponse> Login(LoginRequest loginData, string token = null)
         {
