@@ -9,34 +9,34 @@ namespace Essence.Communication.Models.Dtos
         public bool Value { get; set; }
         public int Response { get; set; }
         public string ResponseDescription { get; set; }
-        public Activitytype[] activityTypes { get; set; }
-        public Missinginformation[] missingInformation { get; set; }
+        public Activitytype[] ActivityTypes { get; set; }
+        public Missinginformation[] MissingInformation { get; set; }
     }
 
     public class Activitytype
     {
-        public string activityType { get; set; }
-        public Activity[] activities { get; set; }
+        public string ActivityType { get; set; }
+        public Activity[] Activities { get; set; }
     }
 
     public class Activity
     {
-        public object startTime { get; set; }
-        public object endTime { get; set; }
-        public bool passThreshold { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public bool PassThreshold { get; set; }
     }
 
     public class Missinginformation
     {
-        public string reason { get; set; }
-        public Interval[] intervals { get; set; }
+        public string Reason { get; set; }
+        public Interval[] Intervals { get; set; }
     }
 
     public class Interval
     {
-        public DateTime startTime { get; set; }
-        public DateTime? endTime { get; set; }
-        public string previousActivity { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public string PreviousActivity { get; set; }
     }
 }
 

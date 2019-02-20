@@ -17,11 +17,19 @@ namespace Essence.Communication.BusinessServices
     {
         private readonly IReportingService _reportingService;
         private readonly IUnitOfWork<IDbContext> _unitOfWork;
+        private readonly IEventCreator _eventCreator;
+        private readonly IModelMapper _modelMapper;
 
-        public ResidentActivityMetaService(IReportingService reportingService, IUnitOfWork<IDbContext> unitOfWork)
+        public ResidentActivityMetaService(
+            IReportingService reportingService, 
+            IUnitOfWork<IDbContext> unitOfWork, 
+            IEventCreator eventCreator,
+            IModelMapper modelMapper)
         {
             _reportingService = reportingService;
             _unitOfWork = unitOfWork;
+            _eventCreator = eventCreator;
+            _modelMapper = modelMapper; //Reza: I do not see a big gain in doing this for mappers
         }
             
         public async Task<ResidentActivityViewModel> GetLast24HrActivityReportAndBeyond(string accountId)
@@ -36,14 +44,35 @@ namespace Essence.Communication.BusinessServices
 
             //Source 1: Api call
             var activityReport = await _reportingService.GetResidentActivity(last24HrActivityRequest);
-            
+
+            residentAllActivities.ActivityTypes = activityReport.ActivityTypes.Select(a=> new ActivityTypeViewModel
+            {
+                ActivityType = a.ActivityType,
+                Activities = a.Activities.Select(ac => new ActivityViewModel
+                {
+                    StartTime = ac.StartTime,
+                    EndTime = ac.EndTime,
+                    PassThreshold = ac.PassThreshold
+                }).ToList()
+            }).ToList();
+
             //Source 2: events logged in the database
             var eventsFromDbQuery = _unitOfWork.Repository<EssenceEventObjectStructure>().Query().Filter(e =>
                 e.Account.ToString() == accountId && 
                 string.Compare(e.PanelTime, last24HrPanelTimeAsText) >= 0);
-            var events = eventsFromDbQuery.Get().ToList();
-            
-            throw new NotImplementedException();
+            var eventDtos = eventsFromDbQuery.Get().ToList();
+
+            /* TODO (check with Reza)
+             * 
+             * if eventDtos.Count ==0 then fetch previous days
+             * 
+             */
+
+            var events = eventDtos.Select(e => _eventCreator.Create(e, new Models.Account { Id = accountId }));
+
+            residentAllActivities.Alerts = events.Select(e => _modelMapper.MapToViewModel(e)).ToList();
+
+            return residentAllActivities;
         }
     }
 

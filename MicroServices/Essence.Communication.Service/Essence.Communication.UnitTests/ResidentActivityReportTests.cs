@@ -24,7 +24,7 @@ namespace Essence.Communication.UnitTests
             var testEvents = new EventBase[] { new Event<UnexpectedActivityDetails>(), new Event<UnexpectedEntryExitDetails>() };
             repoMoq.Setup(r => r.Query().Filter(It.IsAny<Expression<Func<EventBase, bool>>>()).Get(It.IsAny<Expression<Func<EventBase, bool>>>())).Returns(()=> testEvents);
 
-            var service = new ResidentActivityMetaService(reportingServiceMoq.Object, unitOfWorkMoq.Object);
+//            var service = new ResidentActivityMetaService(reportingServiceMoq.Object, unitOfWorkMoq.Object, new EventCreator(), new AutoMapper());
 
             //unitOfWorkMoq.Setup<IRepository<EventBase>>(r=> r.Repository<EventBase>()).Returns(
             //    //arrange
