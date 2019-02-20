@@ -24,7 +24,8 @@ namespace Essence.Communication.BusinessServices
             _unitOfWork = unitOfWork;
         }
             
-        public async Task<ResidentActivityViewModel> GetLast24HrActivityReport(string accountId)
+        public async Task<ResidentActivityViewModel> GetLast24HrActivityReportAndBeyond(string accountId)
+        //Funny naming but at this stage there is a chance that we may need to retrieve more than 24hr of activities
         {
             var essenceDtFormatter = new EssenceDateFormatter(); //Trivial to inject to this class. better not to, to avoid cluttering the constructor and making unit tests complicated
 
@@ -48,6 +49,6 @@ namespace Essence.Communication.BusinessServices
 
     public interface IResidentActivityService
     {
-        Task<ResidentActivityViewModel> GetLast24HrActivityReport(string account);
+        Task<ResidentActivityViewModel> GetLast24HrActivityReportAndBeyond(string accountId);
     }
 }

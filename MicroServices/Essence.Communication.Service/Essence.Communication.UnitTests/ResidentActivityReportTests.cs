@@ -26,7 +26,6 @@ namespace Essence.Communication.UnitTests
 
             var service = new ResidentActivityMetaService(reportingServiceMoq.Object, unitOfWorkMoq.Object);
 
-            service.GetLast24HrActivityReport()
             //unitOfWorkMoq.Setup<IRepository<EventBase>>(r=> r.Repository<EventBase>()).Returns(
             //    //arrange
             //    var stubMapper = new Mock<IEventCodeDetailsTypeMapper>();
