@@ -60,8 +60,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     b.HasData(
                         new
                         {
-                            Id = "6d1b3ab8-183f-453a-8e2e-e6b200006138",
-                            CreatedDate = new DateTime(2019, 2, 19, 3, 13, 9, 780, DateTimeKind.Utc).AddTicks(1878),
+                            Id = "2b5758c4-c1f7-4a27-8207-043a16e0ebad",
+                            CreatedDate = new DateTime(2019, 2, 20, 2, 18, 4, 978, DateTimeKind.Utc).AddTicks(6970),
                             Name = "TestGroup"
                         });
                 });
@@ -71,6 +71,9 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     b.Property<string>("AccountId");
 
                     b.Property<string>("UserId");
+
+                    b.Property<string>("CareGiverType")
+                        .IsRequired();
 
                     b.Property<DateTime>("CreatedDate");
 
@@ -90,7 +93,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 2, 19, 3, 13, 9, 737, DateTimeKind.Utc).AddTicks(6603));
+                        .HasDefaultValue(new DateTime(2019, 2, 20, 2, 18, 4, 936, DateTimeKind.Utc).AddTicks(905));
 
                     b.Property<string>("Ids");
 
@@ -154,7 +157,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
             modelBuilder.Entity("Essence.Communication.Models.IdentityModels.ApplicationUser", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
 
@@ -224,8 +228,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
 
             modelBuilder.Entity("Essence.Communication.Models.UserReference", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id");
 
                     b.Property<string>("Address")
                         .HasColumnName("Address");
@@ -280,8 +283,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     b.HasData(
                         new
                         {
-                            Id = "6dcbe9e4-c0a1-4658-ba38-85f78615985f",
-                            CreatedDate = new DateTime(2019, 2, 19, 3, 13, 9, 778, DateTimeKind.Utc).AddTicks(5098),
+                            Id = "e7052a2a-d8f3-40a2-a807-6ae86be6131a",
+                            CreatedDate = new DateTime(2019, 2, 20, 2, 18, 4, 977, DateTimeKind.Utc).AddTicks(4426),
                             Name = "Essence"
                         });
                 });
@@ -555,16 +558,13 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                         });
                 });
 
-            modelBuilder.Entity("Essence.Communication.Models.IdentityModels.ApplicationUser", b =>
-                {
-                    b.HasOne("Essence.Communication.Models.UserReference", "UserRef")
-                        .WithOne("User")
-                        .HasForeignKey("Essence.Communication.Models.IdentityModels.ApplicationUser", "Id")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Essence.Communication.Models.UserReference", b =>
                 {
+                    b.HasOne("Essence.Communication.Models.IdentityModels.ApplicationUser", "User")
+                        .WithOne("UserRef")
+                        .HasForeignKey("Essence.Communication.Models.UserReference", "Id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Essence.Communication.Models.Vendor", "Vendor")
                         .WithMany("Users")
                         .HasForeignKey("VendorId");

@@ -2,8 +2,10 @@
 using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.Dtos.Enums;
+using Essence.Communication.Models.Enums;
 using Essence.Communication.Models.IdentityModels;
 using Essence.Communication.Models.Utility;
+using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Services.Utilities.DataAccess;
@@ -21,7 +23,7 @@ namespace Essence.Communication.BusinessServices
     {
         Task<UsersForAccountResult> GetUsersForAccount(UsersForAccountRequest usersForAccountRequest, string token = null);
         Task<GetUsersResult> GetAllResidentUsers(string token = null);
-        Task<bool> PullAccountUsers();
+        Task CreateAccountUserSnapShot();
     }
 
     public class UserAccountService : EssenceServiceBase, IUserAccountService
@@ -31,7 +33,6 @@ namespace Essence.Communication.BusinessServices
         private IRepository<Vendor> _vendorRepo;
         private IRepository<AccountUser> _accountUserRepo;
         private IRepository<AccountGroup> _accountGroupRepo;
-
         private readonly IIdentityUserProfileService _identifyService; 
 
         public UserAccountService(IHttpClientManagerNew httpClientManager,
@@ -108,7 +109,7 @@ namespace Essence.Communication.BusinessServices
             return await SendRequestToEssence<GetUsersResult>("users/GetUsers", header, getUserRequest);
         }
 
-        public async Task PullAccountUsers()
+        public async Task CreateAccountUserSnapShot()
         {
             //get token
             var authToken = await GetEssenceToken(null);
@@ -130,22 +131,15 @@ namespace Essence.Communication.BusinessServices
             var newUsers = new List<UserReference>(); 
             var newAccountUserMapping = new List<AccountUser>();
 
-            var existingAccounts = new List<Account>();
-            var existingUsers = new List<UserReference>();
-            var existingAccountUserMapping = new List<AccountUser>();
+            await HandleAccountUsers(accountsResult.users, 
+                newAccounts, newUsers, newAccountUserMapping, 
+                authToken.Token);
 
-            var allExistingAccounts = _accountRepo.GetAll();
-            var allExistingUsers = _userRepo.GetAll();
-            var allExistingAccountUserMapping = _accountUserRepo.GetAll();
-
-            await AddAccountUsers(accountsResult.users, newAccounts, newUsers, newAccountUserMapping, existingAccounts, existingUsers, existingAccountUserMapping, allExistingAccounts, allExistingUsers, allExistingAccountUserMapping, authToken.Token);
-
-            //insert new accounts
-            _accountRepo.InsertRange(newAccounts);
-
+            
+                //insert new accounts
+             _accountRepo.InsertRange(newAccounts); 
             //create new users
-            await _identifyService.AddBatchUsers(GetUserProfiles(newUsers)); 
-
+            await _identifyService.AddBatchUsers(newUsers.Select(x => Map(x)).ToList()); 
             //create new mappings
             _accountUserRepo.InsertRange(newAccountUserMapping);
             _unitOfWork.Save();
@@ -153,66 +147,43 @@ namespace Essence.Communication.BusinessServices
             return ;
         }
         
-
-        public async Task<bool> SetIdentityUsers(IEnumerable <UserReference> users)
+        private IdentityUserProfile Map (UserReference userRef)
         {
-            foreach(var user in users)
+            var user = new IdentityUserProfile();
+            user.User = new ApplicationUser()
             {
-                var identityUser = new ApplicationUser
-                {
-                    Id = user.Id,
-                    //UserName = user.UserName,
-                    //Email = user.Email,
-                    PhoneNumber = user.CellPhoneNumber
-                };
+                UserRef = userRef
+            };
 
-                //add user
-                var result = await _userManager.CreateAsync(identityUser, GeneralPassword);
-                if (!result.Succeeded)
-                {
-                    //log it
-                    continue;
-                }
+            user.Claims = new List<Claim>(); 
+            AddClaim(JwtClaimTypes.FamilyName, userRef.LastName, user.Claims.ToList());
+            AddClaim(JwtClaimTypes.GivenName, userRef.FirstName, user.Claims.ToList());
+            AddClaim(JwtClaimTypes.PhoneNumber, userRef.CellPhoneNumber, user.Claims.ToList());
+            AddClaim(JwtClaimTypes.Gender, userRef.Gender, user.Claims.ToList());
+            AddClaim(JwtClaimTypes.Address, userRef.Address, user.Claims.ToList());
+            
 
-                //add user claims
-                result = await _userManager.AddClaimsAsync(identityUser, new Claim[] {
-                     new Claim("given_name", user.FirstName),
-                     new Claim("family_name", user.LastName),
-                     new Claim("UserType", user.UserType)
-                });
-                if (!result.Succeeded)
-                {
-                    //log it
-                    continue;
-                }
+            user.Role = "CareGiver";
+            return user;
+        }    
 
-                //TODO: user should have multiple roles
-                //add user roles
-                result = await _userManager.AddToRoleAsync(identityUser, MapRoles(user.UserType));
-                if (!result.Succeeded)
-                {
-                    //log it
-                    continue;
-                }
-
+        private bool AddClaim(string claimName, string value, List<Claim> ClaimList)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
             }
-
+            ClaimList.Add (new Claim(claimName, value));
             return true;
-        }     
-
-        private List<IdentityUserProfile> GetUserProfiles(List<UserReference> users)
-        {
-            var result = new List<IdentityUserProfile>();
-            return result;
         }
-
-
-        private async Task<bool> AddAccountUsers(UserResult[] users, List<Account> accountList, List<UserReference> userList, List<AccountUser> accountUserList, string token)
+        private async Task<bool> HandleAccountUsers(UserResult[] residents, 
+            List<Account> newAccounts, List<UserReference> newUsers, List<AccountUser> newAccountUsers,
+            string token)
         {
-            var existedAccount = _accountRepo.GetAll();
-            var existedUsers = _userRepo.GetAll();
-            var existedAccountUsers = _accountUserRepo.GetAll();
+            var currentUsers = _userRepo.GetAll();
+            var currentAccounts = _accountRepo.GetAll();
 
+            //get essence vendor 
             var vendor = _vendorRepo.Get(x => x.Name == EventVendors.ESSENCE).FirstOrDefault();
             if (vendor == default(Vendor))
             {
@@ -220,99 +191,102 @@ namespace Essence.Communication.BusinessServices
                 return false;
             }
 
-            //TODO: for Testing
+            //get account group
+            //TODO: add the gropu for Testing
             var testGroup = _accountGroupRepo.Get(x => x.Name == "TestGroup").FirstOrDefault();
 
             //get all users linked to residents
-            foreach (var resident in users)
+            foreach (var resident in residents)
             {
-                if (resident.accountDetails == null)
+                //check if the account has been added
+                if (resident.accountDetails == null ||
+                    (currentAccounts.Any(x => x.VendorAccountNo == resident.accountDetails?.account
+                        && x.Vendor.Name.ToString().Equals(EventVendors.ESSENCE, StringComparison.CurrentCultureIgnoreCase))))
                 {
-                    //log
+                    //log account has been existed or can not find account details
                     continue;
                 }
-
+                   
                 //handle accounts
                 var account = new Account
                 {
                     AccountNo = resident.accountDetails.serviceProviderAccountNumber,
                     VendorAccountNo = resident.accountDetails.account,
-                    Vendor = vendor,
-                    Group = testGroup
+                    Vendor = vendor
                 };
 
-                //check if account has been existed
-                var accFound = existedAccount.Where(x => x.VendorAccountNo == account.VendorAccountNo && x.Vendor.Name == EventVendors.ESSENCE).FirstOrDefault();
-                if (accFound == default(Account))
+                if (testGroup != default(AccountGroup))
                 {
-                    //check if account has been added in the list
-                    if (!accountList.Any(x => x.VendorAccountNo == account.VendorAccountNo && x.Vendor.Name == EventVendors.ESSENCE))
-                    {
-                        accountList.Add(account);
-                    }
+                    account.Group = testGroup;
                 }
-                else
-                {
-                    //account.Id = accFound.Id;
 
-                    //TODO: update 
-                   // continue;
-                }
-           
-                //get users
+                //add account into list
+                newAccounts.Add(account);
+
+                //get all users against the accout
                 var userCollection = await GetUsersForAccount(resident.accountDetails.account, token);
                 foreach (var user in userCollection.Users)
                 {
-                    if (user.UserDetails == null)
+                    if (user.UserDetails == null ||
+                        newUsers.Any(x => x.VendorUserId == user.UserDetails?.UserId.ToString() && x.Vendor.Name == EventVendors.ESSENCE) ||
+                        (currentUsers.Any(x => x.VendorUserId.Equals(user.UserDetails?.UserId.ToString(), StringComparison.CurrentCultureIgnoreCase) &&
+                        x.Vendor.Name == EventVendors.ESSENCE)))
                     {
+                        //log 
                         continue;
                     }
 
                     var userRef = new UserReference
                     {
-                        //Id = Guid.NewGuid().ToString(),
-                        //Vendor = vendor,
-                        //VendorUserId = user.UserDetails.UserId.ToString(),
-                        //UserType = user.UserDetails.UserType,
-                        //Email = user.UserDetails.Email,
-                        //UserName = user.UserDetails.UserName,
-                        //CellPhoneNumber = user.UserDetails.CellPhoneNumber,
-                        //Address = user.UserDetails.Address,
-                        //FirstName = user.UserDetails.FirstName,
-                        //LastName = user.UserDetails.LastName
+                        Id = Guid.NewGuid().ToString(),
+                        Vendor = vendor,
+                        VendorUserId = user.UserDetails.UserId.ToString(),
+                        UserType = user.UserDetails.UserType,
+                        Email = user.UserDetails.Email,
+                        UserName = user.UserDetails.UserName,
+                        CellPhoneNumber = user.UserDetails.CellPhoneNumber,
+                        Address = user.UserDetails.Address,
+                        FirstName = user.UserDetails.FirstName,
+                        LastName = user.UserDetails.LastName
                     };
 
-                    //check if user has been existed
-                    var userFound = existedUsers.Where(x => x.VendorUserId == userRef.VendorUserId && x.Vendor.Name == EventVendors.ESSENCE).FirstOrDefault();
-                    if (userFound == default(UserReference))
-                    {
-                        //check if account has been added in the list
-                        if (!userList.Any(x => x.VendorUserId == userRef.VendorUserId && x.Vendor.Name == EventVendors.ESSENCE))
-                        {
-                            userList.Add(userRef);
-                        }
-                    }
-                    else
-                    {
-                        //update
-                    }                   
+                    newUsers.Add(userRef);
 
-                    //check if user/account has been existed
-                    var accUserFound = existedAccountUsers.Where(x => x.UserId == userRef.Id && x.AccountId == account.Id).FirstOrDefault();
-                    if (accUserFound == default(AccountUser))
+                    //check if user/account has been added
+                    if (newAccountUsers.Any(x => x.UserId == userRef.Id && x.AccountId == account.Id))
                     {
-                        var accUser = new AccountUser()
-                        {
-                            Account = account,
-                            User = userRef
-                        };
-                        accountUserList.Add(accUser);
+                        continue;
                     }
+                    var accUser = new AccountUser()
+                    {
+                        Account = account,
+                        User = userRef,
+                        CareGiverType = Map(user.UserDetails.CareGiverType)
+                    };
+                    newAccountUsers.Add(accUser);
                 }
             }
             return true;
+
         }
 
- 
+        private CareGiverType Map(string userCareGiverType)
+        {
+            if (!Enum.TryParse<CareGiverType>(userCareGiverType, out CareGiverType result))
+            {
+                if (string.IsNullOrEmpty(userCareGiverType))
+                {
+                    return CareGiverType.NotCareGiver;
+                }
+
+                throw new NotSupportedException($"Cannot handle the user caregiver type: {userCareGiverType}");
+
+            }
+            return result;
+
+
+        }
+
+
     }
 }

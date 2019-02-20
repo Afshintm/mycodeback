@@ -65,7 +65,7 @@ namespace Essence.Communication.DbContexts
            if(ChangeTracker.Entries()
                 .Any( x => x.Metadata.ClrType == typeof(UserReference)))
             {
-                throw new InvalidOperationException(DbContextHelper.ReadOnlyEntityMsg);
+              //  throw new InvalidOperationException(DbContextHelper.ReadOnlyEntityMsg);
             }
             return base.SaveChanges();
         }

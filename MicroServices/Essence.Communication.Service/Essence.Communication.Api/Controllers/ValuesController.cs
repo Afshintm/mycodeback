@@ -36,7 +36,9 @@ namespace Essence.Communication.Api.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
+            _authService.Test();
             return "value";
+
         }
 
         // POST api/values

@@ -59,12 +59,12 @@ namespace Essence.Communication.UnitTests
             };
         }
 
-        private List<AccountUser> CreateFakeAccountUsers(List<Account> accounts, List<UserReference> users)
+        private List<AccountUser> CreateFakeAccountUsers(List<Account> accounts, List<ApplicationUser> users)
         {
             return new List<AccountUser>()
             {
-                new AccountUser() { AccountId = accounts[0].Id, UserId = users[0].Id },
-                new AccountUser() { AccountId = accounts[1].Id, UserId = users[1].Id },
+                new AccountUser() { AccountId = accounts[0].Id, UserId = users[0].Id, CareGiverType = Models.Enums.CareGiverType.MasterCareGiver},
+                new AccountUser() { AccountId = accounts[1].Id, UserId = users[1].Id, CareGiverType = Models.Enums.CareGiverType.StandardCareGiver },
                 new AccountUser() { AccountId = accounts[2].Id, UserId = users[2].Id }
             };
         }
@@ -115,6 +115,69 @@ namespace Essence.Communication.UnitTests
                 Assert.True(result[0].Name == EventVendors.ESSENCE, "seed data name is wrong"); 
             }
         }
+
+
+        [Fact]
+        public void ApplicatoinUsers_CopyFromUserRef()
+        {
+            //arrange
+            var options = EFTestInMemoryHelper.CreateContextOptions<ApplicationDbContext>();
+
+            
+            var userRef = new UserReference()
+            {
+                Address = "fakeAddress",
+                Email = "fakeenau=",
+                CellPhoneNumber = "fakephonenum",
+                FirstName = "fakeFName",
+                LastName = "fakeLastName",
+                Gender = "fakeG",
+                UserType = "fUserType",
+                UserName = "fakeUs"
+
+            };
+            //action 
+            var testUser = new ApplicationUser();
+            testUser.UserRef = userRef;
+
+
+            //assert
+            Assert.True(userRef.UserName == testUser.UserName, "username is wrong");
+            Assert.True(userRef.Email == testUser.Email, "Email is wrong");
+            Assert.True(userRef.CellPhoneNumber == testUser.CellPhoneNumber, "CellPhoneNumber is wrong");
+            Assert.True(userRef.FirstName == testUser.FirstName, "FirstName is wrong");
+            Assert.True(userRef.LastName == testUser.LastName, "LastName is wrong");
+            Assert.True(userRef.Gender == testUser.Gender, "Gender is wrong");
+            Assert.True(userRef.UserType == testUser.UserType, "UserType is wrong"); 
+        }
+
+
+        [Fact]
+        public void Account_AddAccountUserMappingOk()
+        {
+            //arrange
+            var options = EFTestInMemoryHelper.CreateContextOptions<ApplicationDbContext>();
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                context.Database.OpenConnection();
+                context.Database.EnsureCreated();
+
+                //action
+                var fakeList = CreateFakeAccounts();
+                var fakeUsers = CreateFakeUsers();
+                var testAccountUsers = CreateFakeAccountUsers(fakeList, fakeUsers);
+                context.Accounts.AddRange(fakeList);
+                context.Users.AddRange(fakeUsers);
+                context.AccountUsers.AddRange(testAccountUsers);
+                context.SaveChanges();
+
+                //assert
+                var result = context.Accounts.ToList();
+                Assert.True(result.Count == 3); 
+            }
+        }
+
 
         [Fact]
         public void Vendor_AddVendorsOk()
@@ -191,8 +254,7 @@ namespace Essence.Communication.UnitTests
             }
         }
 
-        [Fact]
-
+    
         public void UserRef_TryToSave_InvalidOperationException()
         {
             //arrange

@@ -28,5 +28,6 @@ namespace Essence.Communication.Api.Controllers
             var result = await _authenticationService.Login(loginRequest);
             return result;
         }
+
     }
 }

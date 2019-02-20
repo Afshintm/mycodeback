@@ -16,7 +16,7 @@ namespace Essence.Communication.BusinessServices
     {
         Task<bool> TryAddUserProfile(ApplicationUser user);
         Task<bool> TryAddUserClaims(ApplicationUser user, IEnumerable<Claim> claims);
-        Task<bool> TryAddUserClaims(ApplicationUser user, string role);
+        Task<bool> TryAddUserRoles(ApplicationUser user, string role);
 
         Task AddBatchUsers(List<IdentityUserProfile> users );
     }
@@ -31,6 +31,7 @@ namespace Essence.Communication.BusinessServices
            _userManager = userManager;
            _roleManager = roleManager;
         }
+
         public async Task<bool> TryAddUserProfile(ApplicationUser user)
         {
             var result = await _userManager.CreateAsync(user, tempPaassword);
@@ -55,7 +56,7 @@ namespace Essence.Communication.BusinessServices
             return true;
         }
 
-        public async Task<bool> TryAddUserClaims(ApplicationUser user, string role)
+        public async Task<bool> TryAddUserRoles(ApplicationUser user, string role)
         {
             var result = await _userManager.AddToRoleAsync(user, role);
             if (!result.Succeeded)
@@ -65,6 +66,30 @@ namespace Essence.Communication.BusinessServices
             }
 
             return true;
+        }
+
+        public async Task AddBatchUsers(List<IdentityUserProfile> users)
+        {
+            foreach(var user in users)
+            {
+                if (user.User == default(ApplicationUser))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    if (await TryAddUserProfile(user.User))
+                    {
+                        await TryAddUserClaims(user.User, user.Claims);
+                        await TryAddUserRoles(user.User, user.Role);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    //log user can not be created
+                }
+            }
         }
 
         private string MapRoles(string userType)
