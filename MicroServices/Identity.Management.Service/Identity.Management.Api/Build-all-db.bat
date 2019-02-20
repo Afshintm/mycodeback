@@ -1,9 +1,9 @@
 Echo Better to use MicroServices/build-all-db
-REM dotnet ef migrations add ApplicationIdentity  -c IdentityDbContext  -o Data/Migrations/ApplicationIdentityDb
+REM dotnet ef migrations add ApplicationIdentity  -c ApplicationDbContext  -o Data/Migrations/ApplicationIdentityDb
 
-REM dotnet ef migrations script -c IdentityDbContext -o Data/Migrations/ApplicationIdentityDb.sql
+REM dotnet ef migrations script -c ApplicationDbContext -o Data/Migrations/ApplicationIdentityDb.sql
 
-REM dotnet ef database  update -c IdentityDbContext 
+REM dotnet ef database  update -c ApplicationDbContext 
 
 
 REM dotnet ef migrations add Grants -c PersistedGrantDbContext -o Data/Migrations/PersistedGrantDb

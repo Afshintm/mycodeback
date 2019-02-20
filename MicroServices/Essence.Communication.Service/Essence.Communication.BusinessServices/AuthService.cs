@@ -1,6 +1,7 @@
 ﻿using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
 using Essence.Communication.Models.IdentityModels;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +11,16 @@ namespace Essence.Communication.BusinessServices
 {
     public interface IAuthService
     {
-        ApplicationUser CreateUser(string username);
-        bool Login(string userName, string password);
-        IEnumerable<string> GetUsers();
+        //ApplicationUser CreateUser(string username);
+        //bool Login(string userName, string password);
+        //IEnumerable<string> GetUsers();
     }
     public class AuthService : IAuthService
     {
-        IdentityDbContext _identityDbContext;
-        public AuthService(IdentityDbContext applicationIdentityDbContext)
+        //IdentityDbContext _identityDbContext;
+        public AuthService()//IdentityDbContext applicationIdentityDbContext)
         {
-            _identityDbContext = applicationIdentityDbContext;
+           // _identityDbContext = applicationIdentityDbContext;
         }
         public ApplicationUser CreateUser(string username)
         {
@@ -30,10 +31,10 @@ namespace Essence.Communication.BusinessServices
         {
             return true;
         }
-        public IEnumerable<string> GetUsers()
-        {
-            var result = _identityDbContext.Users.Select(x => x.UserName).AsEnumerable();
-            return result;
-        }
+       // public IEnumerable<string> GetUsers()
+       // {
+          //  var result = _identityDbContext.Users.Select(x => x.UserName).AsEnumerable();
+          // return result;
+       // }
     }
 }

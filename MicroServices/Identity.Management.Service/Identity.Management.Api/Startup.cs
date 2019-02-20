@@ -36,11 +36,11 @@ namespace Identity.Management.Api
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             
             var applicationIdentityConnectionString = configOptions.ConnectionStrings.ApplicationIdentityConnectionString;
-            services.AddDbContext<IdentityDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(applicationIdentityConnectionString,sql=>sql.MigrationsAssembly(migrationsAssembly)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<IdentityDbContext>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

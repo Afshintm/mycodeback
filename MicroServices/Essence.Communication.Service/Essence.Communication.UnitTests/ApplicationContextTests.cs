@@ -1,6 +1,9 @@
 ﻿using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
+using Essence.Communication.Models.IdentityModels;
+using Essence.Communication.Models.Utility;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +24,28 @@ namespace Essence.Communication.UnitTests
             };
         }
 
-        private List<UserReference> CreateFakeUsers()
+        private List<ApplicationUser> CreateFakeUsers()
+        {
+            return new List<ApplicationUser>()
+            {
+                new ApplicationUser(){UserName  = "userName1", Email = "user1@gmail.com",
+                    UserRef = new UserReference{UserName = "userName1", Email = "user1@gmail.com" } },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "123"},
+                new ApplicationUser(){UserName  = "userName2", Email = "user2@gmail.com",
+                UserRef = new UserReference{UserName = "userName2", Email = "user2@gmail.com" } },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "1223"},
+                new ApplicationUser(){UserName  = "userName3", Email = "user3@gmail.com",
+                UserRef = new UserReference{UserName = "userName3", Email = "user3@gmail.com" } },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "1223"}
+            };
+        }
+
+        private List<UserReference> CreateFakeUserRefs()
         {
             return new List<UserReference>()
             {
-                new UserReference(){Name  = "userName1", Email = "user1@gmail.com", Id = Guid.NewGuid().ToString()},
-                new UserReference(){Name  = "userName2", Email = "user2@gmail.com", Id = Guid.NewGuid().ToString()},
-                new UserReference(){Name  = "userName3", Email = "user3@gmail.com", Id = Guid.NewGuid().ToString()}
+                new UserReference(){UserName  = "userName1", Email = "user1@gmail.com" },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "123"},
+                new UserReference(){UserName  = "userName2", Email = "user2@gmail.com",
+                User = new ApplicationUser{UserName = "userName2", Email = "user2@gmail.com" } },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "1223"},
+                new UserReference(){UserName  = "userName3", Email = "user3@gmail.com",
+                User = new ApplicationUser{UserName = "userName3", Email = "user3@gmail.com" } },//, Id = Guid.NewGuid().ToString(), CellPhoneNumber = "1223"}
             };
         }
 
@@ -77,6 +95,28 @@ namespace Essence.Communication.UnitTests
         }
 
         [Fact]
+        public void Vendor_VendorSeedDataCreated()
+        {
+            //arrange
+            var options = EFTestInMemoryHelper.CreateContextOptions<ApplicationDbContext>();
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                context.Database.OpenConnection();
+                context.Database.EnsureCreated();
+
+                //action
+                var testList = CreateFakeVendors(); 
+                context.SaveChanges();
+
+                //assert
+                var result = context.Vendors.ToList();
+                Assert.True(result.Count == 1, "count is not 1");
+                Assert.True(result[0].Name == EventVendors.ESSENCE, "seed data name is wrong"); 
+            }
+        }
+
+        [Fact]
         public void Vendor_AddVendorsOk()
         {
             //arrange
@@ -94,10 +134,12 @@ namespace Essence.Communication.UnitTests
 
                 //assert
                 var result = context.Vendors.ToList();
-                Assert.True(result.Count == 3);
-                Assert.True(!string.IsNullOrEmpty(result[0].Id));
-                Assert.True(result[0].CreatedDate.Date == DateTime.UtcNow.Date);
-                Assert.True(result[0].Name == testList[0].Name);
+
+                //test count add seed data
+                Assert.True(result.Count == testList.Count + 1, "count is not 3");
+                Assert.True(!string.IsNullOrEmpty(result[0].Id), "result is null");
+                Assert.True(result[0].CreatedDate.Date == DateTime.UtcNow.Date, "datetime is not matched");
+                Assert.True(result.Where( t => t.Name == testList[0].Name).Count() == 1, "Specific Name is not found");
             }
         }
 
@@ -126,7 +168,7 @@ namespace Essence.Communication.UnitTests
         }
 
         [Fact]
-        public void AccountUser_AddAccountUsersOk()
+        public void AccountUser_GetUserRefOk()
         {
             //arrange
             var options = EFTestInMemoryHelper.CreateContextOptions<ApplicationDbContext>();
@@ -137,20 +179,38 @@ namespace Essence.Communication.UnitTests
                 context.Database.EnsureCreated();
 
                 //action
-                var testUserList = CreateFakeUsers();
-                var testAccountList = CreateFakeAccounts();
-                var testAccountUserList = CreateFakeAccountUsers(testAccountList, testUserList);
+                var testList = CreateFakeUsers();
+                context.Users.AddRange(testList);
 
-                context.Accounts.AddRange(testAccountList);
-                context.Users.AddRange(testUserList);
-              //  context.SaveChanges();
-                context.AccountUsers.AddRange(testAccountUserList);
                 context.SaveChanges();
 
                 //assert
-                var result = context.AccountUsers.Include(x => x.Account).Include(x => x.User).ToList();
-                Assert.True(testAccountList.Where(x => x.Id == result[0].Account.Id).Count() > 0);
-                Assert.True(testUserList.Where(x => x.Id == result[0].User.Id).Count() > 0);
+                var result = context.UserRef.ToList();
+                Assert.True(result.Count == 3);
+                Assert.True(!string.IsNullOrEmpty(result[0].Id));
+            }
+        }
+
+        [Fact]
+
+        public void UserRef_TryToSave_InvalidOperationException()
+        {
+            //arrange
+            var options = EFTestInMemoryHelper.CreateContextOptions<ApplicationDbContext>();
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                context.Database.OpenConnection();
+                context.Database.EnsureCreated();
+
+                //action
+                var testList = CreateFakeUserRefs();
+                context.UserRef.AddRange(testList);
+
+                Exception ex = Assert.Throws<InvalidOperationException>(() => context.SaveChanges());
+
+                //assert
+                Assert.Equal(ex.Message, DbContextHelper.ReadOnlyEntityMsg);
             }
         }
 

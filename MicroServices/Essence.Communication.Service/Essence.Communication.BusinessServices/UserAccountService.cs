@@ -4,12 +4,14 @@ using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.Dtos.Enums;
 using Essence.Communication.Models.IdentityModels;
 using Essence.Communication.Models.Utility;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Services.Utilities.DataAccess;
 using Services.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace Essence.Communication.BusinessServices
     {
         Task<UsersForAccountResult> GetUsersForAccount(UsersForAccountRequest usersForAccountRequest, string token = null);
         Task<GetUsersResult> GetAllResidentUsers(string token = null);
-        Task<bool> InitializeAcountUsers();
+        Task<bool> PullAccountUsers();
     }
 
     public class UserAccountService : EssenceServiceBase, IUserAccountService
@@ -31,13 +33,16 @@ namespace Essence.Communication.BusinessServices
         private IRepository<AccountGroup> _accountGroupRepo;
 
         private readonly IIdentityUserProfileService _identifyService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public UserAccountService(IHttpClientManagerNew httpClientManager,
             IAppSettingsConfigService appSettingsConfigService,
             IAuthenticationService authenticationService,
             IUnitOfWork<ApplicationDbContext> unitOfWork,
             IModelMapper modelMapper,
-            IIdentityUserProfileService identifyService
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager
             ) : base(httpClientManager, appSettingsConfigService, authenticationService, unitOfWork, modelMapper)
         {
             _accountRepo = _unitOfWork.Repository<Account>();
@@ -45,9 +50,16 @@ namespace Essence.Communication.BusinessServices
             _vendorRepo = _unitOfWork.Repository<Vendor>();
             _accountUserRepo = _unitOfWork.Repository<AccountUser>();
             _accountGroupRepo = _unitOfWork.Repository<AccountGroup>();
-            _identifyService = identifyService;
-        }
+            _userManager = userManager;
+            _roleManager = roleManager;
 
+    }
+
+
+        public async Task<bool> AddUserTest()
+        {
+            return await _identifyService.UpdateUserProfiles(null);
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -106,7 +118,7 @@ namespace Essence.Communication.BusinessServices
             return await SendRequestToEssence<GetUsersResult>("users/GetUsers", header, getUserRequest);
         }
 
-        public async Task<bool> InitializeAcountUsers()
+        public async Task<bool> PullAccountUsers()
         {
             //get token
             var authToken = await GetEssenceToken(null);
@@ -128,21 +140,79 @@ namespace Essence.Communication.BusinessServices
             _accountRepo.InsertRange(accountList);
             _userRepo.InsertRange(userList);
             _accountUserRepo.InsertRange(accountUserList);
-
-            //TODO: call the service with event
-            await UpdateIdentityUsers(userList.Select(
-                    x => new ApplicationUser() {
-                         Email = x.Email,
-                         UserName = x.Name,
-                         UserType = x.UserType
-                }).ToList());
-
             _unitOfWork.Save();
+
+            await SetIdentityUsers(userList);
             return true;
         }
 
+        private const string GeneralPassword = "Pass123$";
+
+        public async Task<bool> SetIdentityUsers(IEnumerable <UserReference> users)
+        {
+            foreach(var user in users)
+            {
+                var identityUser = new ApplicationUser
+                {
+                    Id = user.Id,
+                    //UserName = user.UserName,
+                    //Email = user.Email,
+                    PhoneNumber = user.CellPhoneNumber
+                };
+
+                //add user
+                var result = await _userManager.CreateAsync(identityUser, GeneralPassword);
+                if (!result.Succeeded)
+                {
+                    //log it
+                    continue;
+                }
+
+                //add user claims
+                result = await _userManager.AddClaimsAsync(identityUser, new Claim[] {
+                     new Claim("given_name", user.FirstName),
+                     new Claim("family_name", user.LastName),
+                     new Claim("UserType", user.UserType)
+                });
+                if (!result.Succeeded)
+                {
+                    //log it
+                    continue;
+                }
+
+                //TODO: user should have multiple roles
+                //add user roles
+                result = await _userManager.AddToRoleAsync(identityUser, MapRoles(user.UserType));
+                if (!result.Succeeded)
+                {
+                    //log it
+                    continue;
+                }
+
+            }
+
+            return true;
+        }
+
+        private string MapRoles(string userType)
+        {
+            switch (userType.ToUpper())
+            {
+                case "CareGiver":
+                    return "CaregiverRole";
+                case "StandardCareGiver":
+                    return "CaregiverRole";
+                case "MasterCareGiver":
+                    return "CaregiverRole";
+                case "Administrator":
+                    return "AdminRole";
+                default:
+                    return "ResidentRole";
+            }
+        }
+
         //TODO: this method should be moved to other project
-        private async Task<bool> UpdateIdentityUsers(List<ApplicationUser> users)
+        private async Task<bool> UpdateIdentityUsers(List<UserReference> users)
         {
             await _identifyService.UpdateUserProfiles(users);
             return true;
@@ -199,9 +269,7 @@ namespace Essence.Communication.BusinessServices
                     //TODO: update 
                    // continue;
                 }
-
-              
-
+           
                 //get users
                 var userCollection = await GetUsersForAccount(resident.accountDetails.account, token);
                 foreach (var user in userCollection.Users)
@@ -213,12 +281,16 @@ namespace Essence.Communication.BusinessServices
 
                     var userRef = new UserReference
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        Vendor = vendor,
-                        VendorUserId = user.UserDetails.UserId.ToString(),
-                        UserType = user.UserDetails.UserType,
-                        Email = user.UserDetails.Email,
-                        Name = user.UserDetails.UserName
+                        //Id = Guid.NewGuid().ToString(),
+                        //Vendor = vendor,
+                        //VendorUserId = user.UserDetails.UserId.ToString(),
+                        //UserType = user.UserDetails.UserType,
+                        //Email = user.UserDetails.Email,
+                        //UserName = user.UserDetails.UserName,
+                        //CellPhoneNumber = user.UserDetails.CellPhoneNumber,
+                        //Address = user.UserDetails.Address,
+                        //FirstName = user.UserDetails.FirstName,
+                        //LastName = user.UserDetails.LastName
                     };
 
                     //check if user has been existed

@@ -30,7 +30,7 @@ namespace Identity.Management.Api
                     EnsureSeedData(context);
                 }
                 {
-                    var context = scope.ServiceProvider.GetService<IdentityDbContext>();
+                    var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
                     context.Database.Migrate();
 
                     var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -94,7 +94,6 @@ namespace Identity.Management.Api
                         {
                             throw new Exception(result.Errors.First().Description);
                         }
-
                         result = userMgr.AddClaimsAsync(bob, new Claim[]{
                         new Claim(JwtClaimTypes.Name, "Bob Smith"),
                         new Claim(JwtClaimTypes.GivenName, "Bob"),

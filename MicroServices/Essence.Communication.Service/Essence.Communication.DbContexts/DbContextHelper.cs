@@ -10,6 +10,7 @@ namespace Essence.Communication.DbContexts
 {
     public static class DbContextHelper
     {
+        public const string ReadOnlyEntityMsg = "Try to modify one of the readonly entities: UserReference";
         public static ValueConverter GetEnumValueConverter<T>() where T : IConvertible
         {
             return new ValueConverter<T, string>(

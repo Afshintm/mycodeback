@@ -26,7 +26,7 @@ namespace Essence.Communication.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ResidentActivityViewModel>> GetResidentActivity(string account)
         {
-            var activityReport = await _residentActivityService.GetLast24HrActivityReport(account);
+            var activityReport = await _residentActivityService.GetLast24HrActivityReportAndBeyond(account);
 
             return Ok(activityReport);
 
