@@ -11,7 +11,7 @@ namespace Essence.Communication.Models.Config
 
     public class ConnectionStrings
     {
-        public string ApplicationConnectionString { get; set; }
+        public string ApplicationIdentityConnectionString { get; set; }
     }
 
     public class LogLevel

@@ -58,7 +58,7 @@ namespace Essence.Communication.Api
             // Add services to the collection.
             services.AddCors();
             //set entityframework connection string
-            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(configOptions.ConnectionStrings.ApplicationConnectionString, b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(configOptions.ConnectionStrings.ApplicationIdentityConnectionString, b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
 
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
