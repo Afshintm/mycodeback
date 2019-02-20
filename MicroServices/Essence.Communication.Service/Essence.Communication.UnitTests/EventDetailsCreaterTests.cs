@@ -13,9 +13,9 @@ namespace Essence.Communication.UnitTests
         public int ActualTemperature { get; set; }
     }
 
-    public class EventDetailsCreaterTests
+    public class EventDetailsCreatorTests
     {
-        public EventDetailsCreaterTests()
+        public EventDetailsCreatorTests()
         {
         }
 

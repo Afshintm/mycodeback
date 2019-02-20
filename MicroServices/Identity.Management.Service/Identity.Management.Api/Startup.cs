@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using Essence.Communication.Models;
 using Essence.Communication.DbContexts;
+using Essence.Communication.Models.IdentityModels;
 using Identity.Management.Api.Extensions;
 using Identity.Management.Api.Services;
 using Microsoft.AspNetCore.Builder;
@@ -11,13 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Essence.Communication.Models.IdentityModels;
+using Microsoft.Extensions.Options;
 
 namespace Identity.Management.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration,ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
             _logger = logger;
@@ -29,10 +29,13 @@ namespace Identity.Management.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ConfigOptions>(Configuration);
+            var sp = services.BuildServiceProvider();
+            var configOptions = sp.GetService<IOptionsMonitor<ConfigOptions>>().CurrentValue;
 
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             
-            var applicationIdentityConnectionString = Configuration.GetConnectionString("ApplicationIdentityConnectionString");
+            var applicationIdentityConnectionString = configOptions.ConnectionStrings.ApplicationIdentityConnectionString;
             services.AddDbContext<IdentityDbContext>(options =>
         options.UseSqlServer(applicationIdentityConnectionString,sql=>sql.MigrationsAssembly(migrationsAssembly)));
 
@@ -42,15 +45,13 @@ namespace Identity.Management.Api
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            var oprationsConnectionString = Configuration.GetConnectionString("IdentityServerOprationsConnectionString");
+            var oprationsConnectionString = configOptions.ConnectionStrings.IdentityServerOprationsConnectionString;
             var identityServerBuilder = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
-                options.IssuerUri = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
-                options.PublicOrigin = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
             })
 
                 //.AddDeveloperSigningCredential()

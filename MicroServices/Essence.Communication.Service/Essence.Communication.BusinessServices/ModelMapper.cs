@@ -1,5 +1,4 @@
-﻿using Essence.Communication.BusinessServices.ViewModel;
-using Essence.Communication.BusinessServices.ViewModels;
+﻿using Essence.Communication.BusinessServices.ViewModels;
 using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.ValueObjects;
