@@ -16,6 +16,7 @@ namespace Essence.Communication.BusinessServices
         EventViewModel MapToViewModel(IEvent eventObj);
         CloseEventsRequest MapToCloseEventRequetDTO(CloseEventsRequestViewtModel viewModel);
         CloseEventsResponseViewModel MapToCloseResponseDTO(CloseEventsResponse dtoModel);
+        ActivityDetailViewModel MapToViewModel(Models.Dtos.Activitytype activityType);
     }
 
     public class ModelMapper : IModelMapper
@@ -162,6 +163,25 @@ namespace Essence.Communication.BusinessServices
         public CloseEventsResponseViewModel MapToCloseEventRequetDTO(CloseEventsResponse viewModel)
         {
             throw new NotImplementedException();
+        }
+
+        public ActivityDetailViewModel MapToViewModel(Models.Dtos.Activitytype activityType)
+        {
+            return new ActivityDetailViewModel
+            {
+                ActivityType = activityType.ActivityType,
+                Activities = activityType.Activities.Select(MapToViewModel).ToList()
+            };
+        }
+
+        private ActivityViewModel MapToViewModel(Activity activity)
+        {
+            return new ActivityViewModel
+            {
+                StartTime = activity.StartTime,
+                EndTime = activity.EndTime,
+                Acceptable = activity.PassThreshold
+            };
         }
     }
 

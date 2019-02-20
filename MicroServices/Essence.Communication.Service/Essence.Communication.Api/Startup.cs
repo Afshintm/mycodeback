@@ -144,14 +144,13 @@ namespace Essence.Communication.Api
             builder.RegisterGeneric(typeof(UnitOfWork<>)).As(typeof(IUnitOfWork<>)).InstancePerDependency();
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency();
             builder.RegisterType<EssenceRequestValidation>().As<IRequestValidation>().InstancePerDependency();
+            builder.RegisterType(typeof(ResidentActivityMetaService)).As(typeof(IResidentActivityService)).InstancePerLifetimeScope();
 
             //TODO: this service may should move to identity project later
             // builder.RegisterGeneric(typeof(UserManager<>)).As(typeof(UserManager<>)).InstancePerDependency();
             //  builder.RegisterGeneric(typeof(RoleManager<>)).As(typeof(RoleManager<>)).InstancePerDependency();
             builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(IIdentityUserContext)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(IdentityUserProfileService)).As(typeof(IIdentityUserProfileService)).InstancePerLifetimeScope();
-
-
 
             return builder;
         }

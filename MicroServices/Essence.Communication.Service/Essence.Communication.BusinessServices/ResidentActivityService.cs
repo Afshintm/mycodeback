@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Essence.Communication.BusinessServices.ViewModels;
 using Essence.Communication.DbContexts;
+using Essence.Communication.Models;
 using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.Utility;
 using Services.Utilities.DataAccess;
@@ -16,13 +17,13 @@ namespace Essence.Communication.BusinessServices
     public class ResidentActivityMetaService : IResidentActivityService
     {
         private readonly IReportingService _reportingService;
-        private readonly IUnitOfWork<IDbContext> _unitOfWork;
+        private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
         private readonly IEventCreator _eventCreator;
         private readonly IModelMapper _modelMapper;
 
         public ResidentActivityMetaService(
             IReportingService reportingService, 
-            IUnitOfWork<IDbContext> unitOfWork, 
+            IUnitOfWork<ApplicationDbContext> unitOfWork, 
             IEventCreator eventCreator,
             IModelMapper modelMapper)
         {
@@ -36,8 +37,11 @@ namespace Essence.Communication.BusinessServices
         //Funny naming but at this stage there is a chance that we may need to retrieve more than 24hr of activities
         {
             var essenceDtFormatter = new EssenceDateFormatter(); //Trivial to inject to this class. better not to, to avoid cluttering the constructor and making unit tests complicated
-
             var residentAllActivities = new ResidentActivityViewModel();
+
+            var account = _unitOfWork.Repository<Account>().FindById(accountId);
+            if (account == null)
+                throw new Exception("Essence AccountID is not found");
 
             var last24HrActivityRequest = new Models.Dtos.ActivityRequest { account = accountId, startTime = DateTime.Now.AddHours(-24), endTime = DateTime.Now };
             var last24HrPanelTimeAsText = essenceDtFormatter.ToPanelTime(last24HrActivityRequest.startTime);
@@ -45,16 +49,8 @@ namespace Essence.Communication.BusinessServices
             //Source 1: Api call
             var activityReport = await _reportingService.GetResidentActivity(last24HrActivityRequest);
 
-            residentAllActivities.ActivityTypes = activityReport.ActivityTypes.Select(a=> new ActivityTypeViewModel
-            {
-                ActivityType = a.ActivityType,
-                Activities = a.Activities.Select(ac => new ActivityViewModel
-                {
-                    StartTime = ac.StartTime,
-                    EndTime = ac.EndTime,
-                    PassThreshold = ac.PassThreshold
-                }).ToList()
-            }).ToList();
+            residentAllActivities.Activities = activityReport.ActivityTypes?.Select(_modelMapper.MapToViewModel).ToList();
+//            residentAllActivities.TotalRestroomTimes = activityReport.ActivityTypes.Count(a=> a.ActivityType == )
 
             //Source 2: events logged in the database
             var eventsFromDbQuery = _unitOfWork.Repository<EssenceEventObjectStructure>().Query().Filter(e =>
@@ -67,8 +63,7 @@ namespace Essence.Communication.BusinessServices
              * if eventDtos.Count ==0 then fetch previous days
              * 
              */
-
-            var events = eventDtos.Select(e => _eventCreator.Create(e, new Models.Account { Id = accountId }));
+            var events = eventDtos.Select(e => _eventCreator.Create(e, account));
 
             residentAllActivities.Alerts = events.Select(e => _modelMapper.MapToViewModel(e)).ToList();
 
