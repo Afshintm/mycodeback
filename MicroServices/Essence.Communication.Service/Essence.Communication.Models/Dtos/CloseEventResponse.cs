@@ -25,12 +25,5 @@ namespace Essence.Communication.Models.Dtos
         public string Value { get; set; }
     }
 
-    public enum ResponseCode
-    {
-        OK = 0,
-        Unknown = 1,
-        PanelNotExist = 105,
-        InvalidToken = 123
-    }
 
 }

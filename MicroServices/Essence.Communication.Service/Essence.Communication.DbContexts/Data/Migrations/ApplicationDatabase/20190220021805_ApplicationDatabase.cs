@@ -94,7 +94,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 2, 19, 2, 48, 56, 108, DateTimeKind.Utc).AddTicks(3941)),
+                    CreatedDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 2, 20, 2, 18, 4, 936, DateTimeKind.Utc).AddTicks(905)),
                     VendorId = table.Column<string>(nullable: true),
                     Account = table.Column<int>(nullable: false),
                     Event_Code = table.Column<int>(nullable: false),
@@ -130,7 +130,6 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     Id = table.Column<string>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
@@ -143,6 +142,7 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     UserType = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
                     CellPhoneNumber = table.Column<string>(nullable: true),
                     Gender = table.Column<string>(nullable: true),
                     Address = table.Column<string>(nullable: true),
@@ -259,7 +259,8 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 {
                     AccountId = table.Column<string>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false)
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    CareGiverType = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -378,13 +379,13 @@ namespace Essence.Communication.DbContexts.Data.Migrations.ApplicationDatabase
                 schema: "Application",
                 table: "AccountGroup",
                 columns: new[] { "Id", "CreatedDate", "Name" },
-                values: new object[] { "d74f7d33-bba8-47df-8eb5-da8002c25954", new DateTime(2019, 2, 19, 2, 48, 56, 150, DateTimeKind.Utc).AddTicks(7586), "TestGroup" });
+                values: new object[] { "2b5758c4-c1f7-4a27-8207-043a16e0ebad", new DateTime(2019, 2, 20, 2, 18, 4, 978, DateTimeKind.Utc).AddTicks(6970), "TestGroup" });
 
             migrationBuilder.InsertData(
                 schema: "Application",
                 table: "Vendor",
                 columns: new[] { "Id", "CreatedDate", "Name" },
-                values: new object[] { "5bfde310-977f-4ca9-9e54-4312834d27b0", new DateTime(2019, 2, 19, 2, 48, 56, 149, DateTimeKind.Utc).AddTicks(3102), "Essence" });
+                values: new object[] { "e7052a2a-d8f3-40a2-a807-6ae86be6131a", new DateTime(2019, 2, 20, 2, 18, 4, 977, DateTimeKind.Utc).AddTicks(4426), "Essence" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Account_GroupId",

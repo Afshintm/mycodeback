@@ -21,6 +21,8 @@ namespace Essence.Communication.BusinessServices
             _httpClient = httpClient;
         }
 
+
+
         public async Task<LoginResponse> Login(LoginRequest loginData, string token = null)
         {
             var headers = new Dictionary<string, string>();

@@ -14,6 +14,7 @@ namespace Essence.Communication.DbContexts.Configurations
             builder.ToTable("AccountUser");
             builder.HasKey(a => new { a.AccountId, a.UserId });
             builder.Ignore(a => a.Id);
+            builder.Property(h => h.CareGiverType).HasConversion(DbContextHelper.GetEnumValueConverter<CareGiverType>());
         }
 
     } 

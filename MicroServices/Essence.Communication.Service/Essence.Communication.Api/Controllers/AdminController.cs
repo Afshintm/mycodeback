@@ -29,28 +29,15 @@ namespace Essence.Communication.Api.Controllers
 
         }
 
-        [Route("TestUser")]
+        [Route("CreateAccountUserSnapShot")]
         [HttpPost]
-        public async Task<ActionResult> TestAppUser()
-        {
-           await  _Iservice.UpdateUserProfiles(null);
-
-            return null;
-        }
-
-
-        [Route("IntializeAccountUsers")]
-        [HttpPost]
-        public async Task<ActionResult> InitializeAccountUsers()
+        public async Task<ActionResult> CreateAccountUserSnapShot()
         {
             try
             {
-                if (await _userAccountService.PullAccountUsers())
-                {
-                    return Ok();
-                }
-                else
-                    return new StatusCodeResult(500);
+                await _userAccountService.CreateAccountUserSnapShot();
+                
+                    return Ok(); 
             }
             catch (Exception ex)
             {

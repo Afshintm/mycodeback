@@ -140,9 +140,9 @@ namespace Essence.Communication.Api
             builder.RegisterType<EssenceRequestValidation>().As<IRequestValidation>().InstancePerDependency();
 
             //TODO: this service may should move to identity project later
-           // builder.RegisterGeneric(typeof(UserManager<>)).As(typeof(UserManager<>)).InstancePerDependency();
-          //  builder.RegisterGeneric(typeof(RoleManager<>)).As(typeof(RoleManager<>)).InstancePerDependency();
-
+            // builder.RegisterGeneric(typeof(UserManager<>)).As(typeof(UserManager<>)).InstancePerDependency();
+            //  builder.RegisterGeneric(typeof(RoleManager<>)).As(typeof(RoleManager<>)).InstancePerDependency();
+            builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(IIdentityUserContext)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(IdentityUserProfileService)).As(typeof(IIdentityUserProfileService)).InstancePerLifetimeScope();
 
 
