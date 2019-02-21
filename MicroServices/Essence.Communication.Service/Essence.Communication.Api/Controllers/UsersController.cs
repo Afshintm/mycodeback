@@ -27,9 +27,9 @@ namespace Essence.Communication.Api.Controllers
         // GET: api/Users
         [Route("AddUser")]
         [HttpPost]
-        public async Task<SuccessResponse> UserProfile(AddUserRequest addUserRequest)
+        public async Task<SuccessResponse> AddUser(AddUserRequest addUserRequest)
         {
-            var result = await _userService.UserProfile(addUserRequest);
+            var result = await _userService.AddUser(addUserRequest);
             return result;
         }
 

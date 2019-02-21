@@ -9,10 +9,8 @@ namespace Essence.Communication.Api.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private IAppSettingsConfigService _appSettingsConfig;
-        public AccountsController(IAppSettingsConfigService appSettingsConfig)
+        public AccountsController()
         {
-            _appSettingsConfig = appSettingsConfig;
         }
 
         // GET: api/Accounts

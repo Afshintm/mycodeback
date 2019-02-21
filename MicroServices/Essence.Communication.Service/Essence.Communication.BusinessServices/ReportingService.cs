@@ -3,23 +3,28 @@ using System.Threading.Tasks;
 using Services.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Essence.Communication.Models.Config;
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 
 namespace Essence.Communication.BusinessServices
 {
-    public interface IReportingService : IBaseBusinessService<ActivityResult>
+    public interface IReportingService
     {
         Task<ActivityResult> GetResidentActivity(ActivityRequest activityRequest);
     }
 
-    public class ReportingService : BaseBusinessServices<ActivityResult>, IReportingService
+    public class ReportingService : EssenceService, IReportingService
     {
-        private readonly IConfiguration _configuration;
-        private readonly IAuthenticationService _authenticationService;
         private readonly ILogger<ReportingService> _logger;
-        public ReportingService(IHttpClientManager httpClientManager, IConfiguration configuration, IAuthenticationService authenticationService,ILogger<ReportingService> logger) : base(httpClientManager, configuration)
+        public ReportingService(
+            IHttpClientManager httpClientManager,
+            IOptionsMonitor<ConfigOptions> monitor, 
+            IAuthenticationService authenticationService, 
+            ILogger<ReportingService> logger) 
+        : base(httpClientManager, monitor, authenticationService, null, null)
         {
-            _configuration = configuration;
-            _authenticationService = authenticationService;
             _logger = logger;
         }
 
@@ -27,22 +32,14 @@ namespace Essence.Communication.BusinessServices
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
-            }; 
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
+            };
+            _logger.LogInformation("Getting Essence token ...");
+            LoginResponse loginResponse = await GetEssenceToken();
             _logger.LogInformation("Calling ResidentActivity Api ...");
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            //var result = await _apiManager.PostExternalAsync<ActivityResult>("report", "GetResidentActivity", activityRequest, loginResponse.token);
-            var response = await Task.Run(async () => {
-                var result = await PostAsync(activityRequest, loginResponse.Token);
-                return result;
-            });
+            var response = await SendRequestToEssence<ActivityResult>("report/GetResidentActivity", loginResponse.Token, activityRequest);
             return response;
-        }
-
-        public override void SetApiEndpointAddress()
-        {
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "report/GetResidentActivity";
         }
     }
 }

@@ -50,7 +50,6 @@ namespace Essence.Communication.Api
         // called by the runtime before the Configure method, below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            
             services.Configure<ConfigOptions>(Configuration);
             var serviceProvider = services.BuildServiceProvider();
             var configOptions = serviceProvider.GetService<IOptionsMonitor<ConfigOptions>>().CurrentValue;
@@ -75,16 +74,10 @@ namespace Essence.Communication.Api
                   });
             
             services.AddAuthorization();
-//<<<<<<< HEAD
             var IdentityServerIssuerUrl = configOptions.AuthenticationServer.Issuer;
             var apiName = configOptions.AuthenticationServer.ApiKey;
             _logger.LogInformation("Identity Server configuration data is {0}available.",( string.IsNullOrEmpty(IdentityServerIssuerUrl)||string.IsNullOrEmpty(IdentityServerIssuerUrl)?"not":string.Empty ));
 
-//=======
-//            var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
-//            var apiName = Configuration.GetSection("AuthenticationServer")["ApiKey"];
-//            _logger.LogInformation("Identity Server configuration data is {0} available.",( string.IsNullOrEmpty(IdentityServerIssuerUrl)||string.IsNullOrEmpty(IdentityServerIssuerUrl)?"not":string.Empty ));
-//>>>>>>> feature/NP-237-styles-for-login-logout
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
@@ -119,15 +112,14 @@ namespace Essence.Communication.Api
             // AFTER Populate those registrations can override things
             // in the ServiceCollection. Mix and match as needed.
             builder.Populate(services);
-            builder.RegisterType<HttpClientManager>().As<IHttpClientManager>().SingleInstance();
-            builder.RegisterType(typeof(AppSettingsConfigService)).As(typeof(IAppSettingsConfigService)).SingleInstance();
+            //builder.RegisterType<HttpClientManager>().As<IHttpClientManager>().SingleInstance();
             builder.RegisterType(typeof(HSCCodeDetailsMapper)).As(typeof(IEventCodeDetailsMapper)).SingleInstance();
             builder.RegisterType(typeof(HSCEventCodeList)).As(typeof(IEventCodeList)).SingleInstance();
             builder.RegisterType(typeof(HSCAlertTypeRules)).As(typeof(IEventAlertRules)).SingleInstance();
-            builder.RegisterType(typeof(HttpClientManagerNew)).As(typeof(IHttpClientManagerNew)).SingleInstance();
+            builder.RegisterType(typeof(HttpClientManager)).As(typeof(IHttpClientManager)).SingleInstance();
 
             builder.RegisterType(typeof(ModelMapper)).As(typeof(IModelMapper)).SingleInstance();
-            builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
+            //builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(AuthenticationService)).As(typeof(IAuthenticationService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(ReportingService)).As(typeof(IReportingService)).InstancePerLifetimeScope();
            

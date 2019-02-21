@@ -1,5 +1,7 @@
-﻿using Essence.Communication.Models.Dtos;
+﻿using Essence.Communication.Models.Config;
+using Essence.Communication.Models.Dtos;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Services.Utils;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ namespace Essence.Communication.BusinessServices
 {
     public interface IAccountService
     {
-        Task<SuccessResponse> UserProfile(AddUserRequest addUserRequest);
+        Task<SuccessResponse> AddUser(AddUserRequest addUserRequest);
         Task<SuccessResponse> AddAndAssociateUser(AddAndAssociateUserRequest addAndAssociateUserRequest);
         Task<SuccessResponse> AssociateUserToAccount(AssociateUserToAccountRequest associateUserToAccountRequest);
         Task<SuccessResponse> DeleteUser(DeleteUserRequest deleteUserRequest);
@@ -21,29 +23,24 @@ namespace Essence.Communication.BusinessServices
         Task<SuccessResponse> UpdateUser(User updateUserRequest);
     }
 
-    public class UserService : BaseBusinessServices<SuccessResponse>, IAccountService
+    public class UserService : EssenceService, IAccountService
     {
-        private readonly IConfiguration _configuration;
-        private readonly IAuthenticationService _authenticationService;
-
-        public UserService(IHttpClientManager httpClientManager, IConfiguration configuration, IAuthenticationService authenticationService) : base(httpClientManager, configuration)
+        public UserService(IHttpClientManager httpClientManager, IOptionsMonitor<ConfigOptions> monitor, IAuthenticationService authenticationService) : base(httpClientManager, monitor, authenticationService, null, null)
         {
-            _configuration = configuration;
-            _authenticationService = authenticationService;
         }
 
         public async Task<SuccessResponse> AddAndAssociateUser(AddAndAssociateUserRequest addAndAssociateUserRequest)
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/AddUser";
+            LoginResponse loginResponse = await GetEssenceToken();
+            //ApiEndPoint = new Uri(new Uri(_configOptions.ApplicationSettings.ApiEndPoint), "users/AddUser").AbsoluteUri;
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(addAndAssociateUserRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<SuccessResponse>("users/AddAndAssociateUser", loginResponse.Token, addAndAssociateUserRequest);
                 return result;
             });
             return response;
@@ -53,14 +50,14 @@ namespace Essence.Communication.BusinessServices
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/AddUser";
+            LoginResponse loginResponse = await GetEssenceToken();
+            //ApiEndPoint = new Uri(new Uri(_configOptions.ApplicationSettings.ApiEndPoint), "users/AddUser").AbsoluteUri;
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(associateUserToAccountRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<SuccessResponse>("users/AssociateUserToAccount", loginResponse.Token, associateUserToAccountRequest);
                 return result;
             });
             return response;
@@ -70,14 +67,13 @@ namespace Essence.Communication.BusinessServices
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/DeactivateUser";
+            LoginResponse loginResponse = await GetEssenceToken();
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(deactivateUserRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<SuccessResponse>("users/DeactivateUser", loginResponse.Token, deactivateUserRequest);
                 return result;
             });
             return response;
@@ -87,14 +83,13 @@ namespace Essence.Communication.BusinessServices
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/DeleteAccount";
+            LoginResponse loginResponse = await GetEssenceToken();
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(deleteAccountRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<SuccessResponse>("users/DeleteAccount", loginResponse.Token, deleteAccountRequest);
                 return result;
             });
             return response;
@@ -104,14 +99,14 @@ namespace Essence.Communication.BusinessServices
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/DeleteUser";
+            LoginResponse loginResponse = await GetEssenceToken();
+            //ApiEndPoint = new Uri(new Uri(_configOptions.ApplicationSettings.ApiEndPoint), "users/DeleteUser").AbsoluteUri;
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(deleteUserRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<SuccessResponse>("users/DeleteUser", loginResponse.Token, deleteUserRequest);
                 return result;
             });
             return response;
@@ -121,36 +116,30 @@ namespace Essence.Communication.BusinessServices
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/DisassociateUserFromAccount";
+            LoginResponse loginResponse = await GetEssenceToken();
+            //ApiEndPoint = new Uri(new Uri(_configOptions.ApplicationSettings.ApiEndPoint), "users/DisassociateUserFromAccount").AbsoluteUri;
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(disassociateUserFromAccountRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<SuccessResponse>("users/DisassociateUserFromAccount", loginResponse.Token, disassociateUserFromAccountRequest);
                 return result;
             });
             return response;
-        }
-
-        public override void SetApiEndpointAddress()
-        {
-            //ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "report/GetResidentActivity";
         }
 
         public async Task<SuccessResponse> UpdateAccountInformation(UpdateAccountInformationRequest updateAccountInformationRequest)
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/UpdateAccountInformation";
+            LoginResponse loginResponse = await GetEssenceToken();
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(updateAccountInformationRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<SuccessResponse>("users/UpdateAccountInformation", loginResponse.Token, updateAccountInformationRequest);
                 return result;
             });
             return response;
@@ -160,31 +149,29 @@ namespace Essence.Communication.BusinessServices
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/UpdateUser";
+            LoginResponse loginResponse = await GetEssenceToken();
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(updateUserRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<SuccessResponse>("users/UpdateUser", loginResponse.Token, updateUserRequest);
                 return result;
             });
             return response;
         }
 
-        public async Task<SuccessResponse> UserProfile(AddUserRequest addUserRequest)
+        public async Task<SuccessResponse> AddUser(AddUserRequest addUserRequest)
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/AddUser";
+            LoginResponse loginResponse = await GetEssenceToken();
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(addUserRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<SuccessResponse>("users/AddUser", loginResponse.Token, addUserRequest);
                 return result;
             });
             return response;

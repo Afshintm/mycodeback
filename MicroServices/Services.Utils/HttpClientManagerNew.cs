@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Services.Utils
 {
-    public interface IHttpClientManagerNew
+    public interface IHttpClientManager
     {
         Task<T> GetAsync<T>(string path, string parameters = null) where T : class;
         Task<T> PostAsync<T>(string path, object body) where T : class;
@@ -24,11 +24,10 @@ namespace Services.Utils
     /// 2> Be able to add request headers
     /// 3> Encapsulate process of sending request and handle response in sperated function "InvokeAsync"
     /// </summary>
-    public class HttpClientManagerNew : IHttpClientManagerNew
+    public class HttpClientManager : IHttpClientManager
     {
         private HttpClient _client;
-        private bool baseUrlSet = false;    
-        public HttpClientManagerNew()
+        public HttpClientManager()
         {
             _client = new HttpClient(); 
             _client.Timeout = new TimeSpan(0, 0, 0, 10);
@@ -38,10 +37,13 @@ namespace Services.Utils
         //this client manager can only work for one baseUrl in as a single instance
         public void SetBaseUrl(string baseUrl)
         {
-            if (!baseUrlSet)
+            if (_client.BaseAddress == null)
             {
                 _client.BaseAddress = new Uri(baseUrl);
-                baseUrlSet = true;
+            }
+            else if (!string.Equals(_client.BaseAddress.AbsoluteUri, baseUrl, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new Exception("BaseUrl can only be set once for the lifetime of this instance");
             }
         }
         public async Task<T> GetAsync<T>(string path, string parameters = null) where T : class

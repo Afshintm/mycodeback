@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Essence.Communication.Models.Config;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Linq;
@@ -15,14 +17,14 @@ namespace Essence.Communication.BusinessServices
 
     public class EssenceRequestValidation : IRequestValidation
     {
-        private readonly IAppSettingsConfigService _appSetting;
+        private readonly ConfigOptions _appSetting;
         private const string ContentType = "Content-Type";
         private const string Authentication = "Authorization";
         private const string jsonCententType = "application/json";
 
-        public EssenceRequestValidation(IAppSettingsConfigService appSetting)
+        public EssenceRequestValidation(IOptionsMonitor<ConfigOptions> monitor)
         {
-            _appSetting = appSetting;
+            _appSetting = monitor.CurrentValue;
         }
 
         public HttpResponseMessage CheckHeaders(IHeaderDictionary headers)
@@ -81,12 +83,12 @@ namespace Essence.Communication.BusinessServices
 
             var version = profiles.Substring(start, length);
 
-            if (_appSetting.SupportEssenceVersion.Any(x => x.Trim().Equals(version, StringComparison.CurrentCultureIgnoreCase)) == false)
+            if (_appSetting.ApplicationSettings.SupportedEssenceVersion.Any(x => x.Trim().Equals(version, StringComparison.CurrentCultureIgnoreCase)) == false)
             {
 
                 var response = new HttpResponseMessage(HttpStatusCode.UnsupportedMediaType);
                 var unSupported = $"Unsupported version: {version.Trim()}";
-                var supported = $"Supported versions: {string.Join(",", _appSetting.SupportEssenceVersion.Select(x => x.Trim()).ToArray())}";
+                var supported = $"Supported versions: {string.Join(",", _appSetting.ApplicationSettings.SupportedEssenceVersion.Select(x => x.Trim()).ToArray())}";
                 response.Content = new StringContent(unSupported + "\r\n" + supported);
                 return response;
             }

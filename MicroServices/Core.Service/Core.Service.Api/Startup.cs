@@ -63,8 +63,6 @@ namespace Core.Service.Api
             // AFTER Populate those registrations can override things
             // in the ServiceCollection. Mix and match as needed.
             builder.Populate(services);
-            builder.RegisterType<HttpClientManager>().As<IHttpClientManager>().SingleInstance();
-            builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).SingleInstance();
             builder.RegisterType(typeof(MQPersistantConnection)).As(typeof(IMQPersistentConnection)).InstancePerLifetimeScope();
 

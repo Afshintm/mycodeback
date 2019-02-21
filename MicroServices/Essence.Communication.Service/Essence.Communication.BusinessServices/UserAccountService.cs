@@ -1,5 +1,6 @@
 ﻿using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
+using Essence.Communication.Models.Config;
 using Essence.Communication.Models.Dtos;
 using Essence.Communication.Models.Dtos.Enums;
 using Essence.Communication.Models.Enums;
@@ -8,6 +9,7 @@ using Essence.Communication.Models.Utility;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Services.Utilities.DataAccess;
 using Services.Utils;
 using System;
@@ -26,7 +28,7 @@ namespace Essence.Communication.BusinessServices
         Task CreateAccountUserSnapShot();
     }
 
-    public class UserAccountService : EssenceServiceBase, IUserAccountService
+    public class UserAccountService : EssenceService, IUserAccountService
     {
         private IRepository<Account> _accountRepo;
         private IRepository<UserReference> _userRepo;
@@ -35,13 +37,13 @@ namespace Essence.Communication.BusinessServices
         private IRepository<AccountGroup> _accountGroupRepo;
         private readonly IIdentityUserProfileService _identifyService; 
 
-        public UserAccountService(IHttpClientManagerNew httpClientManager,
-            IAppSettingsConfigService appSettingsConfigService,
+        public UserAccountService(IHttpClientManager httpClientManager,
+            IOptionsMonitor<ConfigOptions> optionsMonitor,
             IAuthenticationService authenticationService,
             IUnitOfWork<ApplicationDbContext> unitOfWork,
             IModelMapper modelMapper,
             IIdentityUserProfileService identifyService
-            ) : base(httpClientManager, appSettingsConfigService, authenticationService, unitOfWork, modelMapper)
+            ) : base(httpClientManager, optionsMonitor, authenticationService, unitOfWork, modelMapper)
         {
             _accountRepo = _unitOfWork.Repository<Account>();
             _userRepo = _unitOfWork.Repository<UserReference>();
@@ -80,7 +82,7 @@ namespace Essence.Communication.BusinessServices
             //get all resident recores
             var header = new Dictionary<string, string>();
             header.Add("Authorization", token);
-            header.Add("Host", _appSettingsConfigService.HostName);
+            header.Add("Host", _configOptions.ApplicationSettings.HostName);
             return await SendRequestToEssence<UsersForAccountResult>("users/GetUsersForAccount", header, usersForAccountRequest);
         }
 
@@ -101,7 +103,7 @@ namespace Essence.Communication.BusinessServices
             //get all resident recores
             var header = new Dictionary<string, string>();
             header.Add("Authorization", authToken.Token);
-            header.Add("Host", _appSettingsConfigService.HostName);
+            header.Add("Host", _configOptions.ApplicationSettings.HostName);
             //_httpClient.ConfigurateHttpClient(_appSettingsConfigService.EssenceBaseUrl, header);
             //return await _httpClient.PostAsync<GetUsersResult>("users/GetUsers", getUserRequest);
 

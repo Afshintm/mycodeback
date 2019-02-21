@@ -1,5 +1,7 @@
-﻿using Essence.Communication.Models.Dtos;
+﻿using Essence.Communication.Models.Config;
+using Essence.Communication.Models.Dtos;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Services.Utils;
 using System;
 using System.Collections.Generic;
@@ -13,38 +15,28 @@ namespace Essence.Communication.BusinessServices
         Task<GetUsersResult> GetUsers(GetUsersRequest getUsersRequest);
     }
 
-    public class UsersProfileService : BaseBusinessServices<GetUsersResult>, IUserProfileService
+    public class UsersProfileService : EssenceService, IUserProfileService
     {
-        private readonly IConfiguration _configuration;
-        private readonly IAuthenticationService _authenticationService;
 
-        public UsersProfileService(IHttpClientManager httpClientManager, IConfiguration configuration, IAuthenticationService authenticationService) : base(httpClientManager, configuration)
+        public UsersProfileService(IHttpClientManager httpClientManager, IOptionsMonitor<ConfigOptions> monitor, IAuthenticationService authenticationService) : base(httpClientManager, monitor, authenticationService, null, null)
         {
-            _configuration = configuration;
-            _authenticationService = authenticationService;
         }
 
         public async Task<GetUsersResult> GetUsers(GetUsersRequest getUsersRequest)
         {
             LoginRequest loginRequest = new LoginRequest()
             {
-                userName = _configuration.GetSection("ApplicationSettings")["UserName"],
-                password = _configuration.GetSection("ApplicationSettings")["Password"]
+                userName = _configOptions.ApplicationSettings.UserName,
+                password = _configOptions.ApplicationSettings.Password
             };
-            LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
-            ApiEndPoint = _configuration.GetSection("ApplicationSettings")["ApiEndPoint"] + "users/GetUsers";
+            LoginResponse loginResponse = await GetEssenceToken();
             var response = await Task.Run(async () =>
             {
-                var result = await PostAsync(getUsersRequest, loginResponse.Token);
+                var result = await SendRequestToEssence<GetUsersResult>("users/GetUsers", loginResponse.Token, getUsersRequest);
                 return result;
             });
             return response;
 
-        }
-
-        public override void SetApiEndpointAddress()
-        {
-            throw new NotImplementedException();
         }
     }
 }

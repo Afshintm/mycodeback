@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Essence.Communication.Models.Utility;
+using Essence.Communication.Models.Config;
+using Microsoft.Extensions.Options;
 
 namespace Essence.Communication.BusinessServices
 {
@@ -23,32 +25,20 @@ namespace Essence.Communication.BusinessServices
         Task<CloseEventsResponseViewModel> CloseEvent(CloseEventsRequestViewtModel closedEvent);
     }
 
-    public class EventService : BaseBusinessServicesNew, IEventService
+    public class EventService : EssenceService, IEventService
     {
-        private readonly IAppSettingsConfigService _appSettingsConfigService;
-        private readonly IAuthenticationService _authenticationService;
         private readonly IEventCreator _eventCreater;
-        private readonly IModelMapper _modelMapper;
-        private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
-        private readonly IHttpClientManagerNew _httpClient;
-
 
         public EventService(
-            IHttpClientManager httpClientManager,
-            IAppSettingsConfigService appSettingsConfigService,
+            IOptionsMonitor<ConfigOptions> optionsMonitor,
             IAuthenticationService authenticationService,
             IEventCreator eventCreater,
             IModelMapper mapper,
             IUnitOfWork<ApplicationDbContext> unitOfWork,
-            IHttpClientManagerNew httpClient
-            ) : base()
+            IHttpClientManager httpClient
+            ) : base(httpClient, optionsMonitor, authenticationService, unitOfWork, mapper)
         {
-            _appSettingsConfigService = appSettingsConfigService;
-            _authenticationService = authenticationService;
             _eventCreater = eventCreater; 
-            _modelMapper = mapper;
-            _httpClient = httpClient;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<CloseEventsResponseViewModel> CloseEvent(CloseEventsRequestViewtModel closedEvent)
@@ -73,7 +63,7 @@ namespace Essence.Communication.BusinessServices
             closeRequest.AccountNumber = essenceEvent.Account;
 
             //get token
-            var login = new LoginRequest { password = _appSettingsConfigService.Password, userName = _appSettingsConfigService.UserName };
+            var login = new LoginRequest { password = _configOptions.ApplicationSettings.Password, userName = _configOptions.ApplicationSettings.UserName };
             var authResponse = await _authenticationService.Login(login);
             if(!authResponse.Value)
             {
@@ -83,7 +73,7 @@ namespace Essence.Communication.BusinessServices
             //get close event response
             var header = new Dictionary<string, string>();
             header.Add("Authorization", authResponse.Token);
-            header.Add("Host", _appSettingsConfigService.HostName);
+            header.Add("Host", _configOptions.ApplicationSettings.HostName);
             _httpClient.ConfigurateHttpClient(header);
             var result =  await _httpClient.PostAsync<CloseEventsResponse>("Alerts/CloseEvents", closeRequest);
 
@@ -124,7 +114,7 @@ namespace Essence.Communication.BusinessServices
 
         private async Task<LoginResponse> GetEssenceToken()
         {
-            var login = new LoginRequest { password = _appSettingsConfigService.Password, userName = _appSettingsConfigService.UserName };
+            var login = new LoginRequest { password = _configOptions.ApplicationSettings.Password, userName = _configOptions.ApplicationSettings.UserName };
             var authResponse = await _authenticationService.Login(login);
 
             return authResponse;

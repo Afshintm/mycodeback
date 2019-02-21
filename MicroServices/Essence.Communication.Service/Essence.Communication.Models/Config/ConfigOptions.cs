@@ -14,20 +14,14 @@ namespace Essence.Communication.Models.Config
         public string ApplicationIdentityConnectionString { get; set; }
     }
 
-    public class LogLevel
+    public class LogLevel 
     {
         public string Default { get; set; }
     }
 
-    public class Logging
+    public class Logging 
     {
         public LogLevel LogLevel { get; set; }
-    }
-
-    public class SupportedEssenceVersion
-    {
-        public string version1 { get; set; }
-        public string version2 { get; set; }
     }
 
     public class SQSSettings
@@ -37,14 +31,13 @@ namespace Essence.Communication.Models.Config
         public string QueueName { get; set; }
     }
 
-    public class ApplicationSettings
+    public class ApplicationSettings 
     {
         public string ApiEndPoint { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string HostName { get; set; }
-        public string EssenceBaseUrl { get; set; }
-        public SupportedEssenceVersion SupportedEssenceVersion { get; set; }
+        public string[] SupportedEssenceVersion { get; set; }
         public SQSSettings SQSSettings { get; set; }
     }
 
