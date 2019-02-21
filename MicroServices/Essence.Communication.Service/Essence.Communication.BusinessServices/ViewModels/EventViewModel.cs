@@ -1,8 +1,7 @@
-﻿using Essence.Communication.BusinessServices.ViewModel;
-using Essence.Communication.Models.ValueObjects;
+﻿using Essence.Communication.Models.ValueObjects;
 using System; 
 
-namespace Essence.Communication.BusinessServices.ViewModel
+namespace Essence.Communication.BusinessServices.ViewModels
 {
     public abstract class  EventViewModel  
     {

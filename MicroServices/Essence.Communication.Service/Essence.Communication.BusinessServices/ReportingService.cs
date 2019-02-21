@@ -29,12 +29,12 @@ namespace Essence.Communication.BusinessServices
             {
                 userName = _configuration.GetSection("ApplicationSettings")["UserName"],
                 password = _configuration.GetSection("ApplicationSettings")["Password"]
-            };
+            }; 
             _logger.LogInformation("Calling ResidentActivity Api ...");
             LoginResponse loginResponse = await _authenticationService.Login(loginRequest);
             //var result = await _apiManager.PostExternalAsync<ActivityResult>("report", "GetResidentActivity", activityRequest, loginResponse.token);
             var response = await Task.Run(async () => {
-                var result = await PostAsync(activityRequest, loginResponse.token);
+                var result = await PostAsync(activityRequest, loginResponse.Token);
                 return result;
             });
             return response;

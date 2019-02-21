@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Essence.Communication.BusinessServices
 {
-    public interface IAuthenticationService : IBaseBusinessServiceNew
+    public interface IAuthenticationService
     {
         Task<LoginResponse> Login(LoginRequest loginData, string token=null);
     }
-    public class AuthenticationService : BaseBusinessServicesNew, IAuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly IAppSettingsConfigService _configuration;
         private readonly IHttpClientManagerNew _httpClient;
@@ -19,16 +19,15 @@ namespace Essence.Communication.BusinessServices
         {
             _configuration = configuration;
             _httpClient = httpClient;
+            _httpClient.SetBaseUrl(configuration.EssenceBaseUrl);
         }
 
         public async Task<LoginResponse> Login(LoginRequest loginData, string token = null)
         {
-            string baseUrl = $"{_configuration.EssenceBaseUrl}";
             var headers = new Dictionary<string, string>();
             headers.Add("Host", _configuration.HostName);
 
-            _httpClient.ConfigurateHttpClient(baseUrl, headers);
-
+            _httpClient.ConfigurateHttpClient(headers);
             return await _httpClient.PostAsync<LoginResponse>("Login/Login", loginData);
         }
 

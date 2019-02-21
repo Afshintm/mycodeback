@@ -17,6 +17,7 @@ namespace Essence.Communication.Models
             Status = EventStatus.New;
         } 
         
+        //hsc account
         public Account Account { get; set; }
         public AlertType AlertType { get; set; }
         public EventStatus Status { get; set; }
@@ -30,10 +31,9 @@ namespace Essence.Communication.Models
         public bool? IsMobile { get; set; }
 
         //we do not set vender event as refernce for HSC event
-        public Vendor Vendor { get; set; }
         public string VendorEventId { get; set; } 
 
-        //VendorType-VendorCode
+        // {VendorType}-{VendorCode}
         public string HSCCode { get; set; }
 
         public Location Location

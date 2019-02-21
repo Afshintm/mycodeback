@@ -11,23 +11,16 @@ namespace Essence.Communication.DbContexts.Configurations
     {
         public void Configure(EntityTypeBuilder<EventBase> builder)
         {
+            builder.ToTable("Event");
+
             builder.HasKey(h => h.Id)
                 .HasName("PK_HCSEvent_Id");
-
-            //Default value
-            DbContextHelper.SetIdDefaultGuidValue(builder);
-
-            //fk  
-            builder.HasOne(e => e.Vendor).WithMany(v => v.HSCEvents).HasForeignKey("VendorId");
-            builder.HasOne(e => e.Account).WithMany(a => a.HSCEvents).HasForeignKey("AccountId");
-
+            
             //convert enum into string
             builder.Property(h => h.AlertType).HasConversion(DbContextHelper.GetEnumValueConverter<AlertType>());
             builder.Property(h => h.Status).HasConversion(DbContextHelper.GetEnumValueConverter<EventStatus>());
 
-            builder.Property(h => h.CreateDate)
-                .HasDefaultValue(DateTime.UtcNow)
-                .IsRequired();
+            builder.Property(h => h.CreatedDate).IsRequired();
 
             builder.OwnsOne(l => l.Location).Property(c => c.Latitude).HasColumnName("Latitude");
             builder.OwnsOne(l => l.Location).Property(c => c.Longitude).HasColumnName("Longitude"); ;

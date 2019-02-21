@@ -10,21 +10,14 @@ namespace Essence.Communication.DbContexts
 {
     public static class DbContextHelper
     {
+        public const string ReadOnlyEntityMsg = "Try to modify one of the readonly entities: UserReference";
+
         public static ValueConverter GetEnumValueConverter<T>() where T : IConvertible
         {
             return new ValueConverter<T, string>(
                 v => v.ToString(),
                 v => (T)Enum.Parse(typeof(T), v));
             
-        }
-
-        public static void SetIdDefaultGuidValue<T> (EntityTypeBuilder<T> builder) where T : Entity
-        {
-
-             builder
-                .Property(h => h.Id)
-                .HasDefaultValue(Guid.NewGuid().ToString())
-                .IsRequired();
         }
     }
 }

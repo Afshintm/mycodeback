@@ -28,7 +28,7 @@ namespace Essence.Communication.Models.Utility
             _rules.Add(eventList[EventTypes.Essence_EMERGENCY_PANIC_ALERM_CANCELLED], AlertType.Event);
             _rules.Add(eventList[EventTypes.Essence_EMPTY_BATTERY], AlertType.Alert);
             _rules.Add(eventList[EventTypes.Essence_EXTREME_INACTIVITY], AlertType.Alert);
-            _rules.Add(eventList[EventTypes.Essence_Long_Total_Sustained_Activity_Duration], AlertType.Alert);
+            _rules.Add(eventList[EventTypes.Essence_LONG_TOTAL_SUSTAINED_ACTIVITY_DURATION], AlertType.Alert);
 
             _rules.Add(eventList[EventTypes.Essence_LOW_BATTERY], AlertType.Alert);
             _rules.Add(eventList[EventTypes.Essence_LOW_BATTERY_RESET], AlertType.Event);

@@ -46,7 +46,10 @@ namespace Services.Utils
             var stringContent = new JsonContent(body);
             if (!string.IsNullOrEmpty(token))
             {
-                client.DefaultRequestHeaders.Add("Authorization", "Token " + token);
+                if (!client.DefaultRequestHeaders.Contains("Authorization"))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", "Token " + token);
+                }
             }
             HttpResponseMessage response = await client.PostAsync(path, stringContent);
             if (response.IsSuccessStatusCode)

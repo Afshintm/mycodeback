@@ -2,6 +2,15 @@
 {
     public class LoginResponse:ResponseBase
     {
-        public string token { get; set; } 
+        public LoginResponse()
+        {
+
+        }
+
+        public LoginResponse(ResponseBase response): base(response)
+        {
+
+        }
+        public string Token { get; set; } 
     }
 }

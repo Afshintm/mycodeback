@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Essence.Communication.BusinessServices
 {
-    public interface IEventCreater
+    public interface IEventCreator
     {
         EventBase Create(IVendorEvent providerEvent, Account hscAccount);
     }
@@ -16,13 +16,13 @@ namespace Essence.Communication.BusinessServices
     /// <summary>
     /// create the concrete Detail instance of a Event instance against the json payload passed
     /// </summary>
-    public class EventCreater : IEventCreater
+    public class EventCreator : IEventCreator
     {
         private const string Details_Property = "Details";
         private readonly IEventCodeDetailsMapper _eventCodeDetailTypeMapper;
         private readonly IEventAlertRules _eventAlertRule;
 
-        public EventCreater(IEventCodeDetailsMapper eventCodeDetailTypeMapper,
+        public EventCreator(IEventCodeDetailsMapper eventCodeDetailTypeMapper,
                     IEventAlertRules eventMergencyRules)
         {
             _eventCodeDetailTypeMapper = eventCodeDetailTypeMapper;
@@ -49,7 +49,6 @@ namespace Essence.Communication.BusinessServices
             eventObj.ServerTime = source.ServerTime;
             eventObj.Location = source.Event.Location;
             eventObj.VendorEventId = source.Id;
-            eventObj.Vendor= source.Vendor;
         }
 
         private EventBase CreateEssenceEvent(IVendorEvent eventStructure, Account hscAccount)

@@ -5,19 +5,18 @@ using System.Text;
 namespace Essence.Communication.Models.Dtos
 {
 
-    public class GetUsersResult
+    public class GetUsersResult : ResponseBase
     {
-        public UserResult[] users { get; set; }
-        public bool Value { get; set; }
-        public int Response { get; set; }
-        public string ResponseDescription { get; set; }
-        public object Message { get; set; }
+        public GetUsersResult() { }
+        public GetUsersResult(ResponseBase response) : base(response) { }
+
+        public UserResult[] users { get; set; } 
     }
 
     public class UserResult
     {
-        public Paneldetails panelDetails { get; set; }
-        public Accountdetails accountDetails { get; set; }
+        public PanelDetails panelDetails { get; set; }
+        public AccountDetails accountDetails { get; set; }
         public string careGiverType { get; set; }
         public DateTime? birthDate { get; set; }
         public string address { get; set; }
@@ -35,7 +34,7 @@ namespace Essence.Communication.Models.Dtos
         public object servicePackage { get; set; }
     }
 
-    public class Paneldetails
+    public class PanelDetails
     {
         public string simNumber { get; set; }
         public string panelSerialNumber { get; set; }
@@ -44,7 +43,7 @@ namespace Essence.Communication.Models.Dtos
         public bool supportDeviceSync { get; set; }
     }
 
-    public class Accountdetails
+    public class AccountDetails
     {
         public string account { get; set; }
         public object activationStatus { get; set; }
