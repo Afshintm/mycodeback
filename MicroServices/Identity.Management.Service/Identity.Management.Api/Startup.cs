@@ -61,11 +61,11 @@ namespace Identity.Management.Api
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
 
-                options.IssuerUri = "https://localhost:44343";
-                options.PublicOrigin = "https://localhost:44343";
+                //options.IssuerUri = "https://localhost:44343";
+                //options.PublicOrigin = "https://localhost:44343";
 
-                //options.IssuerUri = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
-                //options.PublicOrigin = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
+                options.IssuerUri = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
+                options.PublicOrigin = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
             })
 
                 //.AddDeveloperSigningCredential()

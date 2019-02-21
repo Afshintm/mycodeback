@@ -25,4 +25,5 @@ RUN dotnet publish "Essence.Communication.Api.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+ENV ASPNETCORE_ENVIRONMENT="Test"
 ENTRYPOINT ["dotnet", "Essence.Communication.Api.dll"]
