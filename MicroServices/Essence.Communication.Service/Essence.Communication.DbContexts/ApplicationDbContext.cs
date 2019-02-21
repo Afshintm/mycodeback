@@ -45,7 +45,7 @@ namespace Essence.Communication.DbContexts
         public DbSet<Account> Accounts { get; set; }
 
         //UserRef is readonly entity that refs to User
-        //public DbSet<UserReference> UserRef { get; protected set; }
+        public DbSet<UserReference> UserRef { get; protected set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
