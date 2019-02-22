@@ -24,7 +24,7 @@ REM dotnet ef migrations script -c ConfigurationDbContext -o Data/Migrations/Con
 dotnet ef database update -c ConfigurationDbContext
 
 dotnet run /seed
-
+REM dotnet run --environment "Test" /seed
 REM cd ../../Essence.Communication.Service/Essence.Communication.DbContexts
 REM dotnet ef migrations add ApplicationDatabase -c ApplicationDbContext -o Data/Migrations/ApplicationDatabase --startup-project ../Essence.Communication.Api
 
