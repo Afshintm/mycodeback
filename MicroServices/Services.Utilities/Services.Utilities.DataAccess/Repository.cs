@@ -15,12 +15,20 @@ namespace Services.Utilities.DataAccess
         void Delete(object id);
         void Delete(TEntity entity);
         void Insert(TEntity entity);
+        void InsertRange(IEnumerable<TEntity> entities);
 
         void Add(TEntity entity);
         TEntity Get(string id);
         IEnumerable<TEntity> GetAll();
 
         RepositoryQuery<TEntity> Query();
+
+        IEnumerable<TEntity> Get(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            List<Expression<Func<TEntity, object>>> includeProperties = null,
+            int? page = null,
+            int? pageSize = null);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
@@ -40,6 +48,11 @@ namespace Services.Utilities.DataAccess
         }
 
  
+        public virtual void InsertRange(IEnumerable<TEntity> entities)
+        {
+            DbSet.AddRange(entities);
+        }
+
         public virtual void Insert(TEntity entity)
         {
  
@@ -79,23 +92,21 @@ namespace Services.Utilities.DataAccess
             return repositoryGetFluentHelper;
         }
 
-        /// <summary>
-        /// Repository Get method is accessable inside the repository assembly
-        /// </summary>
+       
         /// <param name="filter"></param>
         /// <param name="orderBy"></param>
         /// <param name="includeProperties"></param>
         /// <param name="page"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        internal IQueryable<TEntity> Get(
+        public  IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             List<Expression<Func<TEntity, object>>> includeProperties = null,
             int? page = null,
             int? pageSize = null)
         {
-            IQueryable<TEntity> query = DbSet;
+            var query = (IQueryable < TEntity > )DbSet;
 
             if (includeProperties != null)
                 includeProperties.ForEach(i => { query = query.Include(i); });
@@ -111,7 +122,7 @@ namespace Services.Utilities.DataAccess
                     .Skip((page.Value - 1) * pageSize.Value)
                     .Take(pageSize.Value);
 
-            return query;
+            return query.ToList();
         }
 
         #region New accessor methods on Repository

@@ -114,7 +114,6 @@ namespace Core.Service.Api
             // so it won't work with the above ConfigureContainer mechanism.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
             //var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            
         }
 
         private void RegisterServiceBusMessageEvents(IServiceCollection services)

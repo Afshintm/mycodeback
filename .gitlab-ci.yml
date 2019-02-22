@@ -25,23 +25,43 @@ docker:
     image: docker:latest
     variables:
         AWS_DEFAULT_REGION: "ap-southeast-2"
-        REPOSITORY_URL: 90986216309.dkr.ecr.ap-southeast-2.amazonaws.com/testcontainerapp21       
+        ECR_URI : 590986216309.dkr.ecr.ap-southeast-2.amazonaws.com
+        ECR_NAME : essencecommunicationapi
+        ENVIRONMENT : Production
+        VERSION: 1.1.1
+        REPOSITORY_URL: 590986216309.dkr.ecr.ap-southeast-2.amazonaws.com/essencecommunicationapi:latest       
     services:
         - docker:dind
     script:
         - echo "docker image"
-        - "docker build -t $REPOSITORY_URL ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/"
+        - "docker build --pull -t $REPOSITORY_URL -f MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile ."
+        #- "docker tag $ECR_NAME:latest $ECR_URI/$ECR_NAME:$ENVIRONMENT-$VERSION"
+        #- "docker tag $ECR_NAME:latest $ECR_URI/$ECR_NAME:latest-$ENVIRONMENT"
+        - echo $AWS_ACCESS_KEY_ID
+        - echo $AWS_SECRET_ACCESS_KEY
+        - "$(aws ecr get-login --region $AWS_DEFAULT_REGION)"
         
-deploy:
+.deploy:
     stage: deploy
     image: docker:latest    
     variables:
         AWS_DEFAULT_REGION: "ap-southeast-2"
-        REPOSITORY_URL: 90986216309.dkr.ecr.ap-southeast-2.amazonaws.com/testcontainerapp21        
+        REPOSITORY_URL: 590986216309.dkr.ecr.ap-southeast-2.amazonaws.com/essencecommunicationapi:latest        
     script:
         - echo $AWS_ACCESS_KEY_ID
         - echo $AWS_SECRET_ACCESS_KEY
         - echo $PROD_LOAD_BALANCER_URL
-        - $(aws ecr get-login --no-include-email --region ap-southeast-2)
-        - docker build -t $REPOSITORY_URL ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/
-        - docker push $REPOSITORY_URL        
+        - "docker build -t $REPOSITORY_URL -f MicroServices/Essence.Communication.Service/Essence.Communication.Api/Dockerfile ."
+        - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+#        - docker build -t $REPOSITORY_URL ./MicroServices/Essence.Communication.Service/Essence.Communication.Api/
+#        - docker push $REPOSITORY_URL        
+        
+#         cd "${DIR}/.."
+#  docker build --pull -t "${ECR_NAME}:latest" -f ./docker/Dockerfile .
+#  docker tag "${ECR_NAME}:latest" "${ECR_URI}/${ECR_NAME}:${ENVIRONMENT}-${VERSION}"
+#  docker tag "${ECR_NAME}:latest" "${ECR_URI}/${ECR_NAME}:latest-${ENVIRONMENT}"
+#  $(aws ecr get-login --region "${ECS_REGION}")
+#  docker push "${ECR_URI}/${ECR_NAME}:${ENVIRONMENT}-${VERSION}"
+#  docker push "${ECR_URI}/${ECR_NAME}:latest-${ENVIRONMENT}"
+
+        

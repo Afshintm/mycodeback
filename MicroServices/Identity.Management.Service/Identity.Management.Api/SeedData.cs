@@ -1,7 +1,10 @@
 ﻿using Essence.Communication.DbContexts;
+using Essence.Communication.Models;
+using Essence.Communication.Models.IdentityModels;
 using IdentityModel;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,10 +19,12 @@ namespace Identity.Management.Api
     {
         public static void EnsureSeedData(IServiceProvider serviceProvider)
         {
-            Console.WriteLine("Seeding database...");
+            
 
             using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
+                var env = scope.ServiceProvider.GetService<IHostingEnvironment>();
+                Console.WriteLine($"Seeding database...in {env.EnvironmentName}");
                 scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
                 {
                     var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
@@ -28,7 +33,7 @@ namespace Identity.Management.Api
                     EnsureSeedData(context);
                 }
                 {
-                    var context = scope.ServiceProvider.GetService<ApplicationIdentityDbContext>();
+                    var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
                     context.Database.Migrate();
 
                     var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -41,7 +46,6 @@ namespace Identity.Management.Api
                         {
                             throw new Exception(r.Errors.First().Description);
                         }
-
                     }
 
 
@@ -93,7 +97,6 @@ namespace Identity.Management.Api
                         {
                             throw new Exception(result.Errors.First().Description);
                         }
-
                         result = userMgr.AddClaimsAsync(bob, new Claim[]{
                         new Claim(JwtClaimTypes.Name, "Bob Smith"),
                         new Claim(JwtClaimTypes.GivenName, "Bob"),
@@ -105,12 +108,12 @@ namespace Identity.Management.Api
                         new Claim("location", "somewhere"),
                         new Claim("abcClaim","abcClaimValue")
                         }).Result;
-                        result = userMgr.AddToRoleAsync(bob, "ResidentRole").Result;    
-                        if (!result.Succeeded)    
-                        {    
-                            throw new Exception(result.Errors.First().Description);    
-                        }    
-                        Console.WriteLine("bob created");    
+                        result = userMgr.AddToRoleAsync(bob, "ResidentRole").Result;
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception(result.Errors.First().Description);
+                        }
+                        Console.WriteLine("bob created");
                     }
                     else
                     {

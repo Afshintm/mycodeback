@@ -1,14 +1,18 @@
-﻿using Essence.Communication.BusinessServices.ViewModel;
-using Essence.Communication.BusinessServices.ViewModels;
+﻿using Essence.Communication.BusinessServices.ViewModels;
 using Essence.Communication.DbContexts;
 using Essence.Communication.Models;
-using Essence.Communication.Models.Dtos; 
+using Essence.Communication.Models.Dtos;
+using Essence.Communication.Models.Dtos.Enums;
 using Microsoft.Extensions.Configuration;
 using Services.Utilities.DataAccess;
 using Services.Utils;
+using System.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Threading.Tasks;
+using Essence.Communication.Models.Utility;
 
 namespace Essence.Communication.BusinessServices
 {
@@ -23,7 +27,7 @@ namespace Essence.Communication.BusinessServices
     {
         private readonly IAppSettingsConfigService _appSettingsConfigService;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IEventCreater _eventCreater;
+        private readonly IEventCreator _eventCreater;
         private readonly IModelMapper _modelMapper;
         private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
         private readonly IHttpClientManagerNew _httpClient;
@@ -33,7 +37,7 @@ namespace Essence.Communication.BusinessServices
             IHttpClientManager httpClientManager,
             IAppSettingsConfigService appSettingsConfigService,
             IAuthenticationService authenticationService,
-            IEventCreater eventCreater,
+            IEventCreator eventCreater,
             IModelMapper mapper,
             IUnitOfWork<ApplicationDbContext> unitOfWork,
             IHttpClientManagerNew httpClient
@@ -78,9 +82,9 @@ namespace Essence.Communication.BusinessServices
 
             //get close event response
             var header = new Dictionary<string, string>();
-            header.Add("Authorization", authResponse.token);
+            header.Add("Authorization", authResponse.Token);
             header.Add("Host", _appSettingsConfigService.HostName);
-            _httpClient.ConfigurateHttpClient(_appSettingsConfigService.EssenceBaseUrl, header);
+            _httpClient.ConfigurateHttpClient(header);
             var result =  await _httpClient.PostAsync<CloseEventsResponse>("Alerts/CloseEvents", closeRequest);
 
             //map to viewmodel
@@ -106,8 +110,7 @@ namespace Essence.Communication.BusinessServices
 
             //save essenceEvent 
             //_appData.AddVendorEvent(vendorEvent);
-            _unitOfWork.Repository<EssenceEventObjectStructure>().Insert(vendorEvent);
-            
+            _unitOfWork.Repository<EssenceEventObjectStructure>().Insert(vendorEvent);          
 
             //cast essenceEvent details into hcsEvent 
             var hscEvent = _eventCreater.Create(vendorEvent, new Account());
@@ -117,6 +120,14 @@ namespace Essence.Communication.BusinessServices
             _unitOfWork.Save();
 
             return await Task.Run(() => true);
+        }
+
+        private async Task<LoginResponse> GetEssenceToken()
+        {
+            var login = new LoginRequest { password = _appSettingsConfigService.Password, userName = _appSettingsConfigService.UserName };
+            var authResponse = await _authenticationService.Login(login);
+
+            return authResponse;
         }
     }
 }

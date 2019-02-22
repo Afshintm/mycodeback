@@ -2,13 +2,13 @@
 using Essence.Communication.Models.ValueObjects;
 using System.Collections.Generic;
 
-namespace Essence.Communication.BusinessServices.ViewModel
+namespace Essence.Communication.BusinessServices.ViewModels
 {
-    public interface IDetailsViewModel
+    public interface IEventDetailViewModel
     {
     }
 
-    public abstract class DeviceEventDetailsViewModel : IDetailsViewModel
+    public abstract class DeviceEventDetailsViewModel : IEventDetailViewModel
     {
         public int DeviceId { get; set; }
         public int DeviceType { get; set; }
@@ -29,7 +29,7 @@ namespace Essence.Communication.BusinessServices.ViewModel
         public string PeriodEndTime { get; set; }
     }
     
-    public class StayHomeDetailsViewModel : IDetailsViewModel
+    public class StayHomeDetailsViewModel : IEventDetailViewModel
     {
         public string ExitTime { get; set; }
         public string PeriodStartTime { get; set; }
@@ -49,7 +49,7 @@ namespace Essence.Communication.BusinessServices.ViewModel
         public int BatteryLevel { get; set; }
     }
     
-    public class PanelStatusDetailsViewModel : IDetailsViewModel
+    public class PanelStatusDetailsViewModel : IEventDetailViewModel
     {
         public string LastContactTime { get; set; }
     }

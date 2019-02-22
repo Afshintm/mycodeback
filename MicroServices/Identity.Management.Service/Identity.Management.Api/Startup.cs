@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Essence.Communication.DbContexts;
+using Essence.Communication.Models.IdentityModels;
 using Identity.Management.Api.Extensions;
 using Identity.Management.Api.Services;
 using Microsoft.AspNetCore.Builder;
@@ -10,12 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Identity.Management.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration,ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
             _logger = logger;
@@ -27,26 +29,43 @@ namespace Identity.Management.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ConfigOptions>(Configuration);
+            var sp = services.BuildServiceProvider();
+            var configOptions = sp.GetService<IOptionsMonitor<ConfigOptions>>().CurrentValue;
 
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             
-            var applicationIdentityConnectionString = Configuration.GetConnectionString("ApplicationIdentityConnectionString");
-            services.AddDbContext<ApplicationIdentityDbContext>(options =>
+            var applicationIdentityConnectionString = configOptions.ConnectionStrings.ApplicationIdentityConnectionString;
+            services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(applicationIdentityConnectionString,sql=>sql.MigrationsAssembly(migrationsAssembly)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            var oprationsConnectionString = Configuration.GetConnectionString("IdentityServerOprationsConnectionString");
+            //var oprationsConnectionString = Configuration.GetConnectionString("IdentityServerOprationsConnectionString");
+            var oprationsConnectionString = configOptions.ConnectionStrings.IdentityServerOprationsConnectionString;
+
+            ///Todo:
+            ///Get the ssl certificate installed locally with the name *.homestay.care
+            ///Setup the containres to use a host *.homestay.care with the same certificate in dev environment
+            ///Install the Certificate in AWS store and setup the hostname for identity server and main api
+            ///For local tests, Api should not be run from container by the time above solution will fix the issue 
+            
             var identityServerBuilder = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
+
+                //options.IssuerUri = "https://localhost:44343";
+                //options.PublicOrigin = "https://localhost:44343";
+
+                options.IssuerUri = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
+                options.PublicOrigin = "http://identitymanagementapi-1966185121.ap-southeast-2.elb.amazonaws.com";
             })
 
                 //.AddDeveloperSigningCredential()

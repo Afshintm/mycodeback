@@ -53,7 +53,6 @@ namespace Services.Utilities.DataAccess
             return this;
         }
 
-
         public IEnumerable<TEntity> GetPage(int page, int pageSize, out int totalCount)
         {
             _page = page;
@@ -83,13 +82,5 @@ namespace Services.Utilities.DataAccess
                 _orderByQuerable, _includeProperties, _page, _pageSize);
         }
 
-        public IQueryable<TEntity> Get()
-        {
-
-            return _repository.Get(
-            _filter,
-            _orderByQuerable, _includeProperties, _page, _pageSize);
-
-        }
     }
 }

@@ -19,6 +19,10 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.Reflection;
 using System.IO;
+using Microsoft.Extensions.Options;
+using Essence.Communication.Models.Config;
+using Microsoft.AspNetCore.Identity;
+using Essence.Communication.Models.IdentityModels;
 
 namespace Essence.Communication.Api
 {
@@ -46,30 +50,41 @@ namespace Essence.Communication.Api
         // called by the runtime before the Configure method, below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            
+            services.Configure<ConfigOptions>(Configuration);
+            var serviceProvider = services.BuildServiceProvider();
+            var configOptions = serviceProvider.GetService<IOptionsMonitor<ConfigOptions>>().CurrentValue;
+
             // Add services to the collection.
             services.AddCors();
             //set entityframework connection string
-            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
-            services.AddDbContext<ApplicationIdentityDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ApplicationConnectionString"), b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(configOptions.ConnectionStrings.ApplicationIdentityConnectionString, b => b.MigrationsAssembly("Essence.Communication.DbContexts")));
 
-            services.AddMvc();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddMvc(); 
 
             //add swagger service
             services.AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new Info { Title = "HomeStay API", Version = "v1" });
                     
-                    var basePath = PlatformServices.Default.Application.ApplicationBasePath;
-
-                    var name = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                    var xmlPath = Path.Combine(basePath, name);
-                    c.IncludeXmlComments(xmlPath);
-                });
+                  });
             
             services.AddAuthorization();
-            var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
-            var apiName = Configuration.GetSection("AuthenticationServer")["ApiKey"];
+//<<<<<<< HEAD
+            var IdentityServerIssuerUrl = configOptions.AuthenticationServer.Issuer;
+            var apiName = configOptions.AuthenticationServer.ApiKey;
             _logger.LogInformation("Identity Server configuration data is {0}available.",( string.IsNullOrEmpty(IdentityServerIssuerUrl)||string.IsNullOrEmpty(IdentityServerIssuerUrl)?"not":string.Empty ));
+
+//=======
+//            var IdentityServerIssuerUrl = Configuration.GetSection("AuthenticationServer")["Issuer"];
+//            var apiName = Configuration.GetSection("AuthenticationServer")["ApiKey"];
+//            _logger.LogInformation("Identity Server configuration data is {0} available.",( string.IsNullOrEmpty(IdentityServerIssuerUrl)||string.IsNullOrEmpty(IdentityServerIssuerUrl)?"not":string.Empty ));
+//>>>>>>> feature/NP-237-styles-for-login-logout
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
@@ -78,13 +93,11 @@ namespace Essence.Communication.Api
                     options.ApiName = apiName;
                 });
             
-
             var builder = AppContainerBuilder(services);
             //var builder = services.GetAppContainerBuilder();
 
             this.ApplicationContainer = builder.Build();
-
-           
+          
             // Create the IServiceProvider based on the container.
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
@@ -117,10 +130,11 @@ namespace Essence.Communication.Api
             builder.RegisterGeneric(typeof(BaseBusinessServices<>)).As(typeof(IBaseBusinessService<>)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(AuthenticationService)).As(typeof(IAuthenticationService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(ReportingService)).As(typeof(IReportingService)).InstancePerLifetimeScope();
+           
             builder.RegisterType(typeof(UserService)).As(typeof(IAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(MessageService)).As(typeof(IMessageService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventService)).As(typeof(IEventService)).InstancePerLifetimeScope();
-            builder.RegisterType(typeof(EventCreater)).As(typeof(IEventCreater)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(EventCreator)).As(typeof(IEventCreator)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(UserAccountService)).As(typeof(IUserAccountService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(UsersProfileService)).As(typeof(IUserProfileService)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(EventBusMessageQueue)).As(typeof(IEventBus)).InstancePerLifetimeScope();
@@ -130,8 +144,13 @@ namespace Essence.Communication.Api
             builder.RegisterGeneric(typeof(UnitOfWork<>)).As(typeof(IUnitOfWork<>)).InstancePerDependency();
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerDependency();
             builder.RegisterType<EssenceRequestValidation>().As<IRequestValidation>().InstancePerDependency();
+            builder.RegisterType(typeof(ResidentActivityMetaService)).As(typeof(IResidentActivityService)).InstancePerLifetimeScope();
 
-
+            //TODO: this service may should move to identity project later
+            // builder.RegisterGeneric(typeof(UserManager<>)).As(typeof(UserManager<>)).InstancePerDependency();
+            //  builder.RegisterGeneric(typeof(RoleManager<>)).As(typeof(RoleManager<>)).InstancePerDependency();
+            builder.RegisterType(typeof(ApplicationDbContext)).As(typeof(IIdentityUserContext)).InstancePerLifetimeScope();
+            builder.RegisterType(typeof(IdentityUserProfileService)).As(typeof(IIdentityUserProfileService)).InstancePerLifetimeScope();
 
             return builder;
         }

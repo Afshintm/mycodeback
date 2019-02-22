@@ -10,23 +10,17 @@ using System.Collections.Generic;
 
 namespace Essence.Communication.DbContexts.Configurations
 {
-    //TODO: change essence event to vender event
-    public class VendorEventConfig : IEntityTypeConfiguration<EssenceEventObjectStructure>
+    public class EssenceEventConfig : IEntityTypeConfiguration<EssenceEventObjectStructure>
     {
         public void Configure(EntityTypeBuilder<EssenceEventObjectStructure> builder)
         {
+            builder.ToTable("EssenceEvent");
             builder.HasKey(h => h.Id)
                 .HasName("PK_EssenceEvent_Id");
+            
 
-            //Default value
-            DbContextHelper.SetIdDefaultGuidValue(builder);
-
-            builder.Property(h => h.CreateDate)
-                .HasDefaultValue(DateTime.UtcNow)
-                .IsRequired();
-
-            //fk to vendor
-            builder.HasOne(e => e.Vendor).WithMany(a => a.VendorEvents)　.HasForeignKey("VendorId");
+            builder.Property(h => h.CreatedDate).HasDefaultValue(DateTime.UtcNow)
+                .IsRequired();         
 
             //convert json obj into string
             var jsonConverter = new ValueConverter<JObject, string>(

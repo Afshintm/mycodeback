@@ -1,5 +1,23 @@
 ﻿from Postman 
 post following json to https://localhost:44308/api/events/ReceiveEvent endpoint 
+
+{ "Account" : 99999999,
+ "Event" : { "Code" : 3,
+ "Details" : { "DeviceId" : 3,
+ "DeviceType" : 32,
+ "DeviceDescription" : "Main Bathroom",
+ "RadioLevel" : 80,
+ "Trigger" : 0
+ },
+ "Severity" : 1
+ },
+ "PanelTime" : "2016-01-19T18:00:00",
+ "ServerTime" : "2016-01-19T18:00:09.088+02:00",
+ "ServiceProvider" : 2
+}
+
+---this one was here before and was not working because the event code was not supported in the version at the time
+
 {
     "Account": 99999999,
     "Event": {

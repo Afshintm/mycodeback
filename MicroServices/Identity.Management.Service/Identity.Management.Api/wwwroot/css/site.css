@@ -1,5 +1,45 @@
-﻿body {
+body {
   margin-top: 65px;
+  background: #ededed;
+}
+.login-container {
+  padding: 2em;
+  margin: auto;
+  width: 30em;
+}
+.login-container .btn.login {
+  width: 100%;
+  margin-top: 1em;
+  color: #000;
+  font-weight: 600;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  display: block;
+  line-height: 0.3em;
+  background-color: rgb(20, 174, 254);
+}
+.login-container .btn.login:hover {
+  background-color: rgba(20, 174, 254, 0.7);
+}
+@media only screen and (max-width: 768px) {
+  .login-container .container {
+    width: 100%;
+  }
+}
+.login-container fieldset {
+  border: none;
+}
+.login-container input {
+  background-color: #fff !important;
+  padding-left: 0.5em !important;
+  box-sizing: border-box !important;
+}
+.login-container input:focus {
+  border-bottom-color: rgb(20, 174, 254) !important;
+}
+.panel-heading {
+  text-align: center;
+  margin-bottom: 1em;
 }
 .navbar-header {
   position: relative;
@@ -80,3 +120,4 @@
 .grants .grant li:last-child:after {
   content: '';
 }
+/*# sourceMappingURL=site.css.map */

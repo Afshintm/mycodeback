@@ -25,7 +25,7 @@ namespace Essence.Communication.BusinessServices
         public string UserName { get => _configuration[SectionNames.App_UserName]; }
         public string Password { get => _configuration[SectionNames.App_Password]; }
         public string HostName { get => _configuration[SectionNames.App_HostName]; }
-        public string EssenceBaseUrl { get => _configuration[SectionNames.App_HostName]; }
+        public string EssenceBaseUrl { get => _configuration[SectionNames.App_EssenceBaseUrl]; }
         public string[] SupportEssenceVersion
         {
             get
